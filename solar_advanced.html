@@ -1621,6 +1621,9 @@
         let drawnLayer = null;
         let monthlyChart, savingsChart;
         let actualPanelsFit = 0;
+        let isCalculating = false;
+        let lastCalcTimestamp = 0;
+        let userRequestedFinance = false;
 
         // UAE Bounds
         const UAE_BOUNDS = L.latLngBounds(
@@ -2335,6 +2338,13 @@
             if (event && event.target) event.target.classList.add('active');
             if (tabName === 'production' && monthlyChart) monthlyChart.update();
             else if (tabName === 'financial' && savingsChart) savingsChart.update();
+            if (tabName === 'financial') {
+                userRequestedFinance = true;
+                // Auto-run calculation when user opens Financial tab
+                if (roofArea > 0 && !isCalculating) {
+                    calculateSolar();
+                }
+            }
         }
 
         // NASA POWER Data Functions
@@ -2468,9 +2478,9 @@
             // UAE average irradiation values as fallback (kWh/m²/day)
             const UAE_MONTHLY_AVG = [4.8, 5.5, 6.2, 6.8, 7.2, 7.1, 6.8, 6.5, 6.3, 5.8, 5.0, 4.5];
             const month = new Date().getMonth();
-            
+
             if (!record) return UAE_MONTHLY_AVG[month];
-            
+
             const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
             const val = record[monthNames[month]];
             if (val != null && !isNaN(val)) return val;
@@ -2575,12 +2585,14 @@
         }
 
         async function calculateSolar() {
+            if (isCalculating) return; // prevent concurrent runs
             if (roofArea === 0) {
                 showStatus('Please draw your roof area first!', 'error');
                 return;
             }
 
             showLoading('Calculating solar potential...');
+            isCalculating = true;
 
             try {
                 panelCount = currentPanelCount;
@@ -2712,11 +2724,13 @@
                 });
 
                 showStatus('✅ Analysis complete!', 'success');
+                lastCalcTimestamp = Date.now();
 
             } catch (error) {
                 showStatus('Error: ' + error.message, 'error');
             } finally {
                 hideLoading();
+                isCalculating = false;
             }
         }
 
