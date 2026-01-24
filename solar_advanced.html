@@ -1665,6 +1665,7 @@
 
         function updatePanelRotation(value) {
             currentRotation = parseInt(value);
+            userSetRotation = true; // Mark that user manually set rotation
             document.getElementById('rotationValue').textContent = `${currentRotation}°`;
             if (drawnLayer && roofArea > 0) {
                 visualizeSolarPanels(drawnLayer, currentPanelCount);
@@ -1924,6 +1925,9 @@
             slider.max = maxPanelsForRoof;
             slider.value = maxPanelsForRoof;
             currentPanelCount = maxPanelsForRoof;
+            
+            // Reset rotation flag for new building - allow auto-optimization
+            userSetRotation = false;
 
             document.getElementById('maxPanelText').textContent = `Max: ${maxPanelsForRoof}`;
             updatePanelCount(maxPanelsForRoof);
@@ -1941,15 +1945,16 @@
 
         let visualizePanelsTimeout = null;
         let isVisualizing = false;
+        let userSetRotation = false; // Track if user manually set rotation
 
-        function visualizeSolarPanels(layer, count) {
+        function visualizeSolarPanels(layer, count, forceAutoRotation = false) {
             if (visualizePanelsTimeout) clearTimeout(visualizePanelsTimeout);
             visualizePanelsTimeout = setTimeout(() => {
-                visualizeSolarPanelsImmediate(layer, count);
+                visualizeSolarPanelsImmediate(layer, count, forceAutoRotation);
             }, 150);
         }
 
-        function visualizeSolarPanelsImmediate(layer, count) {
+        function visualizeSolarPanelsImmediate(layer, count, forceAutoRotation = false) {
             if (isVisualizing) return;
             isVisualizing = true;
             solarPanelsLayer.clearLayers();
@@ -1973,27 +1978,34 @@
             const panelHeightDeg = panelHeightMeters / metersPerDegreeLat;
             const gapDeg = gapMeters / Math.min(metersPerDegreeLat, metersPerDegreeLon);
 
-            let bestOrientation = null;
-            let maxPanelsFit = 0;
-            const orientationsToTest = [0, 45, 90, 135];
+            // Only auto-calculate best rotation if not set by user or forced
+            let useRotation = currentRotation;
+            
+            if (!userSetRotation || forceAutoRotation) {
+                let bestOrientation = 0;
+                let maxPanelsFit = 0;
+                const orientationsToTest = [0, 45, 90, 135];
 
-            for (const testRotation of orientationsToTest) {
-                const testCount = calculatePanelFit(polygon, bbox, testRotation, count, panelWidthDeg, panelHeightDeg, gapDeg, true);
-                if (testCount > maxPanelsFit) {
-                    maxPanelsFit = testCount;
-                    bestOrientation = testRotation;
+                for (const testRotation of orientationsToTest) {
+                    const testCount = calculatePanelFit(polygon, bbox, testRotation, count, panelWidthDeg, panelHeightDeg, gapDeg, true);
+                    if (testCount > maxPanelsFit) {
+                        maxPanelsFit = testCount;
+                        bestOrientation = testRotation;
+                    }
+                }
+                
+                useRotation = bestOrientation;
+                currentRotation = bestOrientation;
+
+                const rotationSlider = document.getElementById('rotationSlider');
+                const rotationValue = document.getElementById('rotationValue');
+                if (rotationSlider && rotationValue) {
+                    rotationSlider.value = bestOrientation;
+                    rotationValue.textContent = `${bestOrientation}°`;
                 }
             }
 
-            const angle = (bestOrientation * Math.PI) / 180;
-            currentRotation = bestOrientation;
-
-            const rotationSlider = document.getElementById('rotationSlider');
-            const rotationValue = document.getElementById('rotationValue');
-            if (rotationSlider && rotationValue) {
-                rotationSlider.value = bestOrientation;
-                rotationValue.textContent = `${bestOrientation}°`;
-            }
+            const angle = (useRotation * Math.PI) / 180;
 
             let panelsDrawn = 0;
             const maxAttempts = Math.min(count * 20, 10000);
@@ -2066,8 +2078,14 @@
             }
 
             actualPanelsFit = panelsDrawn;
+            
+            // Update slider max to actual panels that fit at current rotation
+            if (panelsDrawn > 0 && panelsDrawn < maxPanelsForRoof) {
+                // Don't reduce max, but show info
+            }
+            
             if (panelsDrawn < count) {
-                showStatus(`⚠️ Only ${panelsDrawn} of ${count} panels fit`, 'info');
+                showStatus(`⚠️ ${panelsDrawn} of ${count} panels fit at ${useRotation}° rotation`, 'info');
             }
             updateStats();
             isVisualizing = false;
