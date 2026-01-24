@@ -1624,6 +1624,7 @@
         let isCalculating = false;
         let lastCalcTimestamp = 0;
         let userRequestedFinance = false;
+        let calcDebounce = null;
 
         // UAE Bounds
         const UAE_BOUNDS = L.latLngBounds(
@@ -1663,6 +1664,7 @@
             updateStats();
             if (drawnLayer && roofArea > 0) {
                 visualizeSolarPanels(drawnLayer, currentPanelCount);
+                scheduleCalculate();
             }
         }
 
@@ -1673,6 +1675,7 @@
             if (drawnLayer && roofArea > 0) {
                 visualizeSolarPanels(drawnLayer, currentPanelCount);
                 tryFitMorePanels();
+                scheduleCalculate();
             }
         }
 
@@ -1937,6 +1940,7 @@
             document.getElementById('panelControlSection').style.display = 'block';
             document.getElementById('areaDisplayContainer').classList.add('has-data');
             updateAreaDisplay();
+            scheduleCalculate();
         }
 
         function updateAreaDisplay() {
@@ -2341,9 +2345,7 @@
             if (tabName === 'financial') {
                 userRequestedFinance = true;
                 // Auto-run calculation when user opens Financial tab
-                if (roofArea > 0 && !isCalculating) {
-                    calculateSolar();
-                }
+                scheduleCalculate();
             }
         }
 
@@ -2732,6 +2734,15 @@
                 hideLoading();
                 isCalculating = false;
             }
+        }
+
+        function scheduleCalculate() {
+            if (calcDebounce) clearTimeout(calcDebounce);
+            // Only run if roof drawn
+            if (!roofArea || roofArea <= 0) return;
+            calcDebounce = setTimeout(() => {
+                calculateSolar();
+            }, 300);
         }
 
         function createMonthlyChart(monthlyData, systemSizeKW) {
