@@ -2465,13 +2465,17 @@
         }
 
         function getMonthlyIrradiation(record) {
-            if (!record) return null;
+            // UAE average irradiation values as fallback (kWh/m²/day)
+            const UAE_MONTHLY_AVG = [4.8, 5.5, 6.2, 6.8, 7.2, 7.1, 6.8, 6.5, 6.3, 5.8, 5.0, 4.5];
             const month = new Date().getMonth();
+            
+            if (!record) return UAE_MONTHLY_AVG[month];
+            
             const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
             const val = record[monthNames[month]];
             if (val != null && !isNaN(val)) return val;
             if (record.ann != null && !isNaN(record.ann)) return record.ann / 12;
-            return null;
+            return UAE_MONTHLY_AVG[month];
         }
 
         async function fetchWeatherData(lat, lon) {
@@ -2536,7 +2540,13 @@
 
             } catch (error) {
                 console.error('Weather data error:', error);
-                return null;
+                // Return UAE default values as fallback
+                return {
+                    avgCloudCover: 15, sunnyDays: 25, partlyCloudyDays: 4, cloudyDays: 1, totalDays: 30,
+                    cloudDeratingFactor: 0.92, currentTemp: 30, avgAnnualTemp: 28, condition: 'Clear',
+                    allSkyIrradiation: 5.8, clearSkyIrradiation: 6.3,
+                    dataSource: '📊 UAE Average', aiEnhanced: false
+                };
             }
         }
 
@@ -2580,14 +2590,29 @@
 
                 weatherData = await fetchWeatherData(currentLat, currentLon);
 
-                if (!weatherData) throw new Error('Failed to load weather data');
+                // Use defaults if weather data fails
+                if (!weatherData) {
+                    weatherData = {
+                        avgCloudCover: 15, sunnyDays: 25, partlyCloudyDays: 4, cloudyDays: 1, totalDays: 30,
+                        cloudDeratingFactor: 0.92, currentTemp: 30, avgAnnualTemp: 28, condition: 'Clear',
+                        allSkyIrradiation: 5.8, clearSkyIrradiation: 6.3,
+                        dataSource: '📊 UAE Average', aiEnhanced: false
+                    };
+                }
 
-                const dailyIrradiationKWh = weatherData.allSkyIrradiation;
+                const dailyIrradiationKWh = weatherData.allSkyIrradiation || 5.8;
                 const annualIrradiationPerM2 = dailyIrradiationKWh * 365;
                 const peakSunHours = dailyIrradiationKWh;
 
-                const nasaData = findNearestNasaData(nasaPowerAllSkyData, currentLat, currentLon);
-                const monthlyIrradiance = [nasaData.jan, nasaData.feb, nasaData.mar, nasaData.apr, nasaData.may, nasaData.jun, nasaData.jul, nasaData.aug, nasaData.sep, nasaData.oct, nasaData.nov, nasaData.dec];
+                const nasaData = findNearestNasaData(nasaPowerAllSkyData, currentLat, currentLon) || {};
+                // UAE typical monthly irradiation fallback (kWh/m²/day)
+                const UAE_FALLBACK = [4.8, 5.5, 6.2, 6.8, 7.2, 7.1, 6.8, 6.5, 6.3, 5.8, 5.0, 4.5];
+                const monthlyIrradiance = [
+                    nasaData.jan || UAE_FALLBACK[0], nasaData.feb || UAE_FALLBACK[1], nasaData.mar || UAE_FALLBACK[2],
+                    nasaData.apr || UAE_FALLBACK[3], nasaData.may || UAE_FALLBACK[4], nasaData.jun || UAE_FALLBACK[5],
+                    nasaData.jul || UAE_FALLBACK[6], nasaData.aug || UAE_FALLBACK[7], nasaData.sep || UAE_FALLBACK[8],
+                    nasaData.oct || UAE_FALLBACK[9], nasaData.nov || UAE_FALLBACK[10], nasaData.dec || UAE_FALLBACK[11]
+                ];
 
                 const panelEfficiency = 0.21;
                 const systemEfficiency = 0.85;
@@ -2623,7 +2648,7 @@
 
                 const paybackYears = Math.min(99, netCostAED / annualSavingsAED);
                 const totalProfitAED = (annualSavingsAED * 25) - netCostAED;
-                
+
                 console.log('Financial calc:', { systemCostAED, netCostAED, annualSavingsAED, paybackYears, totalProfitAED, annualProduction });
 
                 const co2PerKwh = 0.55;
@@ -2664,7 +2689,7 @@
                 const annualSavingsEl = document.getElementById('annualSavings');
                 const paybackPeriodEl = document.getElementById('paybackPeriod');
                 const totalProfitEl = document.getElementById('totalProfit');
-                
+
                 if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(systemCostAED || 0).toLocaleString()}`;
                 if (netCostEl) netCostEl.textContent = `AED ${Math.round(netCostAED || 0).toLocaleString()}`;
                 if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(annualSavingsAED || 0).toLocaleString()}`;
@@ -2729,11 +2754,11 @@
         function createSavingsChart(annualSavings, systemCost) {
             const ctx = document.getElementById('savingsChart');
             if (savingsChart) savingsChart.destroy();
-            
+
             // Ensure valid numbers
             annualSavings = annualSavings || 0;
             systemCost = systemCost || 0;
-            
+
             console.log('Savings chart:', { annualSavings, systemCost });
 
             const years = Array.from({ length: 26 }, (_, i) => i);
