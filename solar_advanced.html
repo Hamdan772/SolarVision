@@ -1626,6 +1626,12 @@
         let userRequestedFinance = false;
         let calcDebounce = null;
 
+        // Helpers
+        function safeNumber(val, fallback = 0) {
+            const n = Number(val);
+            return Number.isFinite(n) ? n : fallback;
+        }
+
         // UAE Bounds
         const UAE_BOUNDS = L.latLngBounds(
             L.latLng(22.5, 51.5),
@@ -2614,7 +2620,7 @@
                     };
                 }
 
-                const dailyIrradiationKWh = weatherData.allSkyIrradiation || 5.8;
+                const dailyIrradiationKWh = safeNumber(weatherData.allSkyIrradiation, 5.8);
                 const annualIrradiationPerM2 = dailyIrradiationKWh * 365;
                 const peakSunHours = dailyIrradiationKWh;
 
@@ -2622,19 +2628,19 @@
                 // UAE typical monthly irradiation fallback (kWh/m²/day)
                 const UAE_FALLBACK = [4.8, 5.5, 6.2, 6.8, 7.2, 7.1, 6.8, 6.5, 6.3, 5.8, 5.0, 4.5];
                 const monthlyIrradiance = [
-                    nasaData.jan || UAE_FALLBACK[0], nasaData.feb || UAE_FALLBACK[1], nasaData.mar || UAE_FALLBACK[2],
-                    nasaData.apr || UAE_FALLBACK[3], nasaData.may || UAE_FALLBACK[4], nasaData.jun || UAE_FALLBACK[5],
-                    nasaData.jul || UAE_FALLBACK[6], nasaData.aug || UAE_FALLBACK[7], nasaData.sep || UAE_FALLBACK[8],
-                    nasaData.oct || UAE_FALLBACK[9], nasaData.nov || UAE_FALLBACK[10], nasaData.dec || UAE_FALLBACK[11]
+                    safeNumber(nasaData.jan, UAE_FALLBACK[0]), safeNumber(nasaData.feb, UAE_FALLBACK[1]), safeNumber(nasaData.mar, UAE_FALLBACK[2]),
+                    safeNumber(nasaData.apr, UAE_FALLBACK[3]), safeNumber(nasaData.may, UAE_FALLBACK[4]), safeNumber(nasaData.jun, UAE_FALLBACK[5]),
+                    safeNumber(nasaData.jul, UAE_FALLBACK[6]), safeNumber(nasaData.aug, UAE_FALLBACK[7]), safeNumber(nasaData.sep, UAE_FALLBACK[8]),
+                    safeNumber(nasaData.oct, UAE_FALLBACK[9]), safeNumber(nasaData.nov, UAE_FALLBACK[10]), safeNumber(nasaData.dec, UAE_FALLBACK[11])
                 ];
 
                 const panelEfficiency = 0.21;
                 const systemEfficiency = 0.85;
                 const performanceRatio = 0.80;
 
-                const avgTemp = weatherData.currentTemp || 30;
+                const avgTemp = safeNumber(weatherData.currentTemp, 30);
                 const tempDerating = Math.max(0.7, 1 - ((avgTemp - 25) * 0.004));
-                const cloudDerating = weatherData.cloudDeratingFactor;
+                const cloudDerating = safeNumber(weatherData.cloudDeratingFactor, 0.92);
 
                 displayWeatherCard(weatherData);
 
@@ -2645,20 +2651,22 @@
                 const totalSystemArea = panelCount * panelArea;
                 const annualEnergyFromIrradiation = annualIrradiationPerM2 * totalSystemArea * panelEfficiency * systemEfficiency * performanceRatio;
                 const annualEnergyFromPower = systemSizeKW * peakSunHours * 365 * performanceRatio * tempDerating * cloudDerating;
-                const annualProduction = Math.min(annualEnergyFromIrradiation, annualEnergyFromPower);
+                const annualProduction = safeNumber(Math.min(annualEnergyFromIrradiation, annualEnergyFromPower), 0);
                 const monthlyProduction = annualProduction / 12;
 
                 const costPerWattAED = 8.08;
                 const electricityRateAED = 0.38;
-                const systemCostAED = sizing.systemCostAED;
-                const netCostAED = sizing.netCostAED;
+                const systemCostAED = safeNumber(sizing.systemCostAED, 0);
+                const netCostAED = safeNumber(sizing.netCostAED, 0);
 
                 const avgAnnualUsage = 10950;
                 const coveragePercent = Math.min(100, (annualProduction / avgAnnualUsage) * 100);
 
                 const excessProduction = Math.max(0, annualProduction - avgAnnualUsage);
                 const exportRateAED = electricityRateAED * 0.5;
-                const annualSavingsAED = Math.max(1, (Math.min(annualProduction, avgAnnualUsage) * electricityRateAED) + (excessProduction * exportRateAED));
+                const annualSavingsAED = Math.max(1,
+                    (Math.min(annualProduction, avgAnnualUsage) * electricityRateAED) + (excessProduction * exportRateAED)
+                );
 
                 const paybackYears = Math.min(99, netCostAED / annualSavingsAED);
                 const totalProfitAED = (annualSavingsAED * 25) - netCostAED;
@@ -2673,8 +2681,8 @@
                 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 const maxIrr = Math.max(...monthlyIrradiance);
                 const minIrr = Math.min(...monthlyIrradiance);
-                const bestMonth = monthNames[monthlyIrradiance.indexOf(maxIrr)];
-                const worstMonth = monthNames[monthlyIrradiance.indexOf(minIrr)];
+                const bestMonth = monthNames[Math.max(0, monthlyIrradiance.indexOf(maxIrr))];
+                const worstMonth = monthNames[Math.max(0, monthlyIrradiance.indexOf(minIrr))];
 
                 // Update UI
                 document.getElementById('quickSummarySection').style.display = 'block';
@@ -2695,7 +2703,8 @@
 
                 document.getElementById('systemSize').textContent = `${systemSizeKW.toFixed(1)} kW`;
                 document.getElementById('panelCount').textContent = `${panelCount} panels`;
-                document.getElementById('panelCoverage').textContent = `${((panelCount * panelArea / roofArea) * 100).toFixed(0)}%`;
+                const coverageVal = roofArea > 0 ? ((panelCount * panelArea / roofArea) * 100) : 0;
+                document.getElementById('panelCoverage').textContent = `${coverageVal.toFixed(0)}%`;
 
                 // Update Financial Analysis section
                 const systemCostEl = document.getElementById('systemCost');
@@ -2704,11 +2713,11 @@
                 const paybackPeriodEl = document.getElementById('paybackPeriod');
                 const totalProfitEl = document.getElementById('totalProfit');
 
-                if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(systemCostAED || 0).toLocaleString()}`;
-                if (netCostEl) netCostEl.textContent = `AED ${Math.round(netCostAED || 0).toLocaleString()}`;
-                if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(annualSavingsAED || 0).toLocaleString()}`;
-                if (paybackPeriodEl) paybackPeriodEl.textContent = `${(paybackYears || 0).toFixed(1)} years`;
-                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(totalProfitAED || 0).toLocaleString()}`;
+                if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(safeNumber(systemCostAED, 0)).toLocaleString()}`;
+                if (netCostEl) netCostEl.textContent = `AED ${Math.round(safeNumber(netCostAED, 0)).toLocaleString()}`;
+                if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(safeNumber(annualSavingsAED, 0)).toLocaleString()}`;
+                if (paybackPeriodEl) paybackPeriodEl.textContent = `${safeNumber(paybackYears, 0).toFixed(1)} years`;
+                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(totalProfitAED, 0)).toLocaleString()}`;
 
                 document.getElementById('co2Reduction').textContent = `${co2Reduction.toFixed(1)} tons`;
                 document.getElementById('treesEquiv').textContent = `${treesEquivalent.toLocaleString()} trees`;
