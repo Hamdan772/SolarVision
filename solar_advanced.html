@@ -1631,8 +1631,8 @@
             L.latLng(26.5, 56.5)
         );
 
-        // IMPORTANT: Replace with your own Groq API key
-        const GROQ_API_KEY = 'YOUR_GROQ_API_KEY_HERE';
+        // Groq API key is proxied via /api/groq (set GROQ_API_KEY in Vercel env)
+        const GROQ_API_KEY = '';
 
         // NASA POWER Data Cache
         let nasaPowerAllSkyData = null;
@@ -2564,9 +2564,9 @@
             try {
                 const prompt = `Based on this UAE solar system data, recommend the BEST panel:\nSystem: ${systemData.systemSizeKW} kW, ${systemData.panelCount} panels\nLocation: ${systemData.location}, Temp: ${systemData.avgTemp}°C\nBudget: AED ${Math.round(systemData.budget)}\n\nRespond with JSON only: {"recommended": 1, "reason": "...", "alternativeIndex": 2, "alternativeReason": "..."}`;
 
-                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                const response = await fetch('/api/groq', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'llama-3.3-70b-versatile',
                         messages: [{ role: 'user', content: prompt }],
@@ -2832,9 +2832,9 @@
 
                 const prompt = `Solar Analysis for UAE:\n📍 ${data.location}\n🏠 ${Math.round(data.roofArea)}m² roof → ${data.systemSizeKW.toFixed(1)}kW system (${data.panelCount} panels)\n☀️ ${data.peakSunHours.toFixed(1)} peak sun hrs, ${Math.round(data.annualProduction).toLocaleString()} kWh/yr\n💰 AED ${Math.round(data.systemCost).toLocaleString()} cost, ${data.paybackYears.toFixed(1)}yr payback\n\nProvide 4 points: 1) Investment Verdict 2) Weather Impact 3) Optimization tip 4) Next step. Be concise.`;
 
-                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                const response = await fetch('/api/groq', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'llama-3.3-70b-versatile',
                         messages: [{ role: 'system', content: 'You are a UAE solar expert. Give actionable advice.' }, { role: 'user', content: prompt }],
