@@ -1925,7 +1925,7 @@
             slider.max = maxPanelsForRoof;
             slider.value = maxPanelsForRoof;
             currentPanelCount = maxPanelsForRoof;
-            
+
             // Reset rotation flag for new building - allow auto-optimization
             userSetRotation = false;
 
@@ -1980,7 +1980,7 @@
 
             // Only auto-calculate best rotation if not set by user or forced
             let useRotation = currentRotation;
-            
+
             if (!userSetRotation || forceAutoRotation) {
                 let bestOrientation = 0;
                 let maxPanelsFit = 0;
@@ -1993,7 +1993,7 @@
                         bestOrientation = testRotation;
                     }
                 }
-                
+
                 useRotation = bestOrientation;
                 currentRotation = bestOrientation;
 
@@ -2078,12 +2078,12 @@
             }
 
             actualPanelsFit = panelsDrawn;
-            
+
             // Update slider max to actual panels that fit at current rotation
             if (panelsDrawn > 0 && panelsDrawn < maxPanelsForRoof) {
                 // Don't reduce max, but show info
             }
-            
+
             if (panelsDrawn < count) {
                 showStatus(`⚠️ ${panelsDrawn} of ${count} panels fit at ${useRotation}° rotation`, 'info');
             }
@@ -2619,10 +2619,12 @@
 
                 const excessProduction = Math.max(0, annualProduction - avgAnnualUsage);
                 const exportRateAED = electricityRateAED * 0.5;
-                const annualSavingsAED = (Math.min(annualProduction, avgAnnualUsage) * electricityRateAED) + (excessProduction * exportRateAED);
+                const annualSavingsAED = Math.max(1, (Math.min(annualProduction, avgAnnualUsage) * electricityRateAED) + (excessProduction * exportRateAED));
 
-                const paybackYears = netCostAED / annualSavingsAED;
+                const paybackYears = Math.min(99, netCostAED / annualSavingsAED);
                 const totalProfitAED = (annualSavingsAED * 25) - netCostAED;
+                
+                console.log('Financial calc:', { systemCostAED, netCostAED, annualSavingsAED, paybackYears, totalProfitAED, annualProduction });
 
                 const co2PerKwh = 0.55;
                 const co2Reduction = (annualProduction * 25 * co2PerKwh) / 1000;
@@ -2656,11 +2658,18 @@
                 document.getElementById('panelCount').textContent = `${panelCount} panels`;
                 document.getElementById('panelCoverage').textContent = `${((panelCount * panelArea / roofArea) * 100).toFixed(0)}%`;
 
-                document.getElementById('systemCost').textContent = `AED ${Math.round(systemCostAED).toLocaleString()}`;
-                document.getElementById('netCost').textContent = `AED ${Math.round(netCostAED).toLocaleString()}`;
-                document.getElementById('annualSavings').textContent = `AED ${Math.round(annualSavingsAED).toLocaleString()}`;
-                document.getElementById('paybackPeriod').textContent = `${paybackYears.toFixed(1)} years`;
-                document.getElementById('totalProfit').textContent = `AED ${Math.round(totalProfitAED).toLocaleString()}`;
+                // Update Financial Analysis section
+                const systemCostEl = document.getElementById('systemCost');
+                const netCostEl = document.getElementById('netCost');
+                const annualSavingsEl = document.getElementById('annualSavings');
+                const paybackPeriodEl = document.getElementById('paybackPeriod');
+                const totalProfitEl = document.getElementById('totalProfit');
+                
+                if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(systemCostAED || 0).toLocaleString()}`;
+                if (netCostEl) netCostEl.textContent = `AED ${Math.round(netCostAED || 0).toLocaleString()}`;
+                if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(annualSavingsAED || 0).toLocaleString()}`;
+                if (paybackPeriodEl) paybackPeriodEl.textContent = `${(paybackYears || 0).toFixed(1)} years`;
+                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(totalProfitAED || 0).toLocaleString()}`;
 
                 document.getElementById('co2Reduction').textContent = `${co2Reduction.toFixed(1)} tons`;
                 document.getElementById('treesEquiv').textContent = `${treesEquivalent.toLocaleString()} trees`;
@@ -2720,6 +2729,12 @@
         function createSavingsChart(annualSavings, systemCost) {
             const ctx = document.getElementById('savingsChart');
             if (savingsChart) savingsChart.destroy();
+            
+            // Ensure valid numbers
+            annualSavings = annualSavings || 0;
+            systemCost = systemCost || 0;
+            
+            console.log('Savings chart:', { annualSavings, systemCost });
 
             const years = Array.from({ length: 26 }, (_, i) => i);
             const cumulativeSavings = years.map(year => year === 0 ? -systemCost : (annualSavings * year) - systemCost);
