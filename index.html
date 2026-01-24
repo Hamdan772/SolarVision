@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarVision - Smart Solar Energy Calculator</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0891B2;
+            --primary-dark: #0E7490;
+            --primary-light: #22D3EE;
+            --accent: #F97316;
+            --accent-light: #FB923C;
+            --secondary: #1E293B;
+            --secondary-light: #334155;
+            --bg: #FFFFFF;
+            --bg-alt: #F8FAFC;
+            --bg-subtle: #F1F5F9;
+            --text: #0F172A;
+            --text-light: #475569;
+            --text-muted: #94A3B8;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --shadow: rgba(15, 23, 42, 0.06);
+            --shadow-lg: rgba(15, 23, 42, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 12px 80px;
+            box-shadow: 0 2px 16px var(--shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            color: white;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(-10deg) scale(1.05);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(8, 145, 178, 0.25);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(249, 115, 22, 0.25);
+        }
+
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 15px;
+            border-radius: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 80px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: var(--bg-alt);
+            z-index: -1;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(8, 145, 178, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: gentleFloat 12s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s ease-out forwards;
+            animation-delay: 0.1s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+
+        .hero-badge i {
+            color: var(--primary);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: var(--secondary);
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            line-height: 1.7;
+            max-width: 520px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--secondary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .hero-visual {
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+        }
+
+        .hero-image {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 32px 64px var(--shadow);
+        }
+
+        .hero-float-card {
+            position: absolute;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 16px 48px var(--shadow);
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .hero-float-card.card-1 {
+            bottom: 20%;
+            left: -40px;
+            animation-delay: 0s;
+        }
+
+        .hero-float-card.card-2 {
+            top: 20%;
+            right: -40px;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatCard {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .float-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-subtle);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .float-card-icon i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .float-card-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .float-card-label {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 80px;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 64px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--bg-alt);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 17px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-subtle);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-icon i {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--primary);
+        }
+
+        .feature-card:hover .feature-icon i {
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 120px 80px;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .how-it-works .section-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-light);
+        }
+
+        .how-it-works .section-title {
+            color: white;
+        }
+
+        .how-it-works .section-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .steps {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -24px;
+            width: 48px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0 auto 24px;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover .step-number {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .step h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 120px 80px;
+            background: var(--bg);
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px var(--shadow);
+        }
+
+        .testimonial-rating {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-rating i {
+            color: #FFC107;
+            font-size: 16px;
+        }
+
+        .testimonial-card p {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 15px;
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta .btn-secondary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta .btn-secondary:hover {
+            background: var(--bg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 80px 40px;
+            background: var(--secondary);
+            color: white;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 64px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-brand .logo-text {
+            color: white;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 300px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 58, 95, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 440px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .modal>p {
+            color: var(--text-light);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }
+
+        .modal .btn-primary {
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .modal-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+        }
+
+        .modal-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            nav {
+                padding: 16px 40px;
+            }
+
+            .hero {
+                padding: 120px 40px 80px;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .hero h1 {
+                font-size: 44px;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .features,
+            .how-it-works,
+            .testimonials {
+                padding: 80px 40px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 24px 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .features-grid,
+            .testimonials-grid,
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            footer {
+                padding: 60px 24px 32px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="4" fill="currentColor" />
+                    <path
+                        d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </div>
+            <span class="logo-text">SolarVision</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="solar_advanced.html">Calculator</a>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn btn-ghost" onclick="openModal('signin')">Sign In</button>
+            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <i class="fas fa-sun"></i>
+                    Smart Solar Analysis Platform
+                </div>
+                <h1>Calculate Your <span>Solar Savings</span> in Minutes</h1>
+                <p>Get accurate estimates for your solar installation with AI-powered analysis. We use NASA weather data
+                    to calculate your potential energy savings.</p>
+                <div class="hero-buttons">
+                    <a href="solar_advanced.html" class="btn btn-primary btn-large">
+                        <i class="fas fa-calculator"></i>
+                        Start Free Analysis
+                    </a>
+                    <button class="btn btn-ghost btn-large" onclick="openModal('signup')">
+                        Create Account
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-value" data-target="12847" data-suffix="">0</span>
+                        <span class="stat-label">Calculations Made</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" data-target="98" data-suffix="%">0%</span>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" data-target="2.4" data-prefix="$" data-suffix="M"
+                            data-decimal="true">$0M</span>
+                        <span class="stat-label">User Savings</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=450&fit=crop"
+                    alt="Solar Panels" class="hero-image">
+                <div class="hero-float-card card-1">
+                    <div class="float-card-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="float-card-value">8.5 kW</div>
+                    <div class="float-card-label">System Size</div>
+                </div>
+                <div class="hero-float-card card-2">
+                    <div class="float-card-icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="float-card-value">$1,240</div>
+                    <div class="float-card-label">Annual Savings</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-tag">Features</span>
+            <h2 class="section-title">Everything You Need for Solar Planning</h2>
+            <p class="section-subtitle">Our comprehensive toolkit helps you make informed decisions about your solar
+                investment</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <h3>Interactive Map Analysis</h3>
+                <p>Draw your roof area directly on the map with our intuitive interface. Automatic building detection
+                    helps you get started faster.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-satellite"></i></div>
+                <h3>NASA Weather Data</h3>
+                <p>Access real solar irradiance data from NASA POWER API for accurate energy production estimates based
+                    on your exact location.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>AI Recommendations</h3>
+                <p>Our AI analyzes your roof size, orientation, local weather, and energy needs to suggest the optimal
+                    solar panel configuration.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                <h3>Financial Analysis</h3>
+                <p>Get detailed ROI calculations including installation costs, energy savings, tax incentives, and
+                    payback period estimates.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Production Forecasts</h3>
+                <p>See monthly and yearly energy production projections with interactive charts and seasonal variation
+                    analysis.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Environmental Impact</h3>
+                <p>Understand your carbon footprint reduction and environmental benefits of switching to solar energy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <span class="section-tag">Process</span>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get your personalized solar analysis in three simple steps</p>
+        </div>
+        <div class="steps">
+            <div class="step fade-in">
+                <div class="step-number">1</div>
+                <h3>Find Your Location</h3>
+                <p>Enter your address or use GPS to pinpoint your property on the interactive map</p>
+            </div>
+            <div class="step fade-in">
+                <div class="step-number">2</div>
+                <h3>Measure Your Roof</h3>
+                <p>Use our auto-detect feature or draw your roof area manually for precise measurements</p>
+            </div>
+            <div class="step fade-in">
+                <div class="step-number">3</div>
+                <h3>Get Your Results</h3>
+                <p>Receive detailed analysis with energy production, savings, and environmental impact</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-header">
+            <span class="section-tag">Testimonials</span>
+            <h2 class="section-title">What Our Users Say</h2>
+            <p class="section-subtitle">Join thousands of homeowners who made informed solar decisions</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p>"SolarVision gave me accurate estimates that matched my actual installation perfectly. The financial
+                    projections were spot on!"</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="testimonial-avatar">
+                    <div>
+                        <div class="testimonial-name">Ahmed Hassan</div>
+                        <div class="testimonial-role">Dubai, UAE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card fade-in">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p>"The auto-detect feature saved me so much time. I had my complete solar analysis in under 5 minutes.
+                    Highly recommended!"</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="testimonial-avatar">
+                    <div>
+                        <div class="testimonial-name">Sara Al-Rashid</div>
+                        <div class="testimonial-role">Abu Dhabi, UAE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card fade-in">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p>"Using NASA data for calculations gives me confidence in the accuracy. Best solar calculator I've
+                    used by far."</p>
+                <div class="testimonial-author">
+                    <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="User" class="testimonial-avatar">
+                    <div>
+                        <div class="testimonial-name">Michael Chen</div>
+                        <div class="testimonial-role">Sharjah, UAE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to Go Solar?</h2>
+        <p>Start your free solar analysis today and discover how much you can save</p>
+        <a href="solar_advanced.html" class="btn btn-secondary btn-large">
+            <i class="fas fa-arrow-right"></i>
+            Get Started Now
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="logo-text">SolarVision</span>
+                <p>Empowering homeowners with smart solar analysis tools. Make informed decisions about your renewable
+                    energy future.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="solar_advanced.html">Calculator</a>
+                <a href="#features">Features</a>
+                <a href="#">Pricing</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">Solar Guide</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Careers</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SolarVision. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Sign In Modal -->
+    <div class="modal-overlay" id="signinModal">
+        <div class="modal" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('signin')">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your saved projects</p>
+            <form onsubmit="handleSignIn(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                Don't have an account? <a href="#" onclick="switchModal('signup')">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('signup')">&times;</button>
+            <h2>Create Account</h2>
+            <p>Start your solar journey today</p>
+            <form onsubmit="handleSignUp(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large">Create Account</button>
+            </form>
+            <div class="modal-footer">
+                Already have an account? <a href="#" onclick="switchModal('signin')">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Modal functions
+        function openModal(type) {
+            document.getElementById(type + 'Modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(type) {
+            document.getElementById(type + 'Modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchModal(type) {
+            closeModal(type === 'signin' ? 'signup' : 'signin');
+            setTimeout(() => openModal(type), 200);
+        }
+
+        function handleSignIn(e) {
+            e.preventDefault();
+            closeModal('signin');
+            window.location.href = 'solar_advanced.html';
+        }
+
+        function handleSignUp(e) {
+            e.preventDefault();
+            closeModal('signup');
+            window.location.href = 'solar_advanced.html';
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Count-up animation for stats
+        function animateCountUp() {
+            const stats = document.querySelectorAll('.stat-value[data-target]');
+
+            stats.forEach(stat => {
+                const target = parseFloat(stat.getAttribute('data-target'));
+                const prefix = stat.getAttribute('data-prefix') || '';
+                const suffix = stat.getAttribute('data-suffix') || '';
+                const isDecimal = stat.getAttribute('data-decimal') === 'true';
+                const duration = 2000;
+                const startTime = performance.now();
+
+                function updateCount(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out cubic for smooth deceleration
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = target * easeOut;
+
+                    if (isDecimal) {
+                        stat.textContent = prefix + current.toFixed(1) + suffix;
+                    } else {
+                        stat.textContent = prefix + Math.floor(current).toLocaleString() + suffix;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        if (isDecimal) {
+                            stat.textContent = prefix + target.toFixed(1) + suffix;
+                        } else {
+                            stat.textContent = prefix + target.toLocaleString() + suffix;
+                        }
+                    }
+                }
+
+                requestAnimationFrame(updateCount);
+            });
+        }
+
+        // Trigger count-up when hero stats come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCountUp();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) {
+            statsObserver.observe(heroStats);
+        }
+    </script>
+</body>
+
+</html>
