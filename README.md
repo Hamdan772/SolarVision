@@ -176,7 +176,6 @@ SolarVision/
 
 <h2>👨‍💻 Developers</h2>
 
-<h2>👨‍💻 Developers</h2>
 
 <p align="center">
   <strong>Hamdan Nishad</strong><br/>
