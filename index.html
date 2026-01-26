@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> margin
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarVision - Smart Solar Energy Calculator</title>
     <link
@@ -63,10 +63,26 @@
 
         body {
             font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
+            background: radial-gradient(circle at 10% 20%, rgba(234, 179, 8, 0.08), transparent 35%),
+                radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.08), transparent 32%),
+                radial-gradient(circle at 50% 80%, rgba(250, 204, 21, 0.08), transparent 30%),
+                var(--bg);
             color: var(--text);
             overflow-x: hidden;
             line-height: 1.6;
+        }
+
+        .surface-glass {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.55));
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        [data-theme="dark"] .surface-glass {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.72), rgba(15, 23, 42, 0.65));
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
         }
 
         /* Navigation */
@@ -184,12 +200,33 @@
             gap: 8px;
             border: none;
             font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
         }
 
         .btn-ghost {
             background: transparent;
             color: var(--text);
             border: 1.5px solid var(--border);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
         }
 
         .btn-ghost:hover {
@@ -201,8 +238,6 @@
         .btn-primary {
             background: var(--primary);
             color: white;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn-primary::before {
@@ -259,7 +294,7 @@
             right: 0;
             width: 50%;
             height: 100%;
-            background: var(--bg-alt);
+            background: linear-gradient(145deg, rgba(234, 179, 8, 0.12), rgba(250, 204, 21, 0.05));
             z-index: -1;
         }
 
@@ -270,7 +305,7 @@
             right: 10%;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(8, 145, 178, 0.08) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.28) 0%, transparent 70%);
             border-radius: 50%;
             animation: gentleFloat 12s ease-in-out infinite;
         }
@@ -295,6 +330,55 @@
             grid-template-columns: 1fr 1fr;
             gap: 80px;
             align-items: center;
+        }
+
+        .hero-ornaments {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            filter: blur(22px);
+            border-radius: 50%;
+            opacity: 0.45;
+            animation: floatSoft 14s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            background: radial-gradient(circle at 30% 30%, rgba(250, 204, 21, 0.9), rgba(234, 179, 8, 0.05));
+            top: 8%;
+            left: -6%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            background: radial-gradient(circle at 40% 40%, rgba(251, 191, 36, 0.8), rgba(234, 179, 8, 0.05));
+            bottom: 10%;
+            left: 18%;
+            animation-delay: 2s;
+        }
+
+        .orb-3 {
+            background: radial-gradient(circle at 60% 60%, rgba(234, 179, 8, 0.8), rgba(250, 204, 21, 0.05));
+            top: 6%;
+            right: -8%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatSoft {
+            0%,
+            100% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate3d(12px, -18px, 0) scale(1.05);
+            }
         }
 
         .hero-text {
@@ -504,29 +588,31 @@
         }
 
         .feature-card {
-            background: var(--bg-alt);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75));
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
             padding: 36px;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
         }
 
         .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px var(--shadow);
-            border-color: var(--primary);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.12);
+            border-color: rgba(234, 179, 8, 0.5);
         }
 
         .feature-icon {
             width: 56px;
             height: 56px;
-            background: var(--bg-subtle);
+            background: radial-gradient(circle at 30% 30%, rgba(250, 204, 21, 0.9), rgba(234, 179, 8, 0.2));
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 24px;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            box-shadow: 0 10px 24px rgba(234, 179, 8, 0.15);
         }
 
         .feature-icon i {
@@ -651,16 +737,17 @@
         }
 
         .testimonial-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.82));
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 18px;
             padding: 36px;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
         }
 
         .testimonial-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 32px var(--shadow);
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.12);
         }
 
         .testimonial-rating {
@@ -933,8 +1020,8 @@
         /* Animations */
         .fade-in {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .fade-in.visible {
@@ -942,253 +1029,12 @@
             transform: translateY(0);
         }
 
-        .fade-in-left {
-            opacity: 0;
-            transform: translateX(-40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .fade-in-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .fade-in-right {
-            opacity: 0;
-            transform: translateX(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .fade-in-right.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .scale-in {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .scale-in.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Stagger animation delays */
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
-        .stagger-5 { transition-delay: 0.5s; }
-        .stagger-6 { transition-delay: 0.6s; }
-
-        /* Gradient text animation */
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--primary) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-
-        /* Pulse glow effect */
-        .pulse-glow {
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); }
-        }
-
-        /* Floating animation */
-        .float {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        /* Shimmer effect for buttons */
-        .shimmer {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .shimmer::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        /* Typewriter effect */
-        .typewriter {
-            overflow: hidden;
-            border-right: 3px solid var(--primary);
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--primary); }
-        }
-
-        /* Rotating border */
-        .rotating-border {
-            position: relative;
-        }
-
-        .rotating-border::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary-light), var(--primary));
-            background-size: 400% 400%;
-            border-radius: inherit;
-            z-index: -1;
-            animation: rotateBorder 3s linear infinite;
-        }
-
-        @keyframes rotateBorder {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Parallax scrolling effect */
-        .parallax {
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        /* Counter animation */
-        .counter {
-            display: inline-block;
-        }
-
-        /* Ripple effect */
-        .ripple {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ripple::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .ripple:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        /* Hover lift effect */
-        .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .hover-lift:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px var(--shadow-lg);
-        }
-
-        /* Morphing background */
-        .morph-bg {
-            background: linear-gradient(-45deg, var(--bg-alt), var(--bg-subtle), var(--bg-alt), var(--bg));
-            background-size: 400% 400%;
-            animation: morphBg 15s ease infinite;
-        }
-
-        @keyframes morphBg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Smooth section transitions */
-        section {
-            transition: background-color 0.5s ease;
-        }
-
-        /* Enhanced card hover */
-        .feature-card, .testimonial-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-card:hover, .testimonial-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px var(--shadow-lg);
-        }
-
-        /* Icon bounce on hover */
-        .feature-icon:hover i,
-        .float-card-icon:hover i {
-            animation: iconBounce 0.5s ease;
-        }
-
-        @keyframes iconBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        /* Stats counter glow */
-        .stat-value {
-            text-shadow: 0 0 30px rgba(234, 179, 8, 0.3);
-        }
-
-        /* Smooth page load */
-        body {
-            animation: pageLoad 0.8s ease-out;
-        }
-
-        @keyframes pageLoad {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Loading skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, var(--bg-alt) 25%, var(--bg-subtle) 50%, var(--bg-alt) 75%);
-            background-size: 200% 100%;
-            animation: skeleton 1.5s infinite;
-        }
-
-        @keyframes skeleton {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -1224,21 +1070,26 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg"></div>
+        <div class="hero-ornaments">
+            <span class="orb orb-1"></span>
+            <span class="orb orb-2"></span>
+            <span class="orb orb-3"></span>
+        </div>
         <div class="hero-content">
             <div class="hero-text">
                 <div class="hero-badge">
                     <i class="fas fa-sun"></i>
                     Smart Solar Analysis Platform
                 </div>
-                <h1>Calculate Your <span class="gradient-text">Solar Savings</span> in Minutes</h1>
+                <h1>Calculate Your <span>Solar Savings</span> in Minutes</h1>
                 <p>Get accurate estimates for your solar installation with AI-powered analysis. We use NASA weather data
                     to calculate your potential energy savings.</p>
                 <div class="hero-buttons">
-                    <a href="solar_advanced.html" class="btn btn-primary btn-large shimmer ripple pulse-glow">
+                    <a href="solar_advanced.html" class="btn btn-primary btn-large">
                         <i class="fas fa-calculator"></i>
                         Start Free Analysis
                     </a>
-                    <a href="#features" class="btn btn-ghost btn-large ripple">
+                    <a href="#features" class="btn btn-ghost btn-large">
                         <i class="fas fa-info-circle"></i>
                         Learn More
                     </a>
@@ -1259,15 +1110,15 @@
                     </div>
                 </div>
             </div>
-            <div class="hero-visual float">
+            <div class="hero-visual">
                 <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=450&fit=crop"
                     alt="Solar Panels" class="hero-image">
-                <div class="hero-float-card card-1 hover-lift">
+                <div class="hero-float-card card-1">
                     <div class="float-card-icon"><i class="fas fa-bolt"></i></div>
                     <div class="float-card-value">8.5 kW</div>
                     <div class="float-card-label">System Size</div>
                 </div>
-                <div class="hero-float-card card-2 hover-lift">
+                <div class="hero-float-card card-2">
                     <div class="float-card-icon"><i class="fas fa-piggy-bank"></i></div>
                     <div class="float-card-value">$1,240</div>
                     <div class="float-card-label">Annual Savings</div>
@@ -1277,45 +1128,45 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features morph-bg" id="features">
+    <section class="features" id="features">
         <div class="section-header">
             <span class="section-tag">Features</span>
-            <h2 class="section-title fade-in">Everything You Need for Solar Planning</h2>
-            <p class="section-subtitle fade-in">Our comprehensive toolkit helps you make informed decisions about your solar
+            <h2 class="section-title">Everything You Need for Solar Planning</h2>
+            <p class="section-subtitle">Our comprehensive toolkit helps you make informed decisions about your solar
                 investment</p>
         </div>
         <div class="features-grid">
-            <div class="feature-card fade-in stagger-1 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
                 <h3>Interactive Map Analysis</h3>
                 <p>Draw your roof area directly on the map with our intuitive interface. Automatic building detection
                     helps you get started faster.</p>
             </div>
-            <div class="feature-card fade-in stagger-2 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-satellite"></i></div>
                 <h3>NASA Weather Data</h3>
                 <p>Access real solar irradiance data from NASA POWER API for accurate energy production estimates based
                     on your exact location.</p>
             </div>
-            <div class="feature-card fade-in stagger-3 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-brain"></i></div>
                 <h3>AI Recommendations</h3>
                 <p>Our AI analyzes your roof size, orientation, local weather, and energy needs to suggest the optimal
                     solar panel configuration.</p>
             </div>
-            <div class="feature-card fade-in stagger-4 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
                 <h3>Financial Analysis</h3>
                 <p>Get detailed ROI calculations including installation costs, energy savings, tax incentives, and
                     payback period estimates.</p>
             </div>
-            <div class="feature-card fade-in stagger-5 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Production Forecasts</h3>
                 <p>See monthly and yearly energy production projections with interactive charts and seasonal variation
                     analysis.</p>
             </div>
-            <div class="feature-card fade-in stagger-6 hover-lift">
+            <div class="feature-card fade-in">
                 <div class="feature-icon"><i class="fas fa-leaf"></i></div>
                 <h3>Environmental Impact</h3>
                 <p>Understand your carbon footprint reduction and environmental benefits of switching to solar energy.
@@ -1328,22 +1179,22 @@
     <section class="how-it-works" id="how-it-works">
         <div class="section-header">
             <span class="section-tag">Process</span>
-            <h2 class="section-title fade-in">How It Works</h2>
-            <p class="section-subtitle fade-in">Get your personalized solar analysis in three simple steps</p>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get your personalized solar analysis in three simple steps</p>
         </div>
         <div class="steps">
-            <div class="step fade-in stagger-1">
-                <div class="step-number rotating-border">1</div>
+            <div class="step fade-in">
+                <div class="step-number">1</div>
                 <h3>Find Your Location</h3>
                 <p>Enter your address or use GPS to pinpoint your property on the interactive map</p>
             </div>
-            <div class="step fade-in stagger-2">
-                <div class="step-number rotating-border">2</div>
+            <div class="step fade-in">
+                <div class="step-number">2</div>
                 <h3>Measure Your Roof</h3>
                 <p>Use our auto-detect feature or draw your roof area manually for precise measurements</p>
             </div>
-            <div class="step fade-in stagger-3">
-                <div class="step-number rotating-border">3</div>
+            <div class="step fade-in">
+                <div class="step-number">3</div>
                 <h3>Get Your Results</h3>
                 <p>Receive detailed analysis with energy production, savings, and environmental impact</p>
             </div>
@@ -1354,11 +1205,11 @@
     <section class="testimonials" id="testimonials">
         <div class="section-header">
             <span class="section-tag">Testimonials</span>
-            <h2 class="section-title fade-in">What Our Users Say</h2>
-            <p class="section-subtitle fade-in">Join thousands of homeowners who made informed solar decisions</p>
+            <h2 class="section-title">What Our Users Say</h2>
+            <p class="section-subtitle">Join thousands of homeowners who made informed solar decisions</p>
         </div>
         <div class="testimonials-grid">
-            <div class="testimonial-card fade-in stagger-1 hover-lift">
+            <div class="testimonial-card fade-in">
                 <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -1376,7 +1227,7 @@
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card fade-in stagger-2 hover-lift">
+            <div class="testimonial-card fade-in">
                 <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -1394,7 +1245,7 @@
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card fade-in stagger-3 hover-lift">
+            <div class="testimonial-card fade-in">
                 <div class="testimonial-rating">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -1417,9 +1268,9 @@
 
     <!-- CTA Section -->
     <section class="cta">
-        <h2 class="fade-in">Ready to Go Solar?</h2>
-        <p class="fade-in">Start your free solar analysis today and discover how much you can save</p>
-        <a href="solar_advanced.html" class="btn btn-secondary btn-large shimmer ripple fade-in">
+        <h2>Ready to Go Solar?</h2>
+        <p>Start your free solar analysis today and discover how much you can save</p>
+        <a href="solar_advanced.html" class="btn btn-secondary btn-large">
             <i class="fas fa-arrow-right"></i>
             Get Started Now
         </a>
@@ -1487,8 +1338,24 @@
             updateDarkModeIcon(savedTheme);
         }
 
+        // Subtle parallax for hero ornaments
+        function initParallax() {
+            const orbs = document.querySelectorAll('.orb');
+            if (!orbs.length) return;
+            window.addEventListener('mousemove', (e) => {
+                const { innerWidth, innerHeight } = window;
+                const x = (e.clientX / innerWidth - 0.5) * 12;
+                const y = (e.clientY / innerHeight - 0.5) * 12;
+                orbs.forEach((orb, idx) => {
+                    const depth = (idx + 1) * 0.25;
+                    orb.style.transform = `translate3d(${x * depth}px, ${y * depth}px, 0)`;
+                });
+            });
+        }
+
         // Run on page load
         initTheme();
+        initParallax();
 
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
