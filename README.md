@@ -92,11 +92,13 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 
 The application is deployed on Vercel with serverless functions for the API endpoints. Static assets are served directly while `/api/groq` and `/api/overpass` run as Python serverless functions.
 
-**Production (current):** https://solarvision-dlfwhdse9-rishisomanisasomosas-projects.vercel.app
+**Production (current):** https://solarvision-8ehorhn23-rishisomanisasomosas-projects.vercel.app
 
 **Aliased (friendly URL):** https://solarvision-app.vercel.app
 
-**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI.
+**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI. (commit `aa43fec`)
+
+[![Vercel](https://vercelbadge.vercel.app/api/solarvision-app)](https://solarvision-app.vercel.app)
 
 To deploy updates from your local machine (CLI):
 ```bash
