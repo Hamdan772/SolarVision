@@ -225,7 +225,7 @@ MIT License — see [LICENSE](src/LICENSE)
     <img src="https://img.shields.io/badge/GitHub-@thehans--mwe-181717?style=flat-square&logo=github" alt="GitHub thehans-mwe">
   </a>
 </p>
----
+
 
 <p align="center">
   <strong>Built with ☀️ in the UAE</strong><br>
