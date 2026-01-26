@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Images/SolarPV%20System%20Overview.jpg" alt="SolarVision Banner" width="100%"/>
+  <img src="src/Images/SolarPV%20System%20Overview.jpg" alt="SolarVision Banner" width="100%"/>
 </p>
 
 <h1 align="center">☀️ SolarVision</h1>
@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://solarvision-app.vercel.app">
-    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-0891B2?style=for-the-badge" alt="Live Demo"/>
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-F59E0B?style=for-the-badge" alt="Live Demo"/>
   </a>
 </p>
 
