@@ -71,7 +71,7 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 ---
 
 ## � Recent updates (2026-01-26)
-- ✅ **Panel rendering improved**: Panels now use a center-out spiral placement with adaptive attempt caps to reliably render on large and irregular roofs (see `src/Docs/FIXES_COMPLETE.md`).
+- ⚠️ **Panel rendering update reverted**: A planned center-out spiral placement was briefly implemented but reverted on **2026-01-26** by request. The repository now contains the original grid-based placement (see `src/Docs/FIXES_COMPLETE.md`).
 - ✅ **App deployed to Vercel**: Aliased as `https://solarvision-app.vercel.app`.
 
 ## �🛠️ Tech Stack
