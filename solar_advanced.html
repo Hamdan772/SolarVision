@@ -1335,6 +1335,19 @@
                                 oninput="updatePanelRotation(this.value)">
                         </div>
 
+                        <div class="slider-container">
+                            <div class="slider-header">
+                                <span class="slider-label">Panel Tilt (from horizontal)</span>
+                                <span class="slider-value" id="tiltValue">25°</span>
+                            </div>
+                            <input type="range" id="tiltSlider" min="0" max="45" value="25"
+                                oninput="updatePanelTilt(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                                <span>Flat (0°)</span>
+                                <span id="optimalTiltHint">Optimal: 25°</span>
+                            </div>
+                        </div>
+
                         <div class="stats-grid">
                             <div class="stat-item">
                                 <div class="stat-value" id="sliderSystemSize">0 kW</div>
@@ -1627,6 +1640,7 @@
         let maxPanelsForRoof = 100;
         let currentPanelCount = 35;
         let currentRotation = 0;
+        let currentTilt = 25; // Default optimal tilt for UAE (latitude ~25°)
         let drawnLayer = null;
         let monthlyChart, savingsChart;
         let actualPanelsFit = 0;
@@ -1692,6 +1706,29 @@
                 tryFitMorePanels();
                 scheduleCalculate();
             }
+        }
+
+        function updatePanelTilt(value) {
+            currentTilt = parseInt(value);
+            document.getElementById('tiltValue').textContent = `${currentTilt}°`;
+            // Calculate tilt efficiency factor (optimum ~= latitude for UAE)
+            const optimalTilt = Math.round(currentLat); // Optimal tilt ≈ latitude
+            const tiltEfficiency = calculateTiltEfficiency(currentTilt, optimalTilt);
+            document.getElementById('optimalTiltHint').textContent = `Optimal: ${optimalTilt}° (${Math.round(tiltEfficiency * 100)}% efficiency)`;
+            if (drawnLayer && roofArea > 0) {
+                scheduleCalculate();
+            }
+        }
+
+        function calculateTiltEfficiency(tilt, optimalTilt) {
+            // Simplified model: efficiency drops ~1.5% per degree away from optimal
+            const deviation = Math.abs(tilt - optimalTilt);
+            return Math.max(0.7, 1 - (deviation * 0.015));
+        }
+
+        function getOptimalTilt() {
+            // Optimal tilt angle ≈ latitude for annual average (UAE ~25°)
+            return Math.round(currentLat);
         }
 
         function computeSystemFromPanelCount(panelCount) {
@@ -2006,7 +2043,8 @@
             if (!userSetRotation || forceAutoRotation) {
                 let bestOrientation = 0;
                 let maxPanelsFit = 0;
-                const orientationsToTest = [0, 45, 90, 135];
+                // Test finer rotation angles (every 15°) for better optimization
+                const orientationsToTest = [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];
 
                 for (const testRotation of orientationsToTest) {
                     const testCount = calculatePanelFit(polygon, bbox, testRotation, count, panelWidthDeg, panelHeightDeg, gapDeg, true);
@@ -2030,7 +2068,9 @@
             const angle = (useRotation * Math.PI) / 180;
 
             let panelsDrawn = 0;
-            const maxAttempts = Math.min(count * 20, 10000);
+            // Increase max attempts for large areas to ensure all panels can render
+            const areaFactor = Math.max(1, Math.sqrt(roofArea / 100));
+            const maxAttempts = Math.min(count * 50 * areaFactor, 50000);
             let attempts = 0;
 
             const latSpan = bbox[3] - bbox[1];
@@ -2127,7 +2167,10 @@
 
             let fitsCount = 0;
             let attempts = 0;
-            const maxAttempts = quickCount ? 2000 : 10000;
+            // Scale max attempts based on area size
+            const areaSize = (latSpan * lngSpan) * 111320 * 111320; // Approximate m²
+            const scaleFactor = Math.max(1, Math.sqrt(areaSize / 200));
+            const maxAttempts = quickCount ? Math.min(5000 * scaleFactor, 15000) : Math.min(20000 * scaleFactor, 80000);
 
             for (let row = -2; row < rows && fitsCount < maxCount && attempts < maxAttempts; row++) {
                 for (let col = -2; col < cols && fitsCount < maxCount && attempts < maxAttempts; col++) {
@@ -2650,6 +2693,10 @@
                 const avgTemp = safeNumber(weatherData.currentTemp, 30);
                 const tempDerating = Math.max(0.7, 1 - ((avgTemp - 25) * 0.004));
                 const cloudDerating = safeNumber(weatherData.cloudDeratingFactor, 0.92);
+                
+                // Apply tilt efficiency factor
+                const optimalTilt = getOptimalTilt();
+                const tiltDerating = calculateTiltEfficiency(currentTilt, optimalTilt);
 
                 displayWeatherCard(weatherData);
 
@@ -2658,8 +2705,8 @@
                 }
 
                 const totalSystemArea = panelCount * panelArea;
-                const annualEnergyFromIrradiation = annualIrradiationPerM2 * totalSystemArea * panelEfficiency * systemEfficiency * performanceRatio;
-                const annualEnergyFromPower = systemSizeKW * peakSunHours * 365 * performanceRatio * tempDerating * cloudDerating;
+                const annualEnergyFromIrradiation = annualIrradiationPerM2 * totalSystemArea * panelEfficiency * systemEfficiency * performanceRatio * tiltDerating;
+                const annualEnergyFromPower = systemSizeKW * peakSunHours * 365 * performanceRatio * tempDerating * cloudDerating * tiltDerating;
                 const annualProduction = safeNumber(Math.min(annualEnergyFromIrradiation, annualEnergyFromPower), 0);
                 const monthlyProduction = annualProduction / 12;
 
@@ -2942,9 +2989,22 @@
             setTimeout(() => statusEl.classList.remove('show'), 5000);
         }
 
+        // Initialize tilt to optimal value for location
+        function initTiltSlider() {
+            const optimalTilt = getOptimalTilt();
+            currentTilt = optimalTilt;
+            const tiltSlider = document.getElementById('tiltSlider');
+            const tiltValue = document.getElementById('tiltValue');
+            const optimalHint = document.getElementById('optimalTiltHint');
+            if (tiltSlider) tiltSlider.value = optimalTilt;
+            if (tiltValue) tiltValue.textContent = `${optimalTilt}°`;
+            if (optimalHint) optimalHint.textContent = `Optimal: ${optimalTilt}° (100% efficiency)`;
+        }
+
         // Initialize
         window.onload = () => {
             initMap();
+            initTiltSlider();
             showStatus('🇦🇪 UAE Solar Calculator ready!', 'success');
         };
     </script>

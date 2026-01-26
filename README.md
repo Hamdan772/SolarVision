@@ -143,24 +143,42 @@ SolarVision/
 
 ## 🌍 Current Limitations
 
-> These are known limitations we're actively working to improve:
+> Known constraints the team is actively addressing:
 
-- **UAE-Focused**: Optimized for UAE region; global support coming soon
-- **OSM Dependency**: Roof detection requires buildings in OpenStreetMap
-- **Simplified Financial Model**: Doesn't include maintenance, labor, or panel degradation
-- **No Shading Analysis**: Trees, AC units, water tanks not factored in
-- **Individual Houses Only**: Multi-building/community analysis not yet supported
+- Roof detection depends on OpenStreetMap; buildings must exist in OSM (no AI rooftop segmentation yet)
+- Solar output is an estimation; irradiance data is UAE-only and less accurate elsewhere
+- Financial model is simplified; maintenance, labor, tariffs, and panel degradation are excluded
+- AI panel recommendation is not fully trained; may not match real-world specs or availability
+- Limited to individual houses; multi-building or community analysis unsupported
+- No shading/obstacle handling; trees, AC units, tanks ignored, which can overestimate output
+- No export/report workflow for installers; cannot generate contractor-ready reports
+- Geographic defaults are UAE-focused (data, assumptions, currency)
+- No validation against real installed systems
+- Currently a tool answering “Can I install solar?” rather than a broader platform for change
 
 ---
 
-## 🗺️ Roadmap
+## 🛠️ Planned Improvements / Changes
 
-- [ ] Global location support with region-specific data
-- [ ] AI-based rooftop segmentation (satellite image analysis)
-- [ ] Shading/obstacle detection
-- [ ] Export PDF reports for installers
-- [ ] Community/multi-building analysis
-- [ ] Real installation validation
+**Functionality & AI**
+- Fix panel rendering when selecting large areas
+- Make panel rotation work: rotate panels, remove if they do not fit, re-add if they do
+- Auto-set panel rotation to maximize panel count
+- Add optimal panel tilt for better efficiency
+
+**UI / UX**
+- Remove sign-in button; simplify onboarding
+- Remove Twitter and LinkedIn buttons; ensure GitHub button works
+- Add dark mode to the landing page and improve dark-mode readability (e.g., AI insights)
+- Shift the color theme to yellow for consistency
+- Elevate layout, spacing, and overall modern look; improve the landing page first impression
+
+**Code & Structure**
+- Organize files into folders (except README); delete unused files
+- Remove fallbacks in code; ensure clean console with no errors or broken functionality
+
+**Documentation**
+- Improve README with clearer explanation, setup instructions, tech stack, and demo links
 
 ---
 
