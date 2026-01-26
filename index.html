@@ -17,16 +17,16 @@
         }
 
         :root {
-            --primary: #0891B2;
-            --primary-dark: #0E7490;
-            --primary-light: #22D3EE;
-            --accent: #F97316;
-            --accent-light: #FB923C;
+            --primary: #EAB308;
+            --primary-dark: #CA8A04;
+            --primary-light: #FACC15;
+            --accent: #F59E0B;
+            --accent-light: #FBBF24;
             --secondary: #1E293B;
             --secondary-light: #334155;
             --bg: #FFFFFF;
-            --bg-alt: #F8FAFC;
-            --bg-subtle: #F1F5F9;
+            --bg-alt: #FFFBEB;
+            --bg-subtle: #FEF3C7;
             --text: #0F172A;
             --text-light: #475569;
             --text-muted: #94A3B8;
@@ -34,6 +34,27 @@
             --border: #E2E8F0;
             --shadow: rgba(15, 23, 42, 0.06);
             --shadow-lg: rgba(15, 23, 42, 0.1);
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            --primary: #FACC15;
+            --primary-dark: #EAB308;
+            --primary-light: #FDE047;
+            --accent: #FBBF24;
+            --accent-light: #FCD34D;
+            --secondary: #F8FAFC;
+            --secondary-light: #E2E8F0;
+            --bg: #0F172A;
+            --bg-alt: #1E293B;
+            --bg-subtle: #334155;
+            --text: #F8FAFC;
+            --text-light: #CBD5E1;
+            --text-muted: #64748B;
+            --white: #1E293B;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-lg: rgba(0, 0, 0, 0.4);
         }
 
         html {
@@ -59,10 +80,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] nav {
+            background: rgba(15, 23, 42, 0.95);
         }
 
         nav.scrolled {
@@ -800,117 +825,19 @@
             font-size: 14px;
         }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(30, 58, 95, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.active {
+        /* Dark mode toggle button */
+        #darkModeToggle {
+            width: 44px;
+            height: 44px;
+            padding: 0;
             display: flex;
-            opacity: 1;
-        }
-
-        .modal {
-            background: var(--white);
-            border-radius: 24px;
-            padding: 48px;
-            max-width: 440px;
-            width: 90%;
-            transform: translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--text);
-        }
-
-        .modal h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 8px;
-        }
-
-        .modal>p {
-            color: var(--text-light);
-            margin-bottom: 32px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
-        }
-
-        .modal .btn-primary {
-            width: 100%;
+            align-items: center;
             justify-content: center;
-            margin-top: 8px;
+            border-radius: 50%;
         }
 
-        .modal-footer {
-            text-align: center;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            color: var(--text-light);
-        }
-
-        .modal-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
+        #darkModeToggle i {
+            font-size: 18px;
         }
 
         /* Responsive */
@@ -1038,8 +965,10 @@
             <a href="solar_advanced.html">Calculator</a>
         </div>
         <div class="nav-buttons">
-            <button class="btn btn-ghost" onclick="openModal('signin')">Sign In</button>
-            <button class="btn btn-primary" onclick="openModal('signup')">Get Started</button>
+            <button class="btn btn-ghost" onclick="toggleDarkMode()" id="darkModeToggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon" id="darkModeIcon"></i>
+            </button>
+            <a href="solar_advanced.html" class="btn btn-primary">Get Started</a>
         </div>
     </nav>
 
@@ -1060,9 +989,10 @@
                         <i class="fas fa-calculator"></i>
                         Start Free Analysis
                     </a>
-                    <button class="btn btn-ghost btn-large" onclick="openModal('signup')">
-                        Create Account
-                    </button>
+                    <a href="#features" class="btn btn-ghost btn-large">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More
+                    </a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -1254,9 +1184,9 @@
                 <p>Empowering homeowners with smart solar analysis tools. Make informed decisions about your renewable
                     energy future.</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="https://github.com/Hamdan772/SolarVision" target="_blank" rel="noopener noreferrer" title="View on GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
                 </div>
             </div>
             <div class="footer-links">
@@ -1283,57 +1213,34 @@
         </div>
     </footer>
 
-    <!-- Sign In Modal -->
-    <div class="modal-overlay" id="signinModal">
-        <div class="modal" style="position: relative;">
-            <button class="modal-close" onclick="closeModal('signin')">&times;</button>
-            <h2>Welcome Back</h2>
-            <p>Sign in to access your saved projects</p>
-            <form onsubmit="handleSignIn(event)">
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-large">Sign In</button>
-            </form>
-            <div class="modal-footer">
-                Don't have an account? <a href="#" onclick="switchModal('signup')">Sign Up</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sign Up Modal -->
-    <div class="modal-overlay" id="signupModal">
-        <div class="modal" style="position: relative;">
-            <button class="modal-close" onclick="closeModal('signup')">&times;</button>
-            <h2>Create Account</h2>
-            <p>Start your solar journey today</p>
-            <form onsubmit="handleSignUp(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" placeholder="Enter your name" required>
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" placeholder="Create a password" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-large">Create Account</button>
-            </form>
-            <div class="modal-footer">
-                Already have an account? <a href="#" onclick="switchModal('signin')">Sign In</a>
-            </div>
-        </div>
-    </div>
-
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateDarkModeIcon(newTheme);
+        }
+
+        function updateDarkModeIcon(theme) {
+            const icon = document.getElementById('darkModeIcon');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateDarkModeIcon(savedTheme);
+        }
+
+        // Run on page load
+        initTheme();
+
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
@@ -1359,44 +1266,6 @@
         }, observerOptions);
 
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // Modal functions
-        function openModal(type) {
-            document.getElementById(type + 'Modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(type) {
-            document.getElementById(type + 'Modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        function switchModal(type) {
-            closeModal(type === 'signin' ? 'signup' : 'signin');
-            setTimeout(() => openModal(type), 200);
-        }
-
-        function handleSignIn(e) {
-            e.preventDefault();
-            closeModal('signin');
-            window.location.href = 'solar_advanced.html';
-        }
-
-        function handleSignUp(e) {
-            e.preventDefault();
-            closeModal('signup');
-            window.location.href = 'solar_advanced.html';
-        }
-
-        // Close modal on overlay click
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        });
 
         // Count-up animation for stats
         function animateCountUp() {

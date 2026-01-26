@@ -10,172 +10,167 @@
 
 <p align="center">
   <a href="https://solarvision-app.vercel.app">
-    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-F59E0B?style=for-the-badge" alt="Live Demo">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-EAB308?style=for-the-badge" alt="Live Demo">
   </a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/NASA-POWER_Data-0B3D91?style=flat-square&logo=nasa">
-  <img src="https://img.shields.io/badge/AI-Groq_Powered-F97316?style=flat-square">
+  <img src="https://img.shields.io/badge/AI-Groq_Powered-EAB308?style=flat-square">
   <img src="https://img.shields.io/badge/Maps-Leaflet.js-199900?style=flat-square&logo=leaflet">
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square">
 </p>
 
-<hr>
+---
 
-<h2>🚀 What is SolarVision?</h2>
+## 🚀 What is SolarVision?
 
-<p>
-  <strong>SolarVision</strong> is a web-based solar energy calculator designed specifically for the
-  <strong>UAE region</strong>. It combines real <strong>NASA POWER satellite irradiation data</strong>
-  with <strong>AI-powered optimization</strong> to accurately estimate rooftop solar energy
-  production and financial returns.
-</p>
+**SolarVision** is a modern web-based solar energy calculator designed for the **UAE region**. It combines real **NASA POWER satellite irradiation data** with **AI-powered optimization** to accurately estimate rooftop solar energy production and financial returns.
 
-<p>
-  Unlike basic calculators, SolarVision accounts for <strong>cloud cover, heat losses, dust,
-  degradation</strong>, and <strong>local UAE electricity pricing</strong>.
-</p>
+Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, dust, degradation**, and **local UAE electricity pricing**.
 
-<p>
-  👉 <strong>Live App:</strong>
-  <a href="https://solarvision-app.vercel.app">https://solarvision-app.vercel.app</a>
-</p>
+👉 **Live App:** [https://solarvision-app.vercel.app](https://solarvision-app.vercel.app)
 
-<hr>
+---
 
-<h2>🎯 What Can It Do?</h2>
+## ✨ Key Features
 
-<ul>
-  <li>Estimate monthly and annual solar energy production</li>
-  <li>AI-optimized panel orientation and layout</li>
-  <li>Roof detection via satellite imagery</li>
-  <li>Installation cost, ROI, and payback period calculation</li>
-  <li>Interactive map-based workflow</li>
-</ul>
+| Feature | Description |
+|---------|-------------|
+| 🛰️ **NASA POWER Data** | Real satellite solar irradiation data (2020-2025) |
+| 🤖 **AI Analysis** | Groq LLaMA 3.3 powered recommendations |
+| 🗺️ **Interactive Map** | Draw/auto-detect roof areas with Leaflet.js |
+| 📊 **Financial Analysis** | ROI, payback period, 25-year projections |
+| ☀️ **Panel Visualization** | See panels rendered on your actual roof |
+| 🌙 **Dark Mode** | Eye-friendly dark theme support |
 
-<hr>
+---
 
-<h2>✨ Key Features</h2>
+## 🎯 What Can It Do?
 
-<h3>🛰️ NASA POWER Satellite Data</h3>
-<ul>
-  <li>All-Sky & Clear-Sky solar irradiation data</li>
-  <li>Cloud-aware energy modeling</li>
-  <li>Historical averages (2020–2025)</li>
-  <li>UAE-specific climate calibration</li>
-</ul>
+- ✅ Estimate monthly and annual solar energy production
+- ✅ AI-optimized panel orientation and layout
+- ✅ Roof detection via OpenStreetMap buildings
+- ✅ Installation cost, ROI, and payback period calculation
+- ✅ Interactive map-based workflow
+- ✅ Environmental impact (CO₂ reduction, trees equivalent)
 
-<h3>🤖 AI-Powered Optimization</h3>
-<ul>
-  <li>Automatic roof outline detection</li>
-  <li>Multiple panel orientation testing (0°, 45°, 90°, 135°)</li>
-  <li>Smart panel count recommendations</li>
-  <li>Maximum energy yield optimization</li>
-</ul>
+---
 
-<h3>💰 UAE Financial Model</h3>
-<ul>
-  <li>AED-based pricing</li>
-  <li>Local installation cost assumptions</li>
-  <li>UAE electricity tariffs</li>
-  <li>25-year ROI and payback analysis</li>
-</ul>
+## 🖥️ Demo
 
-<hr>
+🔗 **[Launch Live Demo](https://solarvision-app.vercel.app)** — No installation required!
 
-<h2>🖥️ Demo</h2>
+### Quick Start:
+1. Open the app and go to Calculator
+2. Search for your UAE location
+3. Click **AI Auto-Detect Building**
+4. Adjust panel count if needed
+5. Click **Calculate Solar Potential**
 
-<p>
-  🔗 <a href="https://solarvision-app.vercel.app"><strong>Launch Live Demo</strong></a><br>
-  No installation required — works directly in your browser.
-</p>
+---
 
-<hr>
+## 🛠️ Tech Stack
 
-<h2>🧑‍💻 How to Use</h2>
+| Category | Technology |
+|----------|------------|
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **Mapping** | Leaflet.js, OpenStreetMap, Turf.js |
+| **Charts** | Chart.js |
+| **AI** | Groq API (LLaMA 3.3 70B) |
+| **Data** | NASA POWER API |
+| **Backend** | Python (Flask) |
+| **Deployment** | Vercel |
 
-<h3>Option 1: AI Auto-Detect (Recommended)</h3>
-<ol>
-  <li>Open the live app</li>
-  <li>Go to the Calculator</li>
-  <li>Search for your location or click on the map</li>
-  <li>Click <strong>AI Auto-Detect Building</strong></li>
-  <li>Adjust panel count if needed</li>
-  <li>Click <strong>Calculate Solar Potential</strong></li>
-</ol>
+---
 
-<h3>Option 2: Manual Roof Drawing</h3>
-<ol>
-  <li>Select <strong>Draw Roof Polygon</strong></li>
-  <li>Click around your roof edges</li>
-  <li>Double-click to finish</li>
-  <li>Run the calculation</li>
-</ol>
+## ⚙️ Local Development
 
-<hr>
+### Prerequisites
+- Python 3.7+
+- Modern web browser
+- (Optional) Groq API key for AI features
 
-<h2>⚙️ Local Development</h2>
+### Setup
 
-<h3>Requirements</h3>
-<ul>
-  <li>Python 3.7+</li>
-  <li>Modern web browser</li>
-  <li>Optional: Groq API key</li>
-</ul>
-
-<h3>Setup</h3>
-
-<pre>
+```bash
+# Clone the repository
 git clone https://github.com/Hamdan772/SolarVision.git
 cd SolarVision
-pip install -r requirements.txt
-python server.py
-</pre>
 
-<p>Then open: <strong>http://localhost:8000</strong></p>
+# Install dependencies
+pip install -r src/requirements.txt
 
-<hr>
+# Start the server
+python src/server.py
+```
 
-<h2>🛠️ Tech Stack</h2>
+Then open: **http://localhost:8000**
 
-<ul>
-  <li><strong>Frontend:</strong> HTML, CSS, JavaScript</li>
-  <li><strong>Mapping:</strong> Leaflet.js, OpenStreetMap</li>
-  <li><strong>Charts:</strong> Chart.js</li>
-  <li><strong>AI:</strong> Groq (LLaMA 3.1 70B)</li>
-  <li><strong>Backend:</strong> Python</li>
-  <li><strong>Deployment:</strong> Vercel</li>
-  <li><strong>Data:</strong> NASA POWER</li>
-</ul>
+### Environment Variables (Optional)
+Create a `.env` file for AI features:
+```
+GROQ_API_KEY=your_groq_api_key_here
+```
 
-<hr>
+---
 
-<h2>📁 Project Structure</h2>
+## 📁 Project Structure
 
-<pre>
+```
 SolarVision/
-├── index.html
-├── solar_advanced.html
-├── server.py
+├── index.html              # Landing page
+├── solar_advanced.html     # Main calculator app
+├── vercel.json             # Vercel deployment config
+├── README.md               # Documentation
+│
+├── api/                    # Serverless API endpoints
+│   ├── groq.py             # AI analysis endpoint
+│   └── overpass.py         # Building data endpoint
+│
 ├── data/
-├── Docs/
-├── Images/
-└── SolarPV/
-</pre>
+│   └── Weather Data/       # NASA POWER CSV datasets
+│
+└── src/
+    ├── server.py           # Local development server
+    ├── requirements.txt    # Python dependencies
+    ├── Docs/               # Additional documentation
+    ├── Images/             # Project images
+    └── SolarPV/            # Solar PV calculation modules
+```
 
-<hr>
+---
 
-<h2>📜 License</h2>
+## 🌍 Current Limitations
 
-<p>
-  MIT License — see <code>LICENSE</code>
-</p>
+> These are known limitations we're actively working to improve:
 
-<hr>
+- **UAE-Focused**: Optimized for UAE region; global support coming soon
+- **OSM Dependency**: Roof detection requires buildings in OpenStreetMap
+- **Simplified Financial Model**: Doesn't include maintenance, labor, or panel degradation
+- **No Shading Analysis**: Trees, AC units, water tanks not factored in
+- **Individual Houses Only**: Multi-building/community analysis not yet supported
 
-<h2>👨‍💻 Developers</h2>
+---
 
+## 🗺️ Roadmap
+
+- [ ] Global location support with region-specific data
+- [ ] AI-based rooftop segmentation (satellite image analysis)
+- [ ] Shading/obstacle detection
+- [ ] Export PDF reports for installers
+- [ ] Community/multi-building analysis
+- [ ] Real installation validation
+
+---
+
+## 📜 License
+
+MIT License — see [LICENSE](src/LICENSE)
+
+---
+
+## 👨‍💻 Developers
 
 <p align="center">
   <strong>Hamdan Nishad</strong><br/>
@@ -191,11 +186,9 @@ SolarVision/
   </a>
 </p>
 
-
-<hr>
+---
 
 <p align="center">
-  <strong>Built in the UAE ☀️</strong><br>
-  Powered by NASA POWER & AI
+  <strong>Built with ☀️ in the UAE</strong><br>
+  Powered by NASA POWER & Groq AI
 </p>
->

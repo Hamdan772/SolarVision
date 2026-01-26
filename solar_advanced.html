@@ -17,16 +17,16 @@
 
     <style>
         :root {
-            --primary: #0891B2;
-            --primary-light: #22D3EE;
-            --primary-dark: #0E7490;
-            --accent: #F97316;
-            --accent-light: #FB923C;
+            --primary: #EAB308;
+            --primary-light: #FACC15;
+            --primary-dark: #CA8A04;
+            --accent: #F59E0B;
+            --accent-light: #FBBF24;
             --secondary: #1E293B;
             --secondary-light: #334155;
             --bg: #FFFFFF;
-            --bg-alt: #F8FAFC;
-            --bg-subtle: #F1F5F9;
+            --bg-alt: #FFFBEB;
+            --bg-subtle: #FEF3C7;
             --bg-card: #FFFFFF;
             --border: #E2E8F0;
             --border-light: #F1F5F9;
@@ -318,7 +318,7 @@
             outline: none;
             border-color: var(--primary);
             background: var(--bg-card);
-            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+            box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.1);
         }
 
         .input-wrapper input::placeholder {
@@ -394,7 +394,7 @@
         .btn-primary {
             background: var(--primary);
             color: white;
-            box-shadow: 0 2px 8px rgba(8, 145, 178, 0.2);
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
         }
 
         .btn-primary::before {
@@ -411,7 +411,7 @@
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4);
         }
 
         .btn-primary:hover::before {
@@ -613,8 +613,8 @@
             font-family: 'Space Grotesk', sans-serif;
             font-size: 16px;
             font-weight: 700;
-            color: var(--primary);
-            background: rgba(255, 107, 53, 0.1);
+            color: var(--primary-dark);
+            background: rgba(234, 179, 8, 0.15);
             padding: 4px 12px;
             border-radius: 8px;
         }
@@ -637,7 +637,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.4);
             transition: transform 0.2s var(--transition);
         }
 
@@ -652,7 +652,7 @@
             border-radius: 50%;
             cursor: pointer;
             border: none;
-            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.4);
         }
 
         /* Map Container */
@@ -806,13 +806,22 @@
 
         .ai-subtitle {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         #aiAnalysisText {
-            color: rgba(255, 255, 255, 0.9);
+            color: #FFFFFF;
             font-size: 14px;
-            line-height: 1.7;
+            line-height: 1.8;
+        }
+
+        #aiAnalysisText p {
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 12px;
+        }
+
+        #aiAnalysisText strong {
+            color: var(--primary-light);
         }
 
         /* Loading Overlay */
@@ -1781,13 +1790,13 @@
                     marker: false,
                     circlemarker: false,
                     rectangle: {
-                        shapeOptions: { color: '#FF6B35', weight: 3, fillOpacity: 0.3 }
+                        shapeOptions: { color: '#EAB308', weight: 3, fillOpacity: 0.3 }
                     },
                     polygon: {
                         allowIntersection: false,
                         showArea: true,
                         metric: true,
-                        shapeOptions: { color: '#FF6B35', weight: 3, fillOpacity: 0.3 }
+                        shapeOptions: { color: '#EAB308', weight: 3, fillOpacity: 0.3 }
                     }
                 },
                 edit: { featureGroup: drawnItems, remove: true }
@@ -1853,10 +1862,10 @@
                         if (element.geometry) {
                             const coords = element.geometry.map(node => [node.lat, node.lon]);
                             const poly = L.polygon(coords, {
-                                color: '#FF6B35',
+                                color: '#EAB308',
                                 weight: 1,
                                 fillOpacity: 0.35,
-                                fillColor: '#FF6B35'
+                                fillColor: '#EAB308'
                             }).addTo(buildingsLayer);
                             poly.bindPopup(`<strong>Building</strong><br>Type: ${element.tags?.building || 'Unknown'}`);
                             count++;
@@ -1901,7 +1910,7 @@
 
                     const pulseIcon = L.divIcon({
                         className: 'pulse-marker',
-                        html: `<div style="width: 20px; height: 20px; background: #FF6B35; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7); animation: pulse 2s infinite;"></div>`
+                        html: `<div style="width: 20px; height: 20px; background: #EAB308; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.7); animation: pulse 2s infinite;"></div>`
                     });
 
                     L.marker([currentLat, currentLon], { icon: pulseIcon }).addTo(map).bindPopup('📍 You are here!').openPopup();
@@ -2079,7 +2088,7 @@
                 const leafletCorners = pos.corners.map(c => [c[1], c[0]]);
 
                 const panel = L.polygon(leafletCorners, {
-                    color: '#FF6B35',
+                    color: '#EAB308',
                     weight: 1.5,
                     fillColor: '#1E3A5F',
                     fillOpacity: 0.75,
@@ -2172,7 +2181,7 @@
 
         function selectBuilding(coords) {
             drawnItems.clearLayers();
-            const poly = L.polygon(coords, { color: '#FF6B35', weight: 3, fillOpacity: 0.3 });
+            const poly = L.polygon(coords, { color: '#EAB308', weight: 3, fillOpacity: 0.3 });
             drawnItems.addLayer(poly);
             drawnLayer = poly;
             updateRoofArea(poly);
@@ -2281,7 +2290,7 @@
             L.marker([currentLat, currentLon], {
                 icon: L.divIcon({
                     className: 'custom-marker',
-                    html: '<div style="background: #FF6B35; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>'
+                    html: '<div style="background: #EAB308; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>'
                 })
             }).addTo(map).bindPopup(item.display_name).openPopup();
 
@@ -2323,7 +2332,7 @@
                     L.marker([currentLat, currentLon], {
                         icon: L.divIcon({
                             className: 'custom-marker',
-                            html: '<div style="background: #FF6B35; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>'
+                            html: '<div style="background: #EAB308; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>'
                         })
                     }).addTo(map).bindPopup(data[0].display_name).openPopup();
 
@@ -2768,8 +2777,8 @@
                     datasets: [{
                         label: 'Monthly Production (kWh)',
                         data: productionData,
-                        backgroundColor: '#FF6B35',
-                        borderColor: '#E55A2B',
+                        backgroundColor: '#EAB308',
+                        borderColor: '#CA8A04',
                         borderWidth: 2,
                         borderRadius: 8
                     }]
@@ -2869,7 +2878,7 @@
 
                 document.getElementById('aiAnalysisText').innerHTML = `
                     <div style="line-height: 1.8; color: rgba(255,255,255,0.95);">
-                        ${analysis.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #FF6B35;">$1</strong>').replace(/\n/g, '<br>')}
+                        ${analysis.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #EAB308;">$1</strong>').replace(/\n/g, '<br>')}
                     </div>
                     <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
                         Powered by Groq AI (LLaMA 3.3)
@@ -2879,7 +2888,7 @@
             } catch (error) {
                 document.getElementById('aiAnalysisText').innerHTML = `
                     <div style="background: rgba(255,107,53,0.2); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-                        <strong style="color: #FF6B35;">⚠️ AI temporarily unavailable</strong>
+                        <strong style="color: #EAB308;">⚠️ AI temporarily unavailable</strong>
                     </div>
                     <p>Based on your data: ${data.paybackYears < 6 ? 'Good investment' : 'Moderate investment'} with ${data.paybackYears.toFixed(1)} year payback period and AED ${Math.round(data.annualSavingsAED).toLocaleString()} annual savings.</p>
                 `;
