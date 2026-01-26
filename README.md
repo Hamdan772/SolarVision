@@ -176,17 +176,29 @@ SolarVision/
 
 <h2>👨‍💻 Developers</h2>
 
-<p>
-  <strong>Hamdan Nishad</strong><br>
-  <a href="https://github.com/Hamdan772">https://github.com/Hamdan772</a>
-</p>
+<h2>👨‍💻 Developers</h2>
 
-<p>
-  <strong>Rishi</strong><br>
-  <a href="https://github.com/RishiSomanIsASomosa">
-    https://github.com/RishiSomanIsASomosa
+<p align="center">
+  <strong>Hamdan Nishad</strong><br/>
+  <a href="https://github.com/Hamdan772">
+    <img src="https://img.shields.io/badge/GitHub-@Hamdan772-181717?style=flat-square&logo=github" alt="GitHub Hamdan772">
   </a>
 </p>
+
+<p align="center">
+  <strong>Rishi</strong><br/>
+  <a href="https://github.com/RishiSomanIsASomosa">
+    <img src="https://img.shields.io/badge/GitHub-@RishiSomanIsASomosa-181717?style=flat-square&logo=github" alt="GitHub Rishi">
+  </a>
+</p>
+
+<p align="center">
+  <strong>Thehan Sandaneth</strong><br/>
+  <a href="https://github.com/thehans-mwe">
+    <img src="https://img.shields.io/badge/GitHub-@thehans--mwe-181717?style=flat-square&logo=github" alt="GitHub thehans-mwe">
+  </a>
+</p>
+
 
 <hr>
 
