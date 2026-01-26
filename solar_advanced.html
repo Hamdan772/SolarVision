@@ -2727,8 +2727,6 @@
                 const paybackYears = Math.min(99, netCostAED / annualSavingsAED);
                 const totalProfitAED = (annualSavingsAED * 25) - netCostAED;
 
-                console.log('Financial calc:', { systemCostAED, netCostAED, annualSavingsAED, paybackYears, totalProfitAED, annualProduction });
-
                 const co2PerKwh = 0.55;
                 const co2Reduction = (annualProduction * 25 * co2PerKwh) / 1000;
                 const treesEquivalent = Math.round(co2Reduction * 45.8);
@@ -2848,8 +2846,6 @@
             // Ensure valid numbers
             annualSavings = annualSavings || 0;
             systemCost = systemCost || 0;
-
-            console.log('Savings chart:', { annualSavings, systemCost });
 
             const years = Array.from({ length: 26 }, (_, i) => i);
             const cumulativeSavings = years.map(year => year === 0 ? -systemCost : (annualSavings * year) - systemCost);
