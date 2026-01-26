@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarVision - Smart Solar Energy Calculator</title>
     <link
@@ -391,43 +391,79 @@
         }
 
         @keyframes floatSoft {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translate3d(0, 0, 0) scale(1);
             }
+
             25% {
                 transform: translate3d(8px, -12px, 0) scale(1.03);
             }
+
             50% {
                 transform: translate3d(15px, -20px, 0) scale(1.06);
             }
+
             75% {
                 transform: translate3d(5px, -8px, 0) scale(1.02);
             }
         }
 
         @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
         }
 
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6), 0 0 60px rgba(234, 179, 8, 0.3); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(234, 179, 8, 0.6), 0 0 60px rgba(234, 179, 8, 0.3);
+            }
         }
 
         @keyframes text-gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         @keyframes bounce-subtle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
         }
 
         @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .hero-text {
@@ -776,6 +812,30 @@
             line-height: 1.7;
         }
 
+        /* Dark-mode fixes for feature cards (improve contrast on dark background) */
+        [data-theme="dark"] .feature-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .feature-card h3 {
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .feature-card p {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .feature-icon {
+            box-shadow: 0 10px 30px rgba(234, 179, 8, 0.12), 0 2px 6px rgba(0, 0, 0, 0.5) inset;
+        }
+
+        [data-theme="dark"] .feature-card:hover {
+            border-color: rgba(234, 179, 8, 0.12);
+        }
+
         /* How It Works Section */
         .how-it-works {
             padding: 120px 80px;
@@ -873,6 +933,35 @@
             line-height: 1.6;
         }
 
+        /* Dark-mode fixes for How It Works (improves contrast in dark theme) */
+        [data-theme="dark"] .how-it-works {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)), var(--bg);
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .how-it-works .section-tag {
+            background: rgba(248, 250, 252, 0.04);
+            color: var(--primary-light);
+        }
+
+        [data-theme="dark"] .how-it-works .section-subtitle {
+            color: rgba(248, 250, 252, 0.75);
+        }
+
+        [data-theme="dark"] .step:not(:last-child)::after {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        [data-theme="dark"] .steps .step-number {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: var(--accent);
+        }
+
+        [data-theme="dark"] .step p {
+            color: var(--text-light);
+        }
+
         /* Testimonials Section */
         .testimonials {
             padding: 120px 80px;
@@ -919,6 +1008,32 @@
             transform: translateY(-12px) scale(1.02);
             box-shadow: 0 32px 80px rgba(234, 179, 8, 0.12), 0 16px 40px rgba(0, 0, 0, 0.08);
             border-color: rgba(234, 179, 8, 0.4);
+        }
+
+        /* Dark-mode fixes for testimonials */
+        [data-theme="dark"] .testimonial-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .testimonial-card::before {
+            color: rgba(250, 204, 21, 0.12);
+            opacity: 0.06;
+        }
+
+        [data-theme="dark"] .testimonial-card p {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .testimonial-rating i {
+            color: #FBBF24;
+        }
+
+        [data-theme="dark"] .testimonial-card:hover {
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.06);
         }
 
         .testimonial-rating {
@@ -1002,6 +1117,24 @@
             padding: 80px 80px 40px;
             background: var(--secondary);
             color: white;
+        }
+
+        /* Dark-mode overrides for footer */
+        [data-theme="dark"] footer {
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+
+        [data-theme="dark"] .footer-content {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        [data-theme="dark"] footer a {
+            color: var(--text-light);
+        }
+
+        [data-theme="dark"] .footer-brand .logo-text {
+            color: var(--text);
         }
 
         .footer-content {
@@ -1201,20 +1334,53 @@
         }
 
         /* Staggered animations for grid items */
-        .features-grid .feature-card:nth-child(1) { transition-delay: 0.05s; }
-        .features-grid .feature-card:nth-child(2) { transition-delay: 0.1s; }
-        .features-grid .feature-card:nth-child(3) { transition-delay: 0.15s; }
-        .features-grid .feature-card:nth-child(4) { transition-delay: 0.2s; }
-        .features-grid .feature-card:nth-child(5) { transition-delay: 0.25s; }
-        .features-grid .feature-card:nth-child(6) { transition-delay: 0.3s; }
+        .features-grid .feature-card:nth-child(1) {
+            transition-delay: 0.05s;
+        }
 
-        .testimonials-grid .testimonial-card:nth-child(1) { transition-delay: 0.05s; }
-        .testimonials-grid .testimonial-card:nth-child(2) { transition-delay: 0.15s; }
-        .testimonials-grid .testimonial-card:nth-child(3) { transition-delay: 0.25s; }
+        .features-grid .feature-card:nth-child(2) {
+            transition-delay: 0.1s;
+        }
 
-        .steps .step:nth-child(1) { transition-delay: 0.1s; }
-        .steps .step:nth-child(2) { transition-delay: 0.2s; }
-        .steps .step:nth-child(3) { transition-delay: 0.3s; }
+        .features-grid .feature-card:nth-child(3) {
+            transition-delay: 0.15s;
+        }
+
+        .features-grid .feature-card:nth-child(4) {
+            transition-delay: 0.2s;
+        }
+
+        .features-grid .feature-card:nth-child(5) {
+            transition-delay: 0.25s;
+        }
+
+        .features-grid .feature-card:nth-child(6) {
+            transition-delay: 0.3s;
+        }
+
+        .testimonials-grid .testimonial-card:nth-child(1) {
+            transition-delay: 0.05s;
+        }
+
+        .testimonials-grid .testimonial-card:nth-child(2) {
+            transition-delay: 0.15s;
+        }
+
+        .testimonials-grid .testimonial-card:nth-child(3) {
+            transition-delay: 0.25s;
+        }
+
+        .steps .step:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        .steps .step:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        .steps .step:nth-child(3) {
+            transition-delay: 0.3s;
+        }
 
         /* Floating animation for hero cards */
         .hero-float-card {
@@ -1230,9 +1396,19 @@
         }
 
         @keyframes floatCard {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-8px) rotate(1deg); }
-            75% { transform: translateY(-4px) rotate(-1deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-8px) rotate(1deg);
+            }
+
+            75% {
+                transform: translateY(-4px) rotate(-1deg);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1492,7 +1668,8 @@
                 <p>Empowering homeowners with smart solar analysis tools. Make informed decisions about your renewable
                     energy future.</p>
                 <div class="social-links">
-                    <a href="https://github.com/Hamdan772/SolarVision" target="_blank" rel="noopener noreferrer" title="View on GitHub">
+                    <a href="https://github.com/Hamdan772/SolarVision" target="_blank" rel="noopener noreferrer"
+                        title="View on GitHub">
                         <i class="fab fa-github"></i>
                     </a>
                 </div>
@@ -1539,11 +1716,12 @@
             }
         }
 
-        // Initialize theme from localStorage
+        // Initialize theme from localStorage and respect system preference when unset
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateDarkModeIcon(savedTheme);
+            const savedTheme = localStorage.getItem('theme');
+            const preferred = savedTheme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', preferred);
+            updateDarkModeIcon(preferred);
         }
 
         // Subtle parallax for hero ornaments

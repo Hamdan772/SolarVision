@@ -1342,7 +1342,8 @@
                             </div>
                             <input type="range" id="tiltSlider" min="0" max="45" value="25"
                                 oninput="updatePanelTilt(this.value)">
-                            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
                                 <span>Flat (0°)</span>
                                 <span id="optimalTiltHint">Optimal: 25°</span>
                             </div>
@@ -2693,7 +2694,7 @@
                 const avgTemp = safeNumber(weatherData.currentTemp, 30);
                 const tempDerating = Math.max(0.7, 1 - ((avgTemp - 25) * 0.004));
                 const cloudDerating = safeNumber(weatherData.cloudDeratingFactor, 0.92);
-                
+
                 // Apply tilt efficiency factor
                 const optimalTilt = getOptimalTilt();
                 const tiltDerating = calculateTiltEfficiency(currentTilt, optimalTilt);

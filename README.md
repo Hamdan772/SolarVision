@@ -70,7 +70,11 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 
 ---
 
-## 🛠️ Tech Stack
+## � Recent updates (2026-01-26)
+- ✅ **Panel rendering improved**: Panels now use a center-out spiral placement with adaptive attempt caps to reliably render on large and irregular roofs (see `src/Docs/FIXES_COMPLETE.md`).
+- ✅ **App deployed to Vercel**: Aliased as `https://solarvision-app.vercel.app`.
+
+## �🛠️ Tech Stack
 
 | Category | Technology |
 |----------|------------|
@@ -86,16 +90,39 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 
 ## 🚀 Deployment
 
-The application is deployed on Vercel with serverless functions for the API endpoints. The static assets are served directly, while `/api/groq` and `/api/overpass` run as Python serverless functions.
+The application is deployed on Vercel with serverless functions for the API endpoints. Static assets are served directly while `/api/groq` and `/api/overpass` run as Python serverless functions.
 
-**Live URL:** [https://solarvision-app.vercel.app](https://solarvision-app.vercel.app)
+**Production (current):** https://solarvision-dlfwhdse9-rishisomanisasomosas-projects.vercel.app
 
-To deploy updates:
+**Aliased (friendly URL):** https://solarvision-app.vercel.app
+
+**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI.
+
+To deploy updates from your local machine (CLI):
 ```bash
-vercel --prod
+# make sure you're logged in: `vercel login`
+# deploy a production build and skip prompts
+vercel --prod --yes
 ```
 
-Environment variables (e.g., `GROQ_API_KEY`) are managed through the Vercel dashboard.
+CI / Git-linked deployments
+- For automatic deployments, connect the repository to Vercel via the Vercel dashboard (GitHub/GitLab/Bitbucket) and configure protected environment variables there.
+
+Vercel Environment Variables (required for AI features)
+- The AI endpoint requires a Groq API key to operate. Add this to your Vercel project (Dashboard → Settings → Environment Variables) or via the CLI:
+
+```bash
+# add GROQ_API_KEY for production
+vercel env add GROQ_API_KEY production
+```
+
+If `GROQ_API_KEY` is not set, `/api/groq` will return `{"error": "GROQ_API_KEY not configured"}`. Sensitive keys should never be checked into Git.
+
+Environment variables can also be set for `preview` and `development` scopes using `vercel env add <NAME> preview` or `vercel env add <NAME> development`.
+
+---
+
+If you want, I can add a short `DEPLOYMENT.md` with step-by-step instructions, including how to add secrets and enable Git integrations.
 
 ---
 

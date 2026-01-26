@@ -41,20 +41,23 @@
 - Performance issues
 - No orientation optimization
 
-### Solution:
-- **Two-pass rendering system:**
-  1. **First pass:** Find ALL valid panel positions
-  2. **Second pass:** Render requested count from valid positions
-  
-- **Increased limits:**
-  - Max attempts: 5,000 → 10,000
-  - Grid padding: +4 → +6
-  - Better memory management
+### Solution (2026-01-26 update):
+- **Center-out spiral placement:** candidates are generated in rings outward from the roof centroid so panels fill compactly and predictably for irregular roofs
+- **Adaptive attempt caps** scaled to roof area to avoid early cut-offs on large roofs while keeping performance bounded
+- **Two-pass approach retained:**
+  1. **First pass:** Efficiently generate valid panel positions using spiral search and distance sorting
+  2. **Second pass:** Render requested count from sorted valid positions (closest-to-center first)
+
+- **Other improvements:**
+  - Max attempts increased and bounded (up to 200k) to support very large roofs
+  - Panels now prioritize center placement to avoid sparse or clustered layouts
+  - Better visual defaults for panel fill and stroke for clarity on satellite imagery
 
 ### Result:
-- ✅ Large areas work perfectly
-- ✅ No missing panels
-- ✅ Smooth performance
+- ✅ Large and irregular areas now render panels reliably
+- ✅ Reduced artifacts (odd clustering) and improved placement quality
+- ✅ Informative status messages when panels don't fit
+- ✅ Debug logging available to help diagnose edge cases
 
 ---
 
