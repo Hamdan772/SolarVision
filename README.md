@@ -79,8 +79,23 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 | **Charts** | Chart.js |
 | **AI** | Groq API (LLaMA 3.3 70B) |
 | **Data** | NASA POWER API |
-| **Backend** | Python (Flask) |
+| **Backend** | Python (Serverless Functions on Vercel) |
 | **Deployment** | Vercel |
+
+---
+
+## 🚀 Deployment
+
+The application is deployed on Vercel with serverless functions for the API endpoints. The static assets are served directly, while `/api/groq` and `/api/overpass` run as Python serverless functions.
+
+**Live URL:** [https://solarvision-app.vercel.app](https://solarvision-app.vercel.app)
+
+To deploy updates:
+```bash
+vercel --prod
+```
+
+Environment variables (e.g., `GROQ_API_KEY`) are managed through the Vercel dashboard.
 
 ---
 
