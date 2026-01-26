@@ -42,16 +42,19 @@
 - No orientation optimization
 
 ### Solution (2026-01-26 update):
-- **Center-out spiral placement:** candidates are generated in rings outward from the roof centroid so panels fill compactly and predictably for irregular roofs
-- **Adaptive attempt caps** scaled to roof area to avoid early cut-offs on large roofs while keeping performance bounded
-- **Two-pass approach retained:**
-  1. **First pass:** Efficiently generate valid panel positions using spiral search and distance sorting
-  2. **Second pass:** Render requested count from sorted valid positions (closest-to-center first)
+- **Note:** A center-out spiral placement algorithm was implemented on 2026-01-26 but **reverted upon request** the same day. The active codebase uses the original grid-based placement and fit calculations.
 
-- **Other improvements:**
-  - Max attempts increased and bounded (up to 200k) to support very large roofs
-  - Panels now prioritize center placement to avoid sparse or clustered layouts
-  - Better visual defaults for panel fill and stroke for clarity on satellite imagery
+- **Retained approach:**
+  - **Two-pass approach:**
+    1. **First pass:** Find valid panel positions (grid-based search)
+    2. **Second pass:** Render requested count from valid positions
+
+- **Reversion details:**
+  - Spiral placement and expanded attempt caps were removed to match the previously approved behavior.
+  - Current behavior: grid search with bounded attempts to balance performance and fit.
+
+- **Other improvements (if re-applied future):**
+  - Consider adaptive attempt caps and center-priority placement as an optional feature behind a feature flag for testing.
 
 ### Result:
 - ✅ Large and irregular areas now render panels reliably
