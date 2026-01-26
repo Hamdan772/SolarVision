@@ -96,7 +96,7 @@ The application is deployed on Vercel with serverless functions for the API endp
 
 **Aliased (friendly URL):** https://solarvision-app.vercel.app
 
-**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI. (commit `aa43fec`)
+**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI. (commit `e928d90`)
 
 [![Vercel](https://vercelbadge.vercel.app/api/solarvision-app)](https://solarvision-app.vercel.app)
 
