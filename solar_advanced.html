@@ -131,6 +131,161 @@
             border-color: #334155;
         }
 
+        /* Obstacle marker styles */
+        .obstacle-marker {
+            background: rgba(239, 68, 68, 0.8);
+            border: 2px solid #DC2626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            cursor: move;
+        }
+
+        /* Drawing mode indicator */
+        .drawing-mode-indicator {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            display: none;
+        }
+
+        .drawing-mode-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Shading overlay styles */
+        .shading-info-box {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.9);
+            color: white;
+            border-radius: 12px;
+            font-size: 13px;
+            z-index: 1000;
+            max-width: 280px;
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            display: none;
+        }
+
+        .shading-info-box.active {
+            display: block;
+        }
+
+        /* Multiple roofs badge */
+        .roof-section-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: #0F172A;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Feature toolbar */
+        .feature-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: var(--bg-alt);
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .feature-btn {
+            flex: 1;
+            padding: 10px 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .feature-btn:hover {
+            background: var(--bg-subtle);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .feature-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #0F172A;
+        }
+
+        .feature-btn i {
+            font-size: 16px;
+        }
+
+        /* Obstacle list */
+        .obstacle-list {
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .obstacle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: var(--bg-alt);
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
+        .obstacle-item button {
+            background: transparent;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        /* Roof sections list */
+        .roof-section-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--bg-alt);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            border-left: 3px solid var(--primary);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -1485,6 +1640,66 @@
                                 <div class="stat-label">Panels Fit</div>
                             </div>
                         </div>
+
+                        <!-- Advanced Features Toolbar -->
+                        <div class="feature-toolbar">
+                            <button class="feature-btn" id="obstacleBtn" onclick="toggleObstacleMode()" title="Mark obstacles like AC units, vents">
+                                <i class="fas fa-ban"></i>
+                                <span>Obstacles</span>
+                            </button>
+                            <button class="feature-btn" id="multiRoofBtn" onclick="toggleMultiRoofMode()" title="Add multiple roof sections">
+                                <i class="fas fa-layer-group"></i>
+                                <span>Multi-Roof</span>
+                            </button>
+                            <button class="feature-btn" id="shadingBtn" onclick="analyzeShadingFromBuildings()" title="Analyze shading from nearby buildings">
+                                <i class="fas fa-cloud-sun"></i>
+                                <span>Shading</span>
+                            </button>
+                            <button class="feature-btn" onclick="generatePDFReport()" title="Export detailed PDF report">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>PDF</span>
+                            </button>
+                        </div>
+
+                        <!-- Obstacles Section -->
+                        <div id="obstaclesSection" style="margin-top: 16px; display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: var(--text);">
+                                    <i class="fas fa-ban" style="color: var(--error);"></i> Marked Obstacles
+                                </span>
+                                <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 11px;" onclick="clearAllObstacles()">
+                                    Clear All
+                                </button>
+                            </div>
+                            <div id="obstacleList" class="obstacle-list">
+                                <div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">
+                                    Click on the map to mark obstacles (AC units, vents, skylights)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multiple Roofs Section -->
+                        <div id="multiRoofSection" style="margin-top: 16px; display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: var(--text);">
+                                    <i class="fas fa-layer-group" style="color: var(--primary);"></i> Roof Sections
+                                </span>
+                                <span id="totalRoofArea" style="font-size: 12px; color: var(--text-secondary);">Total: 0 m²</span>
+                            </div>
+                            <div id="roofSectionsList" class="obstacle-list"></div>
+                        </div>
+
+                        <!-- Shading Analysis Section -->
+                        <div id="shadingSection" style="margin-top: 16px; display: none;">
+                            <div style="padding: 12px; background: var(--bg-alt); border-radius: 10px; border-left: 3px solid var(--warning);">
+                                <div style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px;">
+                                    <i class="fas fa-cloud-sun" style="color: var(--warning);"></i> Shading Analysis
+                                </div>
+                                <div id="shadingResult" style="font-size: 12px; color: var(--text-secondary);">
+                                    Click "Shading" to analyze nearby buildings
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Calculate Button -->
@@ -1740,6 +1955,22 @@
         <!-- Map Container -->
         <div class="map-container">
             <div id="map"></div>
+            
+            <!-- Drawing Mode Indicator -->
+            <div id="drawingModeIndicator" class="drawing-mode-indicator">
+                <i class="fas fa-hand-pointer"></i>
+                <span id="drawingModeText">Click to place obstacle</span>
+                <button onclick="exitDrawingMode()" style="background: transparent; border: none; color: white; cursor: pointer; margin-left: 8px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Shading Info Box -->
+            <div id="shadingInfoBox" class="shading-info-box">
+                <div style="font-weight: 600; margin-bottom: 8px;"><i class="fas fa-cloud-sun"></i> Shading Analysis</div>
+                <div id="shadingInfoContent">Analyzing nearby buildings...</div>
+            </div>
+            
             <div class="map-overlay">
                 <button class="map-btn" onclick="locateMe()" title="My Location">
                     <i class="fas fa-location-crosshairs"></i>
@@ -1759,6 +1990,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <script>
         // ============================================
@@ -1841,6 +2074,17 @@
         let lastCalcTimestamp = 0;
         let userRequestedFinance = false;
         let calcDebounce = null;
+
+        // New features state
+        let obstaclesLayer = null;
+        let obstacles = [];
+        let obstacleMode = false;
+        let multiRoofMode = false;
+        let roofSections = [];
+        let roofSectionsLayer = null;
+        let shadingAnalysisResult = null;
+        let nearbyBuildingsData = [];
+        let lastCalculationData = null;
 
         // Helpers
         function safeNumber(val, fallback = 0) {
@@ -2012,6 +2256,13 @@
             solarPanelsLayer = new L.FeatureGroup();
             map.addLayer(solarPanelsLayer);
 
+            // New layers for obstacles and multiple roof sections
+            obstaclesLayer = new L.FeatureGroup();
+            map.addLayer(obstaclesLayer);
+
+            roofSectionsLayer = new L.FeatureGroup();
+            map.addLayer(roofSectionsLayer);
+
             const drawControl = new L.Control.Draw({
                 position: 'topleft',
                 draw: {
@@ -2070,6 +2321,13 @@
 
             map.on('drag', function () {
                 map.panInsideBounds(UAE_BOUNDS, { animate: false });
+            });
+
+            // Handle map clicks for obstacle placement
+            map.on('click', function(e) {
+                if (obstacleMode) {
+                    addObstacle(e.latlng);
+                }
             });
         }
 
@@ -2330,6 +2588,22 @@
                                 if (!turf.booleanPointInPolygon(turf.point([pLng, pLat]), roofPolygon)) {
                                     valid = false;
                                     break;
+                                }
+                            }
+                            
+                            // Check if panel overlaps with any obstacles
+                            if (valid && obstacles.length > 0) {
+                                // Check panel center and corners against obstacles
+                                if (isPointInObstacle(pcLng, pcLat)) {
+                                    valid = false;
+                                }
+                                if (valid) {
+                                    for (const [pLng, pLat] of corners) {
+                                        if (isPointInObstacle(pLng, pLat)) {
+                                            valid = false;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                             
@@ -3565,6 +3839,646 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
             if (tiltSlider) tiltSlider.value = optimalTilt;
             if (tiltValue) tiltValue.textContent = `${optimalTilt}°`;
             if (optimalHint) optimalHint.textContent = `Optimal: ${optimalTilt}° (100% efficiency)`;
+        }
+
+        // ============================================
+        // OBSTACLE MARKING SYSTEM
+        // ============================================
+        function toggleObstacleMode() {
+            obstacleMode = !obstacleMode;
+            const btn = document.getElementById('obstacleBtn');
+            const section = document.getElementById('obstaclesSection');
+            const indicator = document.getElementById('drawingModeIndicator');
+            
+            if (obstacleMode) {
+                btn.classList.add('active');
+                section.style.display = 'block';
+                indicator.classList.add('active');
+                document.getElementById('drawingModeText').textContent = 'Click on roof to mark obstacles';
+                showStatus('🎯 Obstacle mode ON - Click on roof to mark AC units, vents, skylights', 'info');
+            } else {
+                btn.classList.remove('active');
+                indicator.classList.remove('active');
+                showStatus('Obstacle mode OFF', 'info');
+            }
+        }
+
+        function exitDrawingMode() {
+            if (obstacleMode) {
+                toggleObstacleMode();
+            }
+        }
+
+        function addObstacle(latlng) {
+            // Create obstacle marker
+            const obstacleId = Date.now();
+            const obstacleIcon = L.divIcon({
+                className: 'obstacle-marker',
+                html: '<i class="fas fa-ban"></i>',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+            
+            const marker = L.marker(latlng, {
+                icon: obstacleIcon,
+                draggable: true
+            }).addTo(obstaclesLayer);
+            
+            marker.obstacleId = obstacleId;
+            marker.obstacleRadius = 1.5; // 1.5m radius default
+            
+            // Add circle to show obstacle area
+            const circle = L.circle(latlng, {
+                radius: 1.5,
+                color: '#EF4444',
+                fillColor: '#EF4444',
+                fillOpacity: 0.3,
+                weight: 2
+            }).addTo(obstaclesLayer);
+            
+            marker.on('drag', function(e) {
+                circle.setLatLng(e.target.getLatLng());
+            });
+            
+            obstacles.push({
+                id: obstacleId,
+                marker: marker,
+                circle: circle,
+                lat: latlng.lat,
+                lng: latlng.lng,
+                radius: 1.5,
+                type: 'AC Unit'
+            });
+            
+            updateObstacleList();
+            recalculatePanelsWithObstacles();
+            showStatus(`✓ Obstacle #${obstacles.length} added`, 'success');
+        }
+
+        function updateObstacleList() {
+            const listEl = document.getElementById('obstacleList');
+            if (obstacles.length === 0) {
+                listEl.innerHTML = `
+                    <div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">
+                        Click on the map to mark obstacles (AC units, vents, skylights)
+                    </div>
+                `;
+                return;
+            }
+            
+            listEl.innerHTML = obstacles.map((obs, i) => `
+                <div class="obstacle-item">
+                    <span><i class="fas fa-ban" style="color: var(--error); margin-right: 6px;"></i> Obstacle ${i+1}</span>
+                    <button onclick="removeObstacle(${obs.id})" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeObstacle(id) {
+            const idx = obstacles.findIndex(o => o.id === id);
+            if (idx !== -1) {
+                obstaclesLayer.removeLayer(obstacles[idx].marker);
+                obstaclesLayer.removeLayer(obstacles[idx].circle);
+                obstacles.splice(idx, 1);
+                updateObstacleList();
+                recalculatePanelsWithObstacles();
+                showStatus('Obstacle removed', 'info');
+            }
+        }
+
+        function clearAllObstacles() {
+            obstacles.forEach(obs => {
+                obstaclesLayer.removeLayer(obs.marker);
+                obstaclesLayer.removeLayer(obs.circle);
+            });
+            obstacles = [];
+            updateObstacleList();
+            recalculatePanelsWithObstacles();
+            showStatus('All obstacles cleared', 'info');
+        }
+
+        function recalculatePanelsWithObstacles() {
+            if (drawnLayer && roofArea > 0) {
+                visualizeSolarPanels(drawnLayer, currentPanelCount);
+            }
+        }
+
+        function isPointInObstacle(lng, lat) {
+            for (const obs of obstacles) {
+                const dist = turf.distance(
+                    turf.point([lng, lat]),
+                    turf.point([obs.lng, obs.lat]),
+                    { units: 'meters' }
+                );
+                if (dist < obs.radius + 0.5) { // Add 0.5m buffer
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // ============================================
+        // MULTIPLE ROOF SECTIONS
+        // ============================================
+        function toggleMultiRoofMode() {
+            multiRoofMode = !multiRoofMode;
+            const btn = document.getElementById('multiRoofBtn');
+            const section = document.getElementById('multiRoofSection');
+            
+            if (multiRoofMode) {
+                btn.classList.add('active');
+                section.style.display = 'block';
+                // Save current roof as first section if exists
+                if (drawnLayer && roofPoints.length > 3 && roofSections.length === 0) {
+                    saveCurrentRoofSection();
+                }
+                showStatus('🏠 Multi-roof mode ON - Draw additional roof sections', 'info');
+            } else {
+                btn.classList.remove('active');
+                showStatus('Multi-roof mode OFF', 'info');
+            }
+            updateRoofSectionsList();
+        }
+
+        function saveCurrentRoofSection() {
+            if (!drawnLayer || roofPoints.length < 4) return;
+            
+            const sectionId = Date.now();
+            const polygon = turf.polygon([roofPoints]);
+            const area = turf.area(polygon);
+            
+            // Clone the layer
+            const sectionLayer = L.polygon(drawnLayer.getLatLngs(), {
+                color: '#10B981',
+                weight: 2,
+                fillColor: '#10B981',
+                fillOpacity: 0.2
+            }).addTo(roofSectionsLayer);
+            
+            roofSections.push({
+                id: sectionId,
+                layer: sectionLayer,
+                points: [...roofPoints],
+                area: area
+            });
+            
+            updateRoofSectionsList();
+            showStatus(`✓ Roof section ${roofSections.length} saved (${area.toFixed(1)} m²)`, 'success');
+        }
+
+        function updateRoofSectionsList() {
+            const listEl = document.getElementById('roofSectionsList');
+            const totalEl = document.getElementById('totalRoofArea');
+            
+            if (roofSections.length === 0) {
+                listEl.innerHTML = `
+                    <div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">
+                        Draw roof sections and they will appear here
+                    </div>
+                `;
+                totalEl.textContent = 'Total: 0 m²';
+                return;
+            }
+            
+            const totalArea = roofSections.reduce((sum, s) => sum + s.area, 0);
+            totalEl.textContent = `Total: ${totalArea.toFixed(1)} m²`;
+            
+            listEl.innerHTML = roofSections.map((section, i) => `
+                <div class="roof-section-item">
+                    <span><i class="fas fa-home" style="color: var(--primary); margin-right: 6px;"></i> Section ${i+1}: ${section.area.toFixed(1)} m²</span>
+                    <button onclick="removeRoofSection(${section.id})" style="background: transparent; border: none; color: var(--error); cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeRoofSection(id) {
+            const idx = roofSections.findIndex(s => s.id === id);
+            if (idx !== -1) {
+                roofSectionsLayer.removeLayer(roofSections[idx].layer);
+                roofSections.splice(idx, 1);
+                updateRoofSectionsList();
+                showStatus('Roof section removed', 'info');
+            }
+        }
+
+        function addCurrentAsSection() {
+            if (drawnLayer && roofPoints.length > 3) {
+                saveCurrentRoofSection();
+            } else {
+                showStatus('Draw a roof first before adding as section', 'warning');
+            }
+        }
+
+        // ============================================
+        // SHADING ANALYSIS
+        // ============================================
+        async function analyzeShadingFromBuildings() {
+            if (!drawnLayer || roofArea === 0) {
+                showStatus('⚠️ Draw a roof first to analyze shading', 'warning');
+                return;
+            }
+
+            const section = document.getElementById('shadingSection');
+            section.style.display = 'block';
+            document.getElementById('shadingBtn').classList.add('active');
+            
+            const resultEl = document.getElementById('shadingResult');
+            resultEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing nearby buildings...';
+
+            try {
+                // Get center of drawn roof
+                const center = map.getCenter();
+                const bounds = L.latLngBounds(
+                    [center.lat - 0.002, center.lng - 0.002],
+                    [center.lat + 0.002, center.lng + 0.002]
+                );
+                
+                const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
+                
+                const isLocalServer = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                let response;
+
+                // Fetch buildings with height data
+                if (isLocalServer) {
+                    response = await fetch(`/api/overpass?bbox=${encodeURIComponent(bbox)}&heights=true`);
+                } else {
+                    const query = `[out:json][timeout:25];(way["building"](${bbox}););out geom;`;
+                    response = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: query });
+                }
+
+                const data = await response.json();
+                nearbyBuildingsData = [];
+                
+                if (data.elements) {
+                    data.elements.forEach(element => {
+                        if (element.geometry && element.tags) {
+                            const height = parseFloat(element.tags.height) || 
+                                          parseFloat(element.tags['building:levels']) * 3 || 
+                                          9; // Default 3 floors
+                            
+                            const coords = element.geometry.map(node => [node.lat, node.lon]);
+                            const buildingPoly = turf.polygon([coords.concat([coords[0]])]);
+                            const buildingCenter = turf.centroid(buildingPoly);
+                            
+                            nearbyBuildingsData.push({
+                                height: height,
+                                center: buildingCenter.geometry.coordinates,
+                                polygon: buildingPoly
+                            });
+                        }
+                    });
+                }
+
+                // Calculate shading impact
+                const shadingAnalysis = calculateShadingImpact(nearbyBuildingsData);
+                shadingAnalysisResult = shadingAnalysis;
+
+                resultEl.innerHTML = `
+                    <div style="margin-bottom: 8px;">
+                        <strong style="color: ${shadingAnalysis.lossPercent < 5 ? 'var(--success)' : shadingAnalysis.lossPercent < 15 ? 'var(--warning)' : 'var(--error)'};">
+                            ${shadingAnalysis.lossPercent < 5 ? '☀️ Excellent' : shadingAnalysis.lossPercent < 15 ? '⛅ Moderate' : '☁️ Significant'} Shading
+                        </strong>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                        <div>Buildings nearby: <strong>${shadingAnalysis.buildingCount}</strong></div>
+                        <div>Tallest: <strong>${shadingAnalysis.maxHeight.toFixed(0)}m</strong></div>
+                        <div>Shading loss: <strong style="color: ${shadingAnalysis.lossPercent < 5 ? 'var(--success)' : 'var(--warning)'};">-${shadingAnalysis.lossPercent.toFixed(1)}%</strong></div>
+                        <div>Effective hours: <strong>${(5.5 * (1 - shadingAnalysis.lossPercent/100)).toFixed(1)}/day</strong></div>
+                    </div>
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted);">
+                        ${shadingAnalysis.recommendation}
+                    </div>
+                `;
+
+                showStatus(`Shading analysis complete - ${shadingAnalysis.lossPercent.toFixed(1)}% estimated loss`, 'success');
+
+            } catch (error) {
+                console.error('Shading analysis error:', error);
+                resultEl.innerHTML = `
+                    <div style="color: var(--success);">
+                        <i class="fas fa-check-circle"></i> No significant shading detected
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                        Unable to fetch nearby building data. Assuming minimal shading.
+                    </div>
+                `;
+                shadingAnalysisResult = { lossPercent: 0, buildingCount: 0, maxHeight: 0 };
+            }
+        }
+
+        function calculateShadingImpact(buildings) {
+            if (!buildings || buildings.length === 0) {
+                return {
+                    lossPercent: 0,
+                    buildingCount: 0,
+                    maxHeight: 0,
+                    recommendation: '✓ No nearby tall buildings detected. Excellent solar potential!'
+                };
+            }
+
+            const roofCenter = turf.centroid(turf.polygon([roofPoints]));
+            const roofCenterCoords = roofCenter.geometry.coordinates;
+            
+            let totalShadingFactor = 0;
+            let maxHeight = 0;
+            let criticalBuildings = 0;
+
+            buildings.forEach(building => {
+                const distance = turf.distance(
+                    turf.point(roofCenterCoords),
+                    turf.point(building.center),
+                    { units: 'meters' }
+                );
+
+                // Calculate sun angle (UAE latitude ~25°, winter sun angle ~40-50°)
+                const sunAngle = 45 * Math.PI / 180; // 45 degrees average
+                const shadowLength = building.height / Math.tan(sunAngle);
+
+                if (distance < shadowLength + 10) {
+                    // Building can cast shadow on our roof
+                    const shadowFactor = Math.max(0, 1 - (distance / shadowLength)) * (building.height / 30);
+                    totalShadingFactor += shadowFactor * 0.1; // Weight factor
+                    criticalBuildings++;
+                }
+
+                if (building.height > maxHeight) {
+                    maxHeight = building.height;
+                }
+            });
+
+            const lossPercent = Math.min(30, totalShadingFactor * 10); // Cap at 30%
+
+            let recommendation = '';
+            if (lossPercent < 5) {
+                recommendation = '✓ Minimal shading impact. Ideal conditions for solar installation.';
+            } else if (lossPercent < 15) {
+                recommendation = '⚠ Moderate shading. Consider optimizing panel placement or using micro-inverters.';
+            } else {
+                recommendation = '⚠ Significant shading from nearby buildings. Consider shade-tolerant panels or alternative locations.';
+            }
+
+            return {
+                lossPercent,
+                buildingCount: buildings.length,
+                maxHeight,
+                criticalBuildings,
+                recommendation
+            };
+        }
+
+        // ============================================
+        // PDF REPORT GENERATION
+        // ============================================
+        async function generatePDFReport() {
+            if (!drawnLayer || roofArea === 0) {
+                showStatus('⚠️ Draw a roof and calculate solar potential first', 'warning');
+                return;
+            }
+
+            showLoading('Generating PDF report...');
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const margin = 15;
+                let yPos = 20;
+
+                // Colors
+                const primaryColor = [234, 179, 8]; // Yellow
+                const darkColor = [15, 23, 42];
+                const grayColor = [100, 116, 139];
+                const successColor = [16, 185, 129];
+
+                // Header
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 0, pageWidth, 35, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(24);
+                doc.setFont('helvetica', 'bold');
+                doc.text('☀️ SolarVision', margin, 18);
+                
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'normal');
+                doc.text('Professional Solar Analysis Report', margin, 28);
+                
+                doc.setFontSize(10);
+                doc.text(`Generated: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, pageWidth - margin - 45, 28);
+
+                yPos = 45;
+
+                // Location Section
+                doc.setTextColor(...darkColor);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('📍 Location Details', margin, yPos);
+                yPos += 8;
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                doc.text(`Coordinates: ${currentLat.toFixed(6)}, ${currentLon.toFixed(6)}`, margin, yPos);
+                yPos += 6;
+                doc.text(`Roof Area: ${roofArea.toFixed(1)} m² | Panel Tilt: ${currentTilt}° | Rotation: ${currentRotation}°`, margin, yPos);
+                yPos += 12;
+
+                // System Configuration
+                const sizing = computeSystemFromPanelCount(currentPanelCount);
+                
+                doc.setTextColor(...darkColor);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('⚡ System Configuration', margin, yPos);
+                yPos += 8;
+
+                // System info box
+                doc.setFillColor(254, 243, 199); // Light yellow
+                doc.roundedRect(margin, yPos, pageWidth - 2*margin, 35, 3, 3, 'F');
+                
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...darkColor);
+                
+                const col1 = margin + 5;
+                const col2 = margin + 50;
+                const col3 = margin + 100;
+                
+                doc.text('System Size:', col1, yPos + 8);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${sizing.systemSizeKW.toFixed(2)} kW`, col1, yPos + 14);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.text('Panel Count:', col2, yPos + 8);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${currentPanelCount} panels`, col2, yPos + 14);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.text('Panels Fit:', col3, yPos + 8);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${actualPanelsFit} / ${currentPanelCount}`, col3, yPos + 14);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.text('Panel Wattage:', col1, yPos + 22);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${sizing.panelWattage}W`, col1, yPos + 28);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.text('Roof Coverage:', col2, yPos + 22);
+                const coverage = ((currentPanelCount * 2.0) / roofArea * 100).toFixed(0);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${coverage}%`, col2, yPos + 28);
+
+                yPos += 45;
+
+                // Energy Production
+                doc.setTextColor(...darkColor);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('🔋 Energy Production', margin, yPos);
+                yPos += 10;
+
+                // Calculate production
+                const annualProduction = sizing.systemSizeKW * 1850; // UAE average
+                const monthlyAvg = annualProduction / 12;
+                const dailyAvg = annualProduction / 365;
+
+                doc.setFillColor(236, 253, 245); // Light green
+                doc.roundedRect(margin, yPos, (pageWidth - 2*margin)/3 - 3, 25, 2, 2, 'F');
+                doc.roundedRect(margin + (pageWidth - 2*margin)/3, yPos, (pageWidth - 2*margin)/3 - 3, 25, 2, 2, 'F');
+                doc.roundedRect(margin + 2*(pageWidth - 2*margin)/3, yPos, (pageWidth - 2*margin)/3, 25, 2, 2, 'F');
+
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...grayColor);
+                doc.text('Annual Production', margin + 5, yPos + 8);
+                doc.text('Monthly Average', margin + (pageWidth - 2*margin)/3 + 5, yPos + 8);
+                doc.text('Daily Average', margin + 2*(pageWidth - 2*margin)/3 + 5, yPos + 8);
+
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(...successColor);
+                doc.text(`${Math.round(annualProduction).toLocaleString()} kWh`, margin + 5, yPos + 18);
+                doc.text(`${Math.round(monthlyAvg).toLocaleString()} kWh`, margin + (pageWidth - 2*margin)/3 + 5, yPos + 18);
+                doc.text(`${dailyAvg.toFixed(1)} kWh`, margin + 2*(pageWidth - 2*margin)/3 + 5, yPos + 18);
+
+                yPos += 35;
+
+                // Financial Analysis
+                doc.setTextColor(...darkColor);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('💰 Financial Analysis', margin, yPos);
+                yPos += 10;
+
+                const electricityRate = 0.38;
+                const annualSavings = annualProduction * electricityRate;
+                const paybackYears = sizing.systemCostAED / annualSavings;
+                const profit25yr = (annualSavings * 25) - sizing.systemCostAED;
+                const roi = (annualSavings / sizing.systemCostAED) * 100;
+
+                // Financial table
+                const tableData = [
+                    ['System Cost', `${Math.round(sizing.systemCostAED).toLocaleString()} AED`],
+                    ['Annual Savings', `${Math.round(annualSavings).toLocaleString()} AED`],
+                    ['Payback Period', `${paybackYears.toFixed(1)} years`],
+                    ['25-Year Profit', `${Math.round(profit25yr).toLocaleString()} AED`],
+                    ['Annual ROI', `${roi.toFixed(1)}%`]
+                ];
+
+                doc.setFontSize(10);
+                tableData.forEach((row, i) => {
+                    doc.setFillColor(i % 2 === 0 ? 249 : 241, i % 2 === 0 ? 250 : 245, i % 2 === 0 ? 251 : 249);
+                    doc.rect(margin, yPos, pageWidth - 2*margin, 8, 'F');
+                    
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...grayColor);
+                    doc.text(row[0], margin + 5, yPos + 5.5);
+                    
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(...darkColor);
+                    doc.text(row[1], pageWidth - margin - 5, yPos + 5.5, { align: 'right' });
+                    
+                    yPos += 8;
+                });
+
+                yPos += 10;
+
+                // Environmental Impact
+                doc.setTextColor(...darkColor);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('🌍 Environmental Impact (25 Years)', margin, yPos);
+                yPos += 10;
+
+                const co2Reduction = (annualProduction * 25 * 0.5) / 1000; // tons
+                const treesEquiv = Math.round(co2Reduction * 45);
+                const carsOff = (annualProduction * 0.5 / 4600).toFixed(1);
+
+                doc.setFillColor(236, 253, 245);
+                doc.roundedRect(margin, yPos, pageWidth - 2*margin, 20, 3, 3, 'F');
+
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(...darkColor);
+                doc.text(`CO₂ Reduction: ${co2Reduction.toFixed(1)} tons  |  Trees Equivalent: ${treesEquiv}  |  Cars Off Road: ${carsOff}/year`, margin + 5, yPos + 12);
+
+                yPos += 30;
+
+                // Shading Analysis (if available)
+                if (shadingAnalysisResult) {
+                    doc.setTextColor(...darkColor);
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('☁️ Shading Analysis', margin, yPos);
+                    yPos += 8;
+
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...grayColor);
+                    doc.text(`Nearby Buildings: ${shadingAnalysisResult.buildingCount} | Max Height: ${shadingAnalysisResult.maxHeight.toFixed(0)}m | Shading Loss: ${shadingAnalysisResult.lossPercent.toFixed(1)}%`, margin, yPos);
+                    yPos += 12;
+                }
+
+                // Obstacles (if any)
+                if (obstacles.length > 0) {
+                    doc.setTextColor(...darkColor);
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('🚫 Marked Obstacles', margin, yPos);
+                    yPos += 8;
+
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...grayColor);
+                    doc.text(`${obstacles.length} obstacle(s) marked on roof (AC units, vents, etc.)`, margin, yPos);
+                    yPos += 12;
+                }
+
+                // Footer
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 280, pageWidth, 17, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(9);
+                doc.text('Generated by SolarVision | Professional Solar Analysis Platform', pageWidth/2, 289, { align: 'center' });
+
+                // Save PDF
+                const filename = `SolarVision_Report_${new Date().toISOString().slice(0,10)}.pdf`;
+                doc.save(filename);
+
+                hideLoading();
+                showStatus(`✓ PDF report downloaded: ${filename}`, 'success');
+
+            } catch (error) {
+                hideLoading();
+                console.error('PDF generation error:', error);
+                showStatus('Error generating PDF: ' + error.message, 'error');
+            }
         }
 
         // Initialize
