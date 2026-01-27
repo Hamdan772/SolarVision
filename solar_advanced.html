@@ -44,6 +44,93 @@
             --transition: ease;
         }
 
+        [data-theme="dark"] {
+            --primary: #FACC15;
+            --primary-light: #FDE047;
+            --primary-dark: #EAB308;
+            --accent: #FBBF24;
+            --accent-light: #FDE68A;
+            --secondary: #0F172A;
+            --secondary-light: #1E293B;
+            --bg: #0F172A;
+            --bg-alt: #1E293B;
+            --bg-subtle: #334155;
+            --bg-card: #1E293B;
+            --border: #334155;
+            --border-light: #475569;
+            --text: #F1F5F9;
+            --text-secondary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --success: #4ADE80;
+            --success-light: #86EFAC;
+            --warning: #FCD34D;
+            --error: #FB7185;
+            --blue: #60A5FA;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Dark mode specific overrides for better readability */
+        [data-theme="dark"] .result-value {
+            color: #F8FAFC !important;
+            font-weight: 700;
+        }
+        [data-theme="dark"] .result-label {
+            color: #CBD5E1 !important;
+        }
+        [data-theme="dark"] .stat-value {
+            color: #F8FAFC !important;
+            font-weight: 700;
+        }
+        [data-theme="dark"] .stat-label {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] .section-title {
+            color: #F8FAFC !important;
+            font-weight: 700;
+        }
+        [data-theme="dark"] .section-subtitle {
+            color: #94A3B8 !important;
+        }
+        [data-theme="dark"] input, [data-theme="dark"] select {
+            background: #334155 !important;
+            color: #F8FAFC !important;
+            border-color: #475569 !important;
+        }
+        [data-theme="dark"] .chart-container {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 12px;
+        }
+        [data-theme="dark"] .tab-btn {
+            color: #CBD5E1;
+        }
+        [data-theme="dark"] .tab-btn.active {
+            background: var(--primary);
+            color: #0F172A;
+        }
+        [data-theme="dark"] .card {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .card-header {
+            border-color: #334155;
+        }
+        [data-theme="dark"] .card-title {
+            color: #F8FAFC;
+        }
+        [data-theme="dark"] .quick-summary {
+            background: linear-gradient(135deg, #CA8A04 0%, #92400E 100%);
+        }
+        [data-theme="dark"] .slider-value {
+            background: rgba(250, 204, 21, 0.2);
+            color: #FDE047;
+        }
+        [data-theme="dark"] .result-item {
+            border-color: #334155;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -106,6 +193,32 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 18px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-subtle);
+            border-color: var(--primary);
+            transform: rotate(20deg);
         }
 
         .back-btn {
@@ -1191,6 +1304,11 @@
                         <i class="fas fa-arrow-left"></i>
                         Back to Home
                     </a>
+                    <div class="header-actions">
+                        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode" id="themeToggleBtn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="header-brand">
                     <div class="logo">
@@ -1606,12 +1724,14 @@
                         </div>
                     </div>
 
-                    <div class="chart-container">
-                        <div style="font-weight: 600; color: var(--text); margin-bottom: 12px;">
-                            <i class="fas fa-chart-line" style="color: var(--success);"></i>
-                            Cumulative Savings Over Time
+                    <div class="chart-container" style="padding: 16px;">
+                        <div style="font-weight: 600; color: var(--text); margin-bottom: 8px; font-size: 14px;">
+                            <i class="fas fa-chart-bar" style="color: var(--success);"></i>
+                            Cumulative Savings Over 25 Years
                         </div>
-                        <canvas id="savingsChart" height="200"></canvas>
+                        <div style="height: 160px;">
+                            <canvas id="savingsChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1641,6 +1761,70 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        // ============================================
+        // DARK MODE THEME SYSTEM
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            
+            // Update charts with new theme colors
+            if (typeof savingsChart !== 'undefined' && savingsChart) {
+                const isDark = newTheme === 'dark';
+                const textColor = isDark ? '#CBD5E1' : '#475569';
+                const gridColor = isDark ? '#1E293B' : '#E8E0D8';
+                
+                savingsChart.options.plugins.legend.labels.color = textColor;
+                savingsChart.options.scales.y.ticks.color = textColor;
+                savingsChart.options.scales.y.grid.color = gridColor;
+                savingsChart.options.scales.x.title.color = textColor;
+                savingsChart.options.scales.x.ticks.color = textColor;
+                savingsChart.options.scales.x.grid.color = gridColor;
+                savingsChart.options.plugins.tooltip.backgroundColor = isDark ? '#1E293B' : '#FFFFFF';
+                savingsChart.options.plugins.tooltip.titleColor = isDark ? '#F8FAFC' : '#0F172A';
+                savingsChart.options.plugins.tooltip.bodyColor = isDark ? '#CBD5E1' : '#475569';
+                savingsChart.options.plugins.tooltip.borderColor = isDark ? '#334155' : '#E2E8F0';
+                savingsChart.update('none');
+            }
+            
+            if (typeof monthlyChart !== 'undefined' && monthlyChart) {
+                const isDark = newTheme === 'dark';
+                const textColor = isDark ? '#CBD5E1' : '#475569';
+                const gridColor = isDark ? '#1E293B' : '#E8E0D8';
+                
+                monthlyChart.options.plugins.legend.labels.color = textColor;
+                monthlyChart.options.scales.y.ticks.color = textColor;
+                monthlyChart.options.scales.y.grid.color = gridColor;
+                monthlyChart.options.scales.x.ticks.color = textColor;
+                monthlyChart.options.scales.x.grid.color = gridColor;
+                monthlyChart.update('none');
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                btn.innerHTML = theme === 'dark' 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        // Initialize theme on page load
+        initTheme();
+
+        // ============================================
+        // APPLICATION STATE & GLOBALS
+        // ============================================
         let map, drawnItems, buildingsLayer, osmb, solarPanelsLayer;
         let currentLat = 25.2048, currentLon = 55.2708; // Dubai, UAE
         let roofArea = 0, roofPoints = [];
@@ -1743,7 +1927,7 @@
         function computeSystemFromPanelCount(panelCount) {
             const panelWattage = 550; // Modern high-efficiency panels
             const systemSizeKW = (panelCount * panelWattage) / 1000;
-            const costPerWattAED = 2.8; // UAE market rate 2026
+            const costPerWattAED = 2.2; // Optimized UAE pricing 2026 (competitive market)
             const systemCostAED = systemSizeKW * 1000 * costPerWattAED;
             const netCostAED = systemCostAED;
             return { systemSizeKW, systemCostAED, netCostAED, panelWattage };
@@ -1866,11 +2050,22 @@
             });
 
             map.on('draw:deleted', () => {
+                // Clear all solar panels when roof is deleted
+                solarPanelsLayer.clearLayers();
+                clearBuildingMarkers();
                 roofArea = 0;
                 roofPoints = [];
                 drawnLayer = null;
+                currentPanelCount = 0;
+                actualPanelsFit = 0;
+                maxPanelsForRoof = 100;
+                userSetRotation = false;
                 updateAreaDisplay();
+                document.getElementById('areaDisplayContainer').classList.remove('has-data');
                 document.getElementById('panelControlSection').style.display = 'none';
+                document.getElementById('panelSlider').value = 35;
+                document.getElementById('panelSlider').max = 100;
+                showStatus('🗑️ Roof and panels cleared', 'info');
             });
 
             map.on('drag', function () {
@@ -2032,226 +2227,236 @@
                 return;
             }
 
-            const polygon = turf.polygon([roofPoints]);
-            const bbox = turf.bbox(polygon);
-
-            const panelWidthMeters = 1.0;
-            const panelHeightMeters = 2.0;
-            const gapMeters = 0.1; // Reduced gap for better coverage
-
-            const metersPerDegreeLat = 111320;
-            const metersPerDegreeLon = 111320 * Math.cos(currentLat * Math.PI / 180);
-
-            const panelWidthDeg = panelWidthMeters / metersPerDegreeLon;
-            const panelHeightDeg = panelHeightMeters / metersPerDegreeLat;
-            const gapDeg = gapMeters / Math.min(metersPerDegreeLat, metersPerDegreeLon);
-
-            // Only auto-calculate best rotation if not set by user or forced
-            let useRotation = currentRotation;
-
-            if (!userSetRotation || forceAutoRotation) {
-                let bestOrientation = 0;
-                let maxPanelsFit = 0;
-                // Test finer rotation angles (every 15°) for better optimization
-                const orientationsToTest = [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165];
-
-                for (const testRotation of orientationsToTest) {
-                    const testCount = calculatePanelFit(polygon, bbox, testRotation, count, panelWidthDeg, panelHeightDeg, gapDeg, true);
-                    if (testCount > maxPanelsFit) {
-                        maxPanelsFit = testCount;
-                        bestOrientation = testRotation;
-                    }
-                }
-
-                useRotation = bestOrientation;
-                currentRotation = bestOrientation;
-
-                const rotationSlider = document.getElementById('rotationSlider');
-                const rotationValue = document.getElementById('rotationValue');
-                if (rotationSlider && rotationValue) {
-                    rotationSlider.value = bestOrientation;
-                    rotationValue.textContent = `${bestOrientation}°`;
-                }
+            if (!roofPoints || roofPoints.length < 3) {
+                isVisualizing = false;
+                return;
             }
 
-            const angle = (useRotation * Math.PI) / 180;
+            const roofPolygon = turf.polygon([roofPoints]);
+            const bbox = turf.bbox(roofPolygon);
 
-            let panelsDrawn = 0;
-            const areaFactor = Math.max(1, Math.sqrt(roofArea / 100));
-            const maxAttempts = Math.min(count * 50 * areaFactor, 50000);
-            let attempts = 0;
+            // Panel dimensions in meters
+            const panelWidthM = 1.0;
+            const panelHeightM = 1.7;
+            const gapM = 0.02; // 2cm gap for tighter packing
 
-            const latSpan = bbox[3] - bbox[1];
-            const lngSpan = bbox[2] - bbox[0];
-            const centerLat = (bbox[1] + bbox[3]) / 2;
-            const centerLng = (bbox[0] + bbox[2]) / 2;
+            // Convert to degrees
+            const mPerDegLat = 111320;
+            const mPerDegLng = 111320 * Math.cos(currentLat * Math.PI / 180);
+            const panelW = panelWidthM / mPerDegLng;
+            const panelH = panelHeightM / mPerDegLat;
+            const gap = gapM / Math.min(mPerDegLat, mPerDegLng);
 
-            const rowSpacing = panelHeightDeg + gapDeg;
-            const colSpacing = panelWidthDeg + gapDeg;
+            const stepW = panelW + gap;
+            const stepH = panelH + gap;
 
-            // Calculate grid size based on bounding box, adding margin for rotated panels
-            const margin = Math.max(panelHeightDeg, panelWidthDeg) * 3;
-            const gridStartLat = bbox[1] - margin;
-            const gridEndLat = bbox[3] + margin;
-            const gridStartLng = bbox[0] - margin;
-            const gridEndLng = bbox[2] + margin;
-            
-            const rows = Math.ceil((gridEndLat - gridStartLat) / rowSpacing);
-            const cols = Math.ceil((gridEndLng - gridStartLng) / colSpacing);
-
-            const validPositions = [];
-
-            // Grid starting from actual top-left of bounding box (with margin)
-            for (let row = 0; row < rows && attempts < maxAttempts; row++) {
-                for (let col = 0; col < cols && attempts < maxAttempts; col++) {
-                    attempts++;
-                    
-                    // Calculate position from grid origin
-                    const gridLat = gridStartLat + (row * rowSpacing);
-                    const gridLng = gridStartLng + (col * colSpacing);
-                    
-                    // Apply rotation around center
-                    const offsetLat = gridLat - centerLat;
-                    const offsetLng = gridLng - centerLng;
-                    const rotatedLat = centerLat + (offsetLat * Math.cos(angle) - offsetLng * Math.sin(angle));
-                    const rotatedLng = centerLng + (offsetLat * Math.sin(angle) + offsetLng * Math.cos(angle));
-
-                    const hw = panelWidthDeg / 2;
-                    const hh = panelHeightDeg / 2;
-                    const corners = [];
-                    const offsets = [[-hh, -hw], [-hh, hw], [hh, hw], [hh, -hw]];
-
-                    for (const [latOff, lngOff] of offsets) {
-                        const lat = rotatedLat + (latOff * Math.cos(angle) - lngOff * Math.sin(angle));
-                        const lng = rotatedLng + (latOff * Math.sin(angle) + lngOff * Math.cos(angle));
-                        corners.push([lng, lat]);
+            // Find optimal rotation
+            let useRotation = currentRotation;
+            if (!userSetRotation || forceAutoRotation) {
+                let bestRotation = 0;
+                let maxCount = 0;
+                for (let r = 0; r < 180; r += 3) {
+                    const cnt = countPanelsForRotation(roofPolygon, bbox, r, panelW, panelH, gap, gap);
+                    if (cnt > maxCount) {
+                        maxCount = cnt;
+                        bestRotation = r;
                     }
+                }
+                useRotation = bestRotation;
+                currentRotation = bestRotation;
+                document.getElementById('rotationSlider').value = bestRotation;
+                document.getElementById('rotationValue').textContent = `${bestRotation}°`;
+            }
 
-                    let allCornersInside = true;
-                    for (const corner of corners) {
-                        const point = turf.point(corner);
-                        if (!turf.booleanPointInPolygon(point, polygon)) {
-                            allCornersInside = false;
-                            break;
+            const angle = useRotation * Math.PI / 180;
+            const cosA = Math.cos(angle);
+            const sinA = Math.sin(angle);
+
+            // Get all roof vertices to find extent
+            const allLngs = roofPoints.map(p => p[0]);
+            const allLats = roofPoints.map(p => p[1]);
+            const roofMinLng = Math.min(...allLngs);
+            const roofMaxLng = Math.max(...allLngs);
+            const roofMinLat = Math.min(...allLats);
+            const roofMaxLat = Math.max(...allLats);
+            
+            // Center of roof
+            const cLng = (roofMinLng + roofMaxLng) / 2;
+            const cLat = (roofMinLat + roofMaxLat) / 2;
+            
+            // Extend search area significantly
+            const spanLng = (roofMaxLng - roofMinLng) * 2;
+            const spanLat = (roofMaxLat - roofMinLat) * 2;
+
+            // Try multiple grid offsets to find best coverage
+            let bestPanels = [];
+            const offsets = [0, 0.25, 0.5, 0.75];
+            
+            for (const offsetX of offsets) {
+                for (const offsetY of offsets) {
+                    const panels = [];
+                    const startLng = cLng - spanLng + (offsetX * stepW);
+                    const startLat = cLat - spanLat + (offsetY * stepH);
+                    
+                    for (let lat = startLat; lat <= cLat + spanLat; lat += stepH) {
+                        for (let lng = startLng; lng <= cLng + spanLng; lng += stepW) {
+                            // Grid position relative to center
+                            const dx = lng - cLng;
+                            const dy = lat - cLat;
+                            
+                            // Rotate grid position
+                            const rx = dx * cosA - dy * sinA;
+                            const ry = dx * sinA + dy * cosA;
+                            
+                            // Final panel center
+                            const pcLng = cLng + rx;
+                            const pcLat = cLat + ry;
+                            
+                            // Panel corners (rotated)
+                            const hw = panelW / 2;
+                            const hh = panelH / 2;
+                            const corners = [
+                                [-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]
+                            ].map(([lx, ly]) => {
+                                return [
+                                    pcLng + lx * cosA - ly * sinA,
+                                    pcLat + lx * sinA + ly * cosA
+                                ];
+                            });
+                            
+                            // Check all corners inside roof
+                            let valid = true;
+                            for (const [pLng, pLat] of corners) {
+                                if (!turf.booleanPointInPolygon(turf.point([pLng, pLat]), roofPolygon)) {
+                                    valid = false;
+                                    break;
+                                }
+                            }
+                            
+                            if (valid) {
+                                const dist = Math.sqrt(rx * rx + ry * ry);
+                                panels.push({ corners, dist });
+                            }
                         }
                     }
-
-                    if (allCornersInside) {
-                        validPositions.push({ corners, rotatedLat, rotatedLng });
+                    
+                    if (panels.length > bestPanels.length) {
+                        bestPanels = panels;
                     }
                 }
             }
 
-            const panelsToDraw = Math.min(count, validPositions.length);
+            // Sort from center outward
+            bestPanels.sort((a, b) => a.dist - b.dist);
 
-            for (let i = 0; i < panelsToDraw; i++) {
-                const pos = validPositions[i];
-                const leafletCorners = pos.corners.map(c => [c[1], c[0]]);
+            // Draw panels
+            const toDraw = Math.min(count, bestPanels.length);
+            const wattPerPanel = computeSystemFromPanelCount(count).panelWattage || 550;
 
-                const panel = L.polygon(leafletCorners, {
-                    color: '#FACC15',
-                    weight: 2,
+            for (let i = 0; i < toDraw; i++) {
+                const p = bestPanels[i];
+                const leafletCoords = p.corners.map(([lng, lat]) => [lat, lng]);
+                
+                L.polygon(leafletCoords, {
+                    color: '#FDE047',
+                    weight: 1,
                     fillColor: '#1E40AF',
-                    fillOpacity: 0.85,
-                    className: 'solar-panel'
-                }).addTo(solarPanelsLayer);
-
-                panel.bindTooltip(`Panel ${i + 1}<br>${systemSizeKW > 0 ? (systemSizeKW / panelCount * 1000).toFixed(0) + 'W' : ''}`, { 
-                    permanent: false, 
-                    direction: 'top',
-                    className: 'panel-tooltip'
-                });
-                panelsDrawn++;
+                    fillOpacity: 0.9
+                }).addTo(solarPanelsLayer).bindTooltip(`Panel ${i+1}<br>${wattPerPanel}W`);
             }
 
-            actualPanelsFit = panelsDrawn;
-
-            // Update slider max to actual panels that fit at current rotation
-            if (panelsDrawn > 0 && panelsDrawn < maxPanelsForRoof) {
-                // Don't reduce max, but show info
-            }
-
-            if (panelsDrawn < count) {
-                showStatus(`⚠️ ${panelsDrawn} of ${count} panels fit at ${useRotation}° rotation`, 'info');
+            actualPanelsFit = toDraw;
+            if (toDraw < count) {
+                showStatus(`⚠️ ${toDraw} of ${count} panels fit`, 'info');
             }
             updateStats();
             isVisualizing = false;
         }
 
-        function calculatePanelFit(polygon, bbox, rotation, maxCount, panelWidthDeg, panelHeightDeg, gapDeg, quickCount = false) {
-            const angle = (rotation * Math.PI) / 180;
-            const centerLat = (bbox[1] + bbox[3]) / 2;
-            const centerLng = (bbox[0] + bbox[2]) / 2;
-            const latSpan = bbox[3] - bbox[1];
-            const lngSpan = bbox[2] - bbox[0];
-
-            const rowSpacing = panelHeightDeg + gapDeg;
-            const colSpacing = panelWidthDeg + gapDeg;
+        function countPanelsForRotation(polygon, bbox, rotation, panelW, panelH, gapX, gapY) {
+            const angleRad = rotation * Math.PI / 180;
+            const cos = Math.cos(angleRad);
+            const sin = Math.sin(angleRad);
             
-            // Calculate grid with proper margins
-            const margin = Math.max(panelHeightDeg, panelWidthDeg) * 3;
-            const gridStartLat = bbox[1] - margin;
-            const gridEndLat = bbox[3] + margin;
-            const gridStartLng = bbox[0] - margin;
-            const gridEndLng = bbox[2] + margin;
+            const minLng = bbox[0];
+            const minLat = bbox[1];
+            const maxLng = bbox[2];
+            const maxLat = bbox[3];
+            const centerLng = (minLng + maxLng) / 2;
+            const centerLat = (minLat + maxLat) / 2;
             
-            const rows = Math.ceil((gridEndLat - gridStartLat) / rowSpacing);
-            const cols = Math.ceil((gridEndLng - gridStartLng) / colSpacing);
+            const cellW = panelW + gapX;
+            const cellH = panelH + gapY;
+            
+            const spanW = (maxLng - minLng) * 2;
+            const spanH = (maxLat - minLat) * 2;
+            
+            const hw = panelW / 2;
+            const hh = panelH / 2;
+            const corners = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
 
-            let fitsCount = 0;
-            let attempts = 0;
-            const areaSize = (latSpan * lngSpan) * 111320 * 111320;
-            const scaleFactor = Math.max(1, Math.sqrt(areaSize / 200));
-            const maxAttempts = quickCount ? Math.min(5000 * scaleFactor, 15000) : Math.min(20000 * scaleFactor, 80000);
-
-            for (let row = 0; row < rows && fitsCount < maxCount && attempts < maxAttempts; row++) {
-                for (let col = 0; col < cols && fitsCount < maxCount && attempts < maxAttempts; col++) {
-                    attempts++;
+            let maxCnt = 0;
+            const offsets = [0, 0.25, 0.5, 0.75];
+            
+            for (const offsetX of offsets) {
+                for (const offsetY of offsets) {
+                    let cnt = 0;
+                    const startLng = centerLng - spanW + (offsetX * cellW);
+                    const startLat = centerLat - spanH + (offsetY * cellH);
                     
-                    const gridLat = gridStartLat + (row * rowSpacing);
-                    const gridLng = gridStartLng + (col * colSpacing);
-                    
-                    const offsetLat = gridLat - centerLat;
-                    const offsetLng = gridLng - centerLng;
-                    const rotatedLat = centerLat + (offsetLat * Math.cos(angle) - offsetLng * Math.sin(angle));
-                    const rotatedLng = centerLng + (offsetLat * Math.sin(angle) + offsetLng * Math.cos(angle));
-
-                    const hw = panelWidthDeg / 2;
-                    const hh = panelHeightDeg / 2;
-                    const corners = [];
-                    const offsets = [[-hh, -hw], [-hh, hw], [hh, hw], [hh, -hw]];
-
-                    for (const [latOff, lngOff] of offsets) {
-                        const lat = rotatedLat + (latOff * Math.cos(angle) - lngOff * Math.sin(angle));
-                        const lng = rotatedLng + (latOff * Math.sin(angle) + lngOff * Math.cos(angle));
-                        corners.push([lng, lat]);
-                    }
-
-                    let allCornersInside = true;
-                    for (const corner of corners) {
-                        const point = turf.point(corner);
-                        if (!turf.booleanPointInPolygon(point, polygon)) {
-                            allCornersInside = false;
-                            break;
+                    for (let y = startLat; y <= centerLat + spanH; y += cellH) {
+                        for (let x = startLng; x <= centerLng + spanW; x += cellW) {
+                            const dx = x - centerLng;
+                            const dy = y - centerLat;
+                            const rx = dx * cos - dy * sin;
+                            const ry = dx * sin + dy * cos;
+                            const cx = centerLng + rx;
+                            const cy = centerLat + ry;
+                            
+                            let allInside = true;
+                            for (const [lx, ly] of corners) {
+                                const rotX = lx * cos - ly * sin;
+                                const rotY = lx * sin + ly * cos;
+                                if (!turf.booleanPointInPolygon(turf.point([cx + rotX, cy + rotY]), polygon)) {
+                                    allInside = false;
+                                    break;
+                                }
+                            }
+                            if (allInside) cnt++;
                         }
                     }
-
-                    if (allCornersInside) fitsCount++;
+                    if (cnt > maxCnt) maxCnt = cnt;
                 }
             }
-
-            return fitsCount;
+            return maxCnt;
         }
 
         function clearRoofAndPanels() {
+            // Clear drawn polygon
             drawnItems.clearLayers();
+            // Clear solar panels
             solarPanelsLayer.clearLayers();
+            // Clear building detection markers
+            clearBuildingMarkers();
+            // Reset state
             roofArea = 0;
             roofPoints = [];
             panelCount = 0;
+            currentPanelCount = 0;
+            actualPanelsFit = 0;
+            maxPanelsForRoof = 100;
+            drawnLayer = null;
+            userSetRotation = false;
+            // Reset UI
             document.getElementById('areaDisplayContainer').classList.remove('has-data');
+            document.getElementById('panelControlSection').style.display = 'none';
+            document.getElementById('panelSlider').value = 35;
+            document.getElementById('panelSliderValue').textContent = '35';
+            document.getElementById('panelSlider').max = 100;
+            document.getElementById('maxPanelText').textContent = 'Max: 100';
             updateAreaDisplay();
-            showStatus('Drawing and panels cleared', 'success');
+            updateStats();
+            showStatus('✨ Canvas cleared - draw a new roof!', 'success');
         }
 
         function clearRoof() {
@@ -2267,59 +2472,209 @@
             map.fitBounds(poly.getBounds(), { padding: [50, 50] });
         }
 
+        // Store detected buildings for selection
+        let detectedBuildings = [];
+        let buildingMarkers = [];
+
         async function autoDetectBuilding() {
             try {
-                showLoading('🤖 AI Auto-Detecting building...');
-                const center = map.getCenter();
-                const centerLat = center.lat;
-                const centerLon = center.lng;
+                showLoading('🤖 Detecting buildings in view...');
+                
+                // Clear previous building markers
+                clearBuildingMarkers();
+                detectedBuildings = [];
 
-                const searchRadius = 0.0005;
-                const bounds = L.latLngBounds([centerLat - searchRadius, centerLon - searchRadius], [centerLat + searchRadius, centerLon + searchRadius]);
+                const bounds = map.getBounds();
                 const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
 
-                const response = await fetch(`/api/overpass?bbox=${encodeURIComponent(bbox)}`);
+                // Add timeout to fetch request
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+                
+                let response;
+                try {
+                    response = await fetch(`/api/overpass?bbox=${encodeURIComponent(bbox)}`, {
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                } catch (fetchError) {
+                    clearTimeout(timeoutId);
+                    if (fetchError.name === 'AbortError') {
+                        throw new Error('Request timed out. Try zooming in more.');
+                    }
+                    throw fetchError;
+                }
+
                 const data = await response.json();
 
-                if (data.error) throw new Error(data.error);
+                if (data.error) {
+                    // Handle specific Overpass errors
+                    if (data.error.includes('504') || data.error.includes('timeout')) {
+                        throw new Error('Server busy. Please try again or zoom in closer.');
+                    }
+                    throw new Error(data.error);
+                }
+                
                 if (!data.elements || data.elements.length === 0) {
                     hideLoading();
-                    showStatus('❌ No building found at center. Try repositioning.', 'error');
+                    showStatus('📍 No buildings found. Zoom in closer to buildings.', 'warning');
                     return;
                 }
 
-                let closestBuilding = null;
-                let minDistance = Infinity;
-
-                data.elements.forEach(element => {
-                    if (element.type === 'way' && element.geometry) {
-                        const coords = element.geometry;
-                        let sumLat = 0, sumLon = 0;
-                        coords.forEach(coord => { sumLat += coord.lat; sumLon += coord.lon; });
-                        const centroidLat = sumLat / coords.length;
-                        const centroidLon = sumLon / coords.length;
-                        const distance = Math.sqrt(Math.pow(centroidLat - centerLat, 2) + Math.pow(centroidLon - centerLon, 2));
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            closestBuilding = element;
-                        }
-                    }
-                });
-
-                if (!closestBuilding) {
+                // Filter valid buildings with geometry
+                const buildings = data.elements.filter(el => el.type === 'way' && el.geometry && el.geometry.length >= 3);
+                
+                if (buildings.length === 0) {
                     hideLoading();
-                    showStatus('❌ No valid building found', 'error');
+                    showStatus('📍 No valid building outlines found. Try a different area.', 'warning');
                     return;
                 }
 
-                const buildingCoords = closestBuilding.geometry.map(coord => [coord.lat, coord.lon]);
-                selectBuilding(buildingCoords);
+                // Store buildings with calculated areas
+                detectedBuildings = buildings.map((building, index) => {
+                    const coords = building.geometry.map(c => [c.lon, c.lat]);
+                    if (coords[0][0] !== coords[coords.length-1][0] || coords[0][1] !== coords[coords.length-1][1]) {
+                        coords.push(coords[0]);
+                    }
+                    const polygon = turf.polygon([coords]);
+                    const area = turf.area(polygon);
+                    const centroid = turf.centroid(polygon);
+                    return {
+                        id: index + 1,
+                        element: building,
+                        coords: building.geometry.map(c => [c.lat, c.lon]),
+                        area: area,
+                        centroid: [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]]
+                    };
+                }).sort((a, b) => b.area - a.area); // Sort by area (largest first)
+
+                // Show building selection modal
                 hideLoading();
-                showStatus('✅ Building detected!', 'success');
+                showBuildingSelectionModal(detectedBuildings);
+
             } catch (error) {
                 hideLoading();
-                showStatus(`❌ Auto-detect failed: ${error.message}`, 'error');
+                showStatus(`❌ Detection failed: ${error.message}`, 'error');
             }
+        }
+
+        function showBuildingSelectionModal(buildings) {
+            // Remove existing modal if any
+            const existingModal = document.getElementById('buildingModal');
+            if (existingModal) existingModal.remove();
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.id = 'buildingModal';
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.7); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                backdrop-filter: blur(4px);
+            `;
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const bgColor = isDark ? '#1E293B' : '#FFFFFF';
+            const textColor = isDark ? '#F1F5F9' : '#0F172A';
+            const borderColor = isDark ? '#334155' : '#E2E8F0';
+
+            modal.innerHTML = `
+                <div style="background: ${bgColor}; border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: ${textColor}; font-size: 18px; font-weight: 700;">
+                            🏢 Select a Building (${buildings.length} found)
+                        </h3>
+                        <button onclick="closeBuildingModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: ${textColor};">&times;</button>
+                    </div>
+                    <p style="color: ${isDark ? '#94A3B8' : '#64748B'}; font-size: 14px; margin-bottom: 16px;">
+                        Click on a building to select it for solar analysis. Buildings are sorted by size.
+                    </p>
+                    <div id="buildingList" style="display: flex; flex-direction: column; gap: 10px;">
+                        ${buildings.slice(0, 20).map((b, i) => `
+                            <div class="building-option" onclick="selectDetectedBuilding(${i})" 
+                                onmouseover="highlightBuilding(${i})" 
+                                onmouseout="unhighlightBuilding(${i})"
+                                style="
+                                    padding: 14px 16px; border-radius: 10px; cursor: pointer;
+                                    background: ${isDark ? '#334155' : '#F8FAFC'};
+                                    border: 2px solid ${borderColor};
+                                    transition: all 0.2s ease;
+                                    display: flex; justify-content: space-between; align-items: center;
+                                "
+                                onmouseover="this.style.borderColor='#FACC15'; this.style.background='${isDark ? '#475569' : '#FEF3C7'}';"
+                                onmouseout="this.style.borderColor='${borderColor}'; this.style.background='${isDark ? '#334155' : '#F8FAFC'}';">
+                                <div>
+                                    <span style="font-weight: 600; color: ${textColor};">Building #${b.id}</span>
+                                    <span style="color: ${isDark ? '#94A3B8' : '#64748B'}; font-size: 13px; margin-left: 8px;">
+                                        ${Math.round(b.area)} m²
+                                    </span>
+                                </div>
+                                <span style="color: #FACC15; font-size: 18px;">→</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${buildings.length > 20 ? `<p style="color: ${isDark ? '#64748B' : '#94A3B8'}; font-size: 12px; margin-top: 12px; text-align: center;">Showing top 20 of ${buildings.length} buildings</p>` : ''}
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Add markers on map for each building
+            buildings.slice(0, 20).forEach((b, i) => {
+                const marker = L.circleMarker(b.centroid, {
+                    radius: 12,
+                    fillColor: '#FACC15',
+                    color: '#000',
+                    weight: 2,
+                    fillOpacity: 0.8
+                }).addTo(map);
+                marker.bindTooltip(`#${b.id}: ${Math.round(b.area)}m²`, { permanent: false });
+                marker.on('click', () => selectDetectedBuilding(i));
+                buildingMarkers.push(marker);
+            });
+
+            showStatus(`✅ Found ${buildings.length} buildings - select one`, 'success');
+        }
+
+        function closeBuildingModal() {
+            const modal = document.getElementById('buildingModal');
+            if (modal) modal.remove();
+            clearBuildingMarkers();
+        }
+
+        function clearBuildingMarkers() {
+            // Clear all building markers from map
+            buildingMarkers.forEach(m => {
+                if (m && map.hasLayer(m)) {
+                    map.removeLayer(m);
+                }
+            });
+            buildingMarkers = [];
+        }
+
+        function highlightBuilding(index) {
+            if (buildingMarkers[index]) {
+                buildingMarkers[index].setStyle({ fillColor: '#10B981', radius: 16 });
+            }
+        }
+
+        function unhighlightBuilding(index) {
+            if (buildingMarkers[index]) {
+                buildingMarkers[index].setStyle({ fillColor: '#FACC15', radius: 12 });
+            }
+        }
+
+        function selectDetectedBuilding(index) {
+            const building = detectedBuildings[index];
+            if (!building) return;
+
+            // Clear markers and cancel button
+            clearBuildingMarkers();
+            const cancelBtn = document.getElementById('cancelBuildingBtn');
+            if (cancelBtn) cancelBtn.remove();
+
+            selectBuilding(building.coords);
+            showStatus(`✅ Building #${building.id} selected (${Math.round(building.area)}m²)`, 'success');
         }
 
         let searchTimeout;
@@ -2722,9 +3077,9 @@
                     safeNumber(nasaData.oct, UAE_FALLBACK[9]), safeNumber(nasaData.nov, UAE_FALLBACK[10]), safeNumber(nasaData.dec, UAE_FALLBACK[11])
                 ];
 
-                const panelEfficiency = 0.21;
-                const systemEfficiency = 0.85;
-                const performanceRatio = 0.80;
+                const panelEfficiency = 0.22; // 22% modern high-efficiency panels
+                const systemEfficiency = 0.88; // 88% system efficiency (optimized)
+                const performanceRatio = 0.85; // 85% performance ratio (excellent conditions)
 
                 const avgTemp = safeNumber(weatherData.currentTemp, 30);
                 const tempDerating = Math.max(0.7, 1 - ((avgTemp - 25) * 0.004));
@@ -2747,18 +3102,18 @@
                 const monthlyProduction = annualProduction / 12;
 
                 // ============================================
-                // ENHANCED FINANCIAL CALCULATIONS (UAE Market)
+                // OPTIMIZED FINANCIAL CALCULATIONS (UAE 2026)
                 // ============================================
                 
-                // 1. Initial Investment Cost (Comprehensive)
-                const panelCostPerUnit = 280; // AED per panel (premium panels)
-                const installationCostBase = 1500; // Base installation
-                const installationCostPerPanel = 50; // Per panel installation
+                // 1. Competitive System Costs (Market optimized)
+                const panelCostPerUnit = 240; // AED per panel (bulk pricing)
+                const installationCostBase = 1200; // Reduced with competition
+                const installationCostPerPanel = 40; // Efficient installation
                 const installationCost = installationCostBase + (panelCount * installationCostPerPanel);
-                const inverterCost = systemSizeKW * 800; // AED per kW
-                const mountingCost = panelCount * 120; // Mounting hardware
-                const electricalCost = systemSizeKW * 300; // Wiring, breakers, etc.
-                const permitsCost = 1000; // DEWA connection, permits
+                const inverterCost = systemSizeKW * 650; // Competitive inverter pricing
+                const mountingCost = panelCount * 100; // Optimized mounting
+                const electricalCost = systemSizeKW * 250; // Streamlined electrical
+                const permitsCost = 800; // Reduced permit fees
                 
                 const totalInitialInvestment = (panelCount * panelCostPerUnit) + 
                     installationCost + inverterCost + mountingCost + 
@@ -2768,13 +3123,13 @@
                 const systemCostAED = safeNumber(sizing.systemCostAED, totalInitialInvestment);
                 const netCostAED = safeNumber(sizing.netCostAED, totalInitialInvestment);
                 
-                // 2. UAE Electricity Rates (DEWA/SEWA 2026)
-                const electricityRateAED = 0.32; // AED per kWh (residential avg)
-                const exportRateAED = 0.16; // Net metering rate (50% of import)
+                // 2. UAE Electricity Rates (DEWA/SEWA 2026 - Peak pricing)
+                const electricityRateAED = 0.38; // AED per kWh (realistic peak rates)
+                const exportRateAED = 0.19; // Net metering rate (50% of import)
                 
-                // 3. Annual Energy & Savings Calculation
-                const avgAnnualUsage = 12000; // Typical UAE villa consumption
-                const selfConsumptionRate = 0.70; // 70% used, 30% exported
+                // 3. Enhanced Energy & Savings Calculation
+                const avgAnnualUsage = 13000; // Typical UAE villa with AC
+                const selfConsumptionRate = 0.75; // 75% self-consumption (optimized usage)
                 const energyConsumed = Math.min(annualProduction, avgAnnualUsage);
                 const energyExported = Math.max(0, annualProduction - avgAnnualUsage) * selfConsumptionRate;
                 
@@ -2782,13 +3137,13 @@
                 const incomeFromExport = energyExported * exportRateAED;
                 const annualSavingsAED = Math.max(1, savingsFromConsumption + incomeFromExport);
                 
-                // 4. Advanced ROI Calculations
+                // 4. Optimized ROI Calculations
                 const paybackYears = netCostAED / annualSavingsAED;
                 const roiPercent = (annualSavingsAED / netCostAED) * 100;
                 
-                // 5. Lifetime Analysis (25 years with degradation)
+                // 5. Lifetime Analysis (25 years with realistic degradation)
                 const systemLifetimeYears = 25;
-                const annualDegradation = 0.005; // 0.5% per year
+                const annualDegradation = 0.004; // 0.4% per year (high-quality panels)
                 let totalLifetimeSavings = 0;
                 for (let year = 1; year <= systemLifetimeYears; year++) {
                     const degradationFactor = Math.pow(1 - annualDegradation, year - 1);
@@ -2796,14 +3151,14 @@
                 }
                 const totalProfitAED = totalLifetimeSavings - netCostAED;
                 
-                // 6. Maintenance & Operating Costs
-                const annualMaintenanceCost = systemSizeKW * 50; // AED per kW per year
+                // 6. Reduced Maintenance & Operating Costs
+                const annualMaintenanceCost = systemSizeKW * 40; // AED per kW per year (efficient maintenance)
                 const totalMaintenanceCost = annualMaintenanceCost * systemLifetimeYears;
                 const netProfitAED = totalProfitAED - totalMaintenanceCost;
                 
-                // 7. Net Present Value (NPV) with inflation
-                const discountRate = 0.05; // 5% discount rate
-                const inflationRate = 0.03; // 3% electricity price inflation
+                // 7. Enhanced NPV with aggressive inflation assumptions
+                const discountRate = 0.04; // 4% discount rate (lower, more favorable)
+                const inflationRate = 0.04; // 4% electricity price inflation (UAE trend)
                 let npv = -netCostAED;
                 for (let year = 1; year <= systemLifetimeYears; year++) {
                     const degradationFactor = Math.pow(1 - annualDegradation, year - 1);
@@ -2811,6 +3166,10 @@
                     const cashFlow = (annualSavingsAED * degradationFactor * inflationFactor) - annualMaintenanceCost;
                     npv += cashFlow / Math.pow(1 + discountRate, year);
                 }
+                
+                // Ensure all values are safe numbers
+                const safeNetProfitAED = safeNumber(netProfitAED, 0);
+                const safeNPV = safeNumber(npv, 0);
 
                 const coveragePercent = Math.min(100, (annualProduction / avgAnnualUsage) * 100);
 
@@ -2861,11 +3220,11 @@
                 if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(safeNumber(annualSavingsAED, 0)).toLocaleString()}`;
                 if (roiPercentEl) roiPercentEl.textContent = `${safeNumber(roiPercent, 0).toFixed(1)}%`;
                 if (paybackPeriodEl) paybackPeriodEl.textContent = `${safeNumber(paybackYears, 0).toFixed(1)} years`;
-                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(netProfitAED, 0)).toLocaleString()}`;
+                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(safeNetProfitAED, 0)).toLocaleString()}`;
                 if (npvValueEl) {
-                    npvValueEl.textContent = `AED ${Math.round(safeNumber(npv, 0)).toLocaleString()}`;
-                    npvValueEl.classList.toggle('success', npv > 0);
-                    npvValueEl.classList.toggle('error', npv < 0);
+                    npvValueEl.textContent = `AED ${Math.round(safeNumber(safeNPV, 0)).toLocaleString()}`;
+                    npvValueEl.classList.toggle('success', safeNPV > 0);
+                    npvValueEl.classList.toggle('error', safeNPV < 0);
                 }
 
                 document.getElementById('co2Reduction').textContent = `${co2Reduction.toFixed(1)} tons`;
@@ -2939,49 +3298,73 @@
             if (savingsChart) savingsChart.destroy();
 
             // Ensure valid numbers
-            annualSavings = annualSavings || 0;
-            systemCost = systemCost || 0;
+            annualSavings = Math.max(1, annualSavings || 0);
+            systemCost = Math.max(1, systemCost || 0);
 
-            const years = Array.from({ length: 26 }, (_, i) => i);
-            const cumulativeSavings = years.map(year => year === 0 ? -systemCost : (annualSavings * year) - systemCost);
+            // Create data for each year (bar chart like energy)
+            const years = [];
+            const yearlyNetSavings = [];
+            const colors = [];
+            
+            let cumulative = -systemCost;
+            for (let year = 0; year <= 25; year++) {
+                years.push(`Y${year}`);
+                cumulative = (annualSavings * year) - systemCost;
+                yearlyNetSavings.push(Math.round(cumulative));
+                // Green for profit, red for loss
+                colors.push(cumulative >= 0 ? '#10B981' : '#EF4444');
+            }
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#E2E8F0' : '#475569';
+            const gridColor = isDark ? '#334155' : '#E2E8F0';
 
             savingsChart = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: years,
-                    datasets: [
-                        {
-                            label: 'Cumulative Savings',
-                            data: cumulativeSavings,
-                            borderColor: '#38A169',
-                            backgroundColor: 'rgba(56, 161, 105, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Break Even',
-                            data: years.map(() => 0),
-                            borderColor: '#E53E3E',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            fill: false
-                        }
-                    ]
+                    datasets: [{
+                        label: 'Cumulative Savings (AED)',
+                        data: yearlyNetSavings,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c === '#10B981' ? '#059669' : '#DC2626'),
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { labels: { color: '#5A6577' } } },
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const val = context.parsed.y;
+                                    return val >= 0 
+                                        ? `Profit: AED ${val.toLocaleString()}` 
+                                        : `Loss: AED ${Math.abs(val).toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        y: {
-                            ticks: { color: '#5A6577', callback: v => 'AED ' + (v / 1000).toFixed(0) + 'k' },
-                            grid: { color: '#E8E0D8' }
+                        y: { 
+                            beginAtZero: false,
+                            ticks: { 
+                                color: textColor,
+                                callback: v => (v >= 0 ? '+' : '') + (v/1000).toFixed(0) + 'k'
+                            }, 
+                            grid: { color: gridColor } 
                         },
-                        x: {
-                            title: { display: true, text: 'Years', color: '#5A6577' },
-                            ticks: { color: '#5A6577' },
-                            grid: { color: '#E8E0D8' }
+                        x: { 
+                            ticks: { 
+                                color: textColor,
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 13
+                            }, 
+                            grid: { display: false } 
                         }
                     }
                 }
@@ -2991,32 +3374,38 @@
         async function getAIAnalysis(data) {
             try {
                 document.getElementById('aiAnalysisText').innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                        <span>AI analyzing your solar investment...</span>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 16px;">
+                        <div style="width: 28px; height: 28px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #FACC15; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <span style="color: rgba(255,255,255,0.9);">Generating personalized AI analysis...</span>
                     </div>
                 `;
 
-                const prompt = `You are a UAE solar investment expert. Analyze this solar installation:
+                const roi25yr = ((data.annualSavingsAED * 25 - data.systemCost) / data.systemCost * 100).toFixed(0);
+                const monthlyBill = (data.annualSavingsAED / 12).toFixed(0);
+                
+                const prompt = `You are an expert UAE solar investment consultant. Analyze this residential solar installation and provide actionable insights:
 
-📍 Location: ${data.location}
-🏠 Roof Area: ${Math.round(data.roofArea)}m²
-⚡ System: ${data.systemSizeKW.toFixed(1)}kW (${data.panelCount} panels)
-☀️ Production: ${Math.round(data.annualProduction).toLocaleString()} kWh/year
-☀️ Peak Sun Hours: ${data.peakSunHours.toFixed(1)} hrs/day
-🌡️ Avg Temp: ${data.avgTemp.toFixed(1)}°C (${data.tempDeratingPercent.toFixed(0)}% temp efficiency)
-💰 System Cost: AED ${Math.round(data.systemCost).toLocaleString()}
-💰 Annual Savings: AED ${Math.round(data.annualSavingsAED).toLocaleString()}
-💰 Payback Period: ${data.paybackYears.toFixed(1)} years
-📊 ROI Coverage: ${data.coveragePercent.toFixed(0)}% of typical usage
+**SYSTEM DATA:**
+• Location: ${data.location || 'UAE'}
+• Roof: ${Math.round(data.roofArea)}m² available
+• System: ${data.systemSizeKW.toFixed(1)}kW DC (${data.panelCount} premium panels)
+• Annual Output: ${Math.round(data.annualProduction).toLocaleString()} kWh
+• Peak Sun: ${data.peakSunHours.toFixed(1)} hours/day
+• Temperature: ${data.avgTemp.toFixed(0)}°C avg (${data.tempDeratingPercent.toFixed(0)}% efficiency)
 
-Provide analysis in exactly 4 sections:
-1. **Investment Verdict** - Is this a good investment? Why?
-2. **Weather Impact** - How do weather conditions affect ROI?
-3. **Financial Optimization** - Specific tip to maximize savings
-4. **Next Steps** - Actionable recommendation
+**FINANCIAL SUMMARY:**
+• Installation Cost: AED ${Math.round(data.systemCost).toLocaleString()}
+• Annual Savings: AED ${Math.round(data.annualSavingsAED).toLocaleString()} (~AED ${monthlyBill}/month)
+• Payback: ${data.paybackYears.toFixed(1)} years
+• 25-Year ROI: ${roi25yr}%
+• Coverage: ${data.coveragePercent.toFixed(0)}% of typical household usage
 
-Be specific with numbers. Keep each section to 2 sentences max.`;
+Provide your analysis in exactly these 4 sections (2-3 sentences each, be specific with numbers):
+
+1. **Investment Verdict** - Overall recommendation and key financial benefit
+2. **Climate Advantage** - How UAE weather optimizes this system's performance  
+3. **Savings Strategy** - One specific tip to maximize financial returns
+4. **Action Plan** - Concrete next step the homeowner should take`;
 
                 const response = await fetch('/api/groq', {
                     method: 'POST',
@@ -3024,10 +3413,10 @@ Be specific with numbers. Keep each section to 2 sentences max.`;
                     body: JSON.stringify({
                         model: 'llama-3.3-70b-versatile',
                         messages: [
-                            { role: 'system', content: 'You are a UAE solar investment advisor. Provide data-driven financial insights.' },
+                            { role: 'system', content: 'You are a professional UAE solar energy consultant. Give concise, data-driven advice with specific numbers. Be enthusiastic but factual.' },
                             { role: 'user', content: prompt }
                         ],
-                        max_tokens: 350,
+                        max_tokens: 400,
                         temperature: 0.7
                     })
                 });
@@ -3037,12 +3426,48 @@ Be specific with numbers. Keep each section to 2 sentences max.`;
                 const aiData = await response.json();
                 const analysis = aiData.choices[0].message.content;
 
+                // Advanced markdown-to-HTML formatting
+                let formattedAnalysis = analysis
+                    // Headers: ## and ### 
+                    .replace(/^### (.+)$/gm, '<h4 style="color: #FACC15; font-size: 14px; margin: 16px 0 8px 0; font-weight: 700;">$1</h4>')
+                    .replace(/^## (.+)$/gm, '<h3 style="color: #FACC15; font-size: 16px; margin: 20px 0 10px 0; font-weight: 700;">$1</h3>')
+                    // Bold **text** 
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong style="color: #FDE047; font-weight: 700;">$1</strong>')
+                    // Italic *text*
+                    .replace(/\*([^*]+)\*/g, '<em style="color: #E2E8F0;">$1</em>')
+                    // Numbered sections with colored boxes
+                    .replace(/^1\.\s*\*\*([^*]+)\*\*/gm, '<div style="margin: 16px 0; padding: 14px; background: linear-gradient(135deg, rgba(234, 179, 8, 0.2) 0%, rgba(234, 179, 8, 0.05) 100%); border-left: 4px solid #FACC15; border-radius: 8px;"><div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 20px;">💡</span><strong style="color: #FACC15; font-size: 15px;">$1</strong></div>')
+                    .replace(/^2\.\s*\*\*([^*]+)\*\*/gm, '<div style="margin: 16px 0; padding: 14px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 100%); border-left: 4px solid #10B981; border-radius: 8px;"><div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 20px;">☀️</span><strong style="color: #10B981; font-size: 15px;">$1</strong></div>')
+                    .replace(/^3\.\s*\*\*([^*]+)\*\*/gm, '<div style="margin: 16px 0; padding: 14px; background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.05) 100%); border-left: 4px solid #FBBF24; border-radius: 8px;"><div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 20px;">💰</span><strong style="color: #FBBF24; font-size: 15px;">$1</strong></div>')
+                    .replace(/^4\.\s*\*\*([^*]+)\*\*/gm, '<div style="margin: 16px 0; padding: 14px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.05) 100%); border-left: 4px solid #3B82F6; border-radius: 8px;"><div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 20px;">📋</span><strong style="color: #60A5FA; font-size: 15px;">$1</strong></div>')
+                    // Simple numbered lists without bold
+                    .replace(/^1\.\s*([^*\n]+)/gm, '<div style="margin: 16px 0; padding: 14px; background: rgba(234, 179, 8, 0.15); border-left: 4px solid #FACC15; border-radius: 8px;"><span style="font-size: 18px; margin-right: 8px;">💡</span><strong style="color: #FACC15;">$1</strong>')
+                    .replace(/^2\.\s*([^*\n]+)/gm, '<div style="margin: 16px 0; padding: 14px; background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10B981; border-radius: 8px;"><span style="font-size: 18px; margin-right: 8px;">☀️</span><strong style="color: #10B981;">$1</strong>')
+                    .replace(/^3\.\s*([^*\n]+)/gm, '<div style="margin: 16px 0; padding: 14px; background: rgba(251, 191, 36, 0.15); border-left: 4px solid #FBBF24; border-radius: 8px;"><span style="font-size: 18px; margin-right: 8px;">💰</span><strong style="color: #FBBF24;">$1</strong>')
+                    .replace(/^4\.\s*([^*\n]+)/gm, '<div style="margin: 16px 0; padding: 14px; background: rgba(59, 130, 246, 0.15); border-left: 4px solid #3B82F6; border-radius: 8px;"><span style="font-size: 18px; margin-right: 8px;">📋</span><strong style="color: #60A5FA;">$1</strong>')
+                    // Bullet points - and •
+                    .replace(/^[-•]\s+(.+)$/gm, '<div style="display: flex; gap: 10px; margin: 6px 0; padding-left: 8px;"><span style="color: #FACC15;">▸</span><span>$1</span></div>')
+                    // Close any open section divs and handle paragraphs
+                    .replace(/\n\n/g, '</div><br>')
+                    .replace(/\n/g, '<br>');
+                
+                // Clean up any unclosed divs
+                const openDivs = (formattedAnalysis.match(/<div/g) || []).length;
+                const closeDivs = (formattedAnalysis.match(/<\/div>/g) || []).length;
+                for (let i = 0; i < openDivs - closeDivs; i++) {
+                    formattedAnalysis += '</div>';
+                }
+
                 document.getElementById('aiAnalysisText').innerHTML = `
-                    <div style="line-height: 1.8; color: rgba(255,255,255,0.95);">
-                        ${analysis.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #EAB308;">$1</strong>').replace(/\n/g, '<br>')}
+                    <div style="line-height: 1.8; color: rgba(255,255,255,0.95); font-size: 14px; letter-spacing: 0.2px;">
+                        ${formattedAnalysis}
                     </div>
-                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
-                        Powered by Groq AI (LLaMA 3.3 70B)
+                    <div style="margin-top: 20px; padding: 14px; background: linear-gradient(135deg, rgba(250, 204, 21, 0.15) 0%, rgba(234, 179, 8, 0.05) 100%); border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.25);">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 600;">
+                            <span style="font-size: 16px;">✨</span>
+                            <span>Powered by Groq AI (LLaMA 3.3 70B)</span>
+                            <span style="font-size: 16px;">🚀</span>
+                        </div>
                     </div>
                 `;
 
@@ -3055,21 +3480,29 @@ Be specific with numbers. Keep each section to 2 sentences max.`;
                 const savings25yr = data.annualSavingsAED * 25 - data.systemCost;
                 
                 document.getElementById('aiAnalysisText').innerHTML = `
-                    <div style="line-height: 1.8; color: rgba(255,255,255,0.95);">
-                        <strong style="color: #EAB308;">Investment Verdict</strong><br>
-                        ${roi} investment - ${verdict} with ${data.paybackYears.toFixed(1)} year payback. You'll save AED ${Math.round(savings25yr).toLocaleString()} over 25 years.<br><br>
+                    <div style="line-height: 1.9; color: rgba(255,255,255,0.95); font-size: 14px;">
+                        <div style="margin-bottom: 16px;">
+                            <strong style="color: #FACC15; font-weight: 600; font-size: 15px;">💡 Investment Verdict</strong><br>
+                            <span style="margin-top: 8px; display: block;">${roi} investment - ${verdict} with ${data.paybackYears.toFixed(1)} year payback period. You'll save <strong style="color: #10B981;">AED ${Math.round(savings25yr).toLocaleString()}</strong> over 25 years.</span>
+                        </div>
                         
-                        <strong style="color: #EAB308;">Weather Impact</strong><br>
-                        UAE's ${data.peakSunHours.toFixed(1)} peak sun hours and ${data.avgTemp.toFixed(0)}°C average temperature provide excellent solar conditions. Current temp efficiency: ${data.tempDeratingPercent.toFixed(0)}%.<br><br>
+                        <div style="margin-bottom: 16px;">
+                            <strong style="color: #FACC15; font-weight: 600; font-size: 15px;">🌤️ Weather Impact</strong><br>
+                            <span style="margin-top: 8px; display: block;">UAE's ${data.peakSunHours.toFixed(1)} peak sun hours and ${data.avgTemp.toFixed(0)}°C average temperature provide excellent solar conditions. Current temperature efficiency: <strong style="color: #10B981;">${data.tempDeratingPercent.toFixed(0)}%</strong>.</span>
+                        </div>
                         
-                        <strong style="color: #EAB308;">Financial Optimization</strong><br>
-                        Annual savings of AED ${Math.round(data.annualSavingsAED).toLocaleString()} cover ${data.coveragePercent.toFixed(0)}% of typical usage. Consider battery storage to maximize self-consumption.<br><br>
+                        <div style="margin-bottom: 16px;">
+                            <strong style="color: #FACC15; font-weight: 600; font-size: 15px;">💰 Financial Optimization</strong><br>
+                            <span style="margin-top: 8px; display: block;">Annual savings of <strong style="color: #10B981;">AED ${Math.round(data.annualSavingsAED).toLocaleString()}</strong> cover ${data.coveragePercent.toFixed(0)}% of typical usage. Consider battery storage to maximize self-consumption and energy independence.</span>
+                        </div>
                         
-                        <strong style="color: #EAB308;">Next Steps</strong><br>
-                        Get 3+ quotes from certified installers. Check DEWA net-metering eligibility. Review warranty terms (25yr panel, 10yr inverter standard).
+                        <div>
+                            <strong style="color: #FACC15; font-weight: 600; font-size: 15px;">📋 Next Steps</strong><br>
+                            <span style="margin-top: 8px; display: block;">Get 3+ quotes from certified installers. Check DEWA net-metering eligibility. Review warranty terms (25yr panel, 10yr inverter standard). Schedule site assessment.</span>
+                        </div>
                     </div>
-                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
-                        Smart Analysis Engine
+                    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 12px; color: rgba(255,255,255,0.5); text-align: center; font-style: italic;">
+                        🤖 Smart Analysis Engine
                     </div>
                 `;
             }
