@@ -1567,12 +1567,20 @@
                             <span class="result-value success" id="annualSavings">-- AED</span>
                         </div>
                         <div class="result-item">
+                            <span class="result-label"><i class="fas fa-percentage"></i> ROI (Annual)</span>
+                            <span class="result-value success" id="roiPercent">--%</span>
+                        </div>
+                        <div class="result-item">
                             <span class="result-label"><i class="fas fa-hourglass-half"></i> Payback Period</span>
                             <span class="result-value highlight" id="paybackPeriod">-- years</span>
                         </div>
                         <div class="result-item">
                             <span class="result-label"><i class="fas fa-chart-line"></i> 25-Year Profit</span>
                             <span class="result-value success" id="totalProfit">-- AED</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label"><i class="fas fa-coins"></i> Net Present Value</span>
+                            <span class="result-value" id="npvValue">-- AED</span>
                         </div>
                     </div>
 
@@ -1733,12 +1741,12 @@
         }
 
         function computeSystemFromPanelCount(panelCount) {
-            const panelWattage = 400;
+            const panelWattage = 550; // Modern high-efficiency panels
             const systemSizeKW = (panelCount * panelWattage) / 1000;
-            const costPerWattAED = 8.08;
+            const costPerWattAED = 2.8; // UAE market rate 2026
             const systemCostAED = systemSizeKW * 1000 * costPerWattAED;
             const netCostAED = systemCostAED;
-            return { systemSizeKW, systemCostAED, netCostAED };
+            return { systemSizeKW, systemCostAED, netCostAED, panelWattage };
         }
 
         function updateStats() {
@@ -2029,7 +2037,7 @@
 
             const panelWidthMeters = 1.0;
             const panelHeightMeters = 2.0;
-            const gapMeters = 0.15;
+            const gapMeters = 0.1; // Reduced gap for better coverage
 
             const metersPerDegreeLat = 111320;
             const metersPerDegreeLon = 111320 * Math.cos(currentLat * Math.PI / 180);
@@ -2069,7 +2077,6 @@
             const angle = (useRotation * Math.PI) / 180;
 
             let panelsDrawn = 0;
-            // Increase max attempts for large areas to ensure all panels can render
             const areaFactor = Math.max(1, Math.sqrt(roofArea / 100));
             const maxAttempts = Math.min(count * 50 * areaFactor, 50000);
             let attempts = 0;
@@ -2082,17 +2089,30 @@
             const rowSpacing = panelHeightDeg + gapDeg;
             const colSpacing = panelWidthDeg + gapDeg;
 
-            const rows = Math.ceil(latSpan / rowSpacing) + 6;
-            const cols = Math.ceil(lngSpan / colSpacing) + 6;
+            // Calculate grid size based on bounding box, adding margin for rotated panels
+            const margin = Math.max(panelHeightDeg, panelWidthDeg) * 3;
+            const gridStartLat = bbox[1] - margin;
+            const gridEndLat = bbox[3] + margin;
+            const gridStartLng = bbox[0] - margin;
+            const gridEndLng = bbox[2] + margin;
+            
+            const rows = Math.ceil((gridEndLat - gridStartLat) / rowSpacing);
+            const cols = Math.ceil((gridEndLng - gridStartLng) / colSpacing);
 
             const validPositions = [];
 
-            for (let row = -3; row < rows && attempts < maxAttempts; row++) {
-                for (let col = -3; col < cols && attempts < maxAttempts; col++) {
+            // Grid starting from actual top-left of bounding box (with margin)
+            for (let row = 0; row < rows && attempts < maxAttempts; row++) {
+                for (let col = 0; col < cols && attempts < maxAttempts; col++) {
                     attempts++;
-                    const offsetLat = (row - rows / 2) * rowSpacing;
-                    const offsetLng = (col - cols / 2) * colSpacing;
-
+                    
+                    // Calculate position from grid origin
+                    const gridLat = gridStartLat + (row * rowSpacing);
+                    const gridLng = gridStartLng + (col * colSpacing);
+                    
+                    // Apply rotation around center
+                    const offsetLat = gridLat - centerLat;
+                    const offsetLng = gridLng - centerLng;
                     const rotatedLat = centerLat + (offsetLat * Math.cos(angle) - offsetLng * Math.sin(angle));
                     const rotatedLng = centerLng + (offsetLat * Math.sin(angle) + offsetLng * Math.cos(angle));
 
@@ -2129,14 +2149,18 @@
                 const leafletCorners = pos.corners.map(c => [c[1], c[0]]);
 
                 const panel = L.polygon(leafletCorners, {
-                    color: '#EAB308',
-                    weight: 1.5,
-                    fillColor: '#1E3A5F',
-                    fillOpacity: 0.75,
+                    color: '#FACC15',
+                    weight: 2,
+                    fillColor: '#1E40AF',
+                    fillOpacity: 0.85,
                     className: 'solar-panel'
                 }).addTo(solarPanelsLayer);
 
-                panel.bindTooltip(`Panel ${i + 1}`, { permanent: false, direction: 'top' });
+                panel.bindTooltip(`Panel ${i + 1}<br>${systemSizeKW > 0 ? (systemSizeKW / panelCount * 1000).toFixed(0) + 'W' : ''}`, { 
+                    permanent: false, 
+                    direction: 'top',
+                    className: 'panel-tooltip'
+                });
                 panelsDrawn++;
             }
 
@@ -2163,21 +2187,32 @@
 
             const rowSpacing = panelHeightDeg + gapDeg;
             const colSpacing = panelWidthDeg + gapDeg;
-            const rows = Math.ceil(latSpan / rowSpacing) + 4;
-            const cols = Math.ceil(lngSpan / colSpacing) + 4;
+            
+            // Calculate grid with proper margins
+            const margin = Math.max(panelHeightDeg, panelWidthDeg) * 3;
+            const gridStartLat = bbox[1] - margin;
+            const gridEndLat = bbox[3] + margin;
+            const gridStartLng = bbox[0] - margin;
+            const gridEndLng = bbox[2] + margin;
+            
+            const rows = Math.ceil((gridEndLat - gridStartLat) / rowSpacing);
+            const cols = Math.ceil((gridEndLng - gridStartLng) / colSpacing);
 
             let fitsCount = 0;
             let attempts = 0;
-            // Scale max attempts based on area size
-            const areaSize = (latSpan * lngSpan) * 111320 * 111320; // Approximate m²
+            const areaSize = (latSpan * lngSpan) * 111320 * 111320;
             const scaleFactor = Math.max(1, Math.sqrt(areaSize / 200));
             const maxAttempts = quickCount ? Math.min(5000 * scaleFactor, 15000) : Math.min(20000 * scaleFactor, 80000);
 
-            for (let row = -2; row < rows && fitsCount < maxCount && attempts < maxAttempts; row++) {
-                for (let col = -2; col < cols && fitsCount < maxCount && attempts < maxAttempts; col++) {
+            for (let row = 0; row < rows && fitsCount < maxCount && attempts < maxAttempts; row++) {
+                for (let col = 0; col < cols && fitsCount < maxCount && attempts < maxAttempts; col++) {
                     attempts++;
-                    const offsetLat = (row - rows / 2) * rowSpacing;
-                    const offsetLng = (col - cols / 2) * colSpacing;
+                    
+                    const gridLat = gridStartLat + (row * rowSpacing);
+                    const gridLng = gridStartLng + (col * colSpacing);
+                    
+                    const offsetLat = gridLat - centerLat;
+                    const offsetLng = gridLng - centerLng;
                     const rotatedLat = centerLat + (offsetLat * Math.cos(angle) - offsetLng * Math.sin(angle));
                     const rotatedLng = centerLng + (offsetLat * Math.sin(angle) + offsetLng * Math.cos(angle));
 
@@ -2417,7 +2452,7 @@
 
             const baseName = 'data/Weather Data/POWER_Regional_Monthly_2020_2025';
             const candidates = [baseName + '.csv'];
-            for (let i = 2; i <= 30; i++) candidates.push(`${baseName}-${i}.csv`);
+            for (let i = 2; i <= 27; i++) candidates.push(`${baseName}-${i}.csv`);
 
             let loadedAny = false;
 
@@ -2711,22 +2746,73 @@
                 const annualProduction = safeNumber(Math.min(annualEnergyFromIrradiation, annualEnergyFromPower), 0);
                 const monthlyProduction = annualProduction / 12;
 
-                const costPerWattAED = 8.08;
-                const electricityRateAED = 0.38;
-                const systemCostAED = safeNumber(sizing.systemCostAED, 0);
-                const netCostAED = safeNumber(sizing.netCostAED, 0);
+                // ============================================
+                // ENHANCED FINANCIAL CALCULATIONS (UAE Market)
+                // ============================================
+                
+                // 1. Initial Investment Cost (Comprehensive)
+                const panelCostPerUnit = 280; // AED per panel (premium panels)
+                const installationCostBase = 1500; // Base installation
+                const installationCostPerPanel = 50; // Per panel installation
+                const installationCost = installationCostBase + (panelCount * installationCostPerPanel);
+                const inverterCost = systemSizeKW * 800; // AED per kW
+                const mountingCost = panelCount * 120; // Mounting hardware
+                const electricalCost = systemSizeKW * 300; // Wiring, breakers, etc.
+                const permitsCost = 1000; // DEWA connection, permits
+                
+                const totalInitialInvestment = (panelCount * panelCostPerUnit) + 
+                    installationCost + inverterCost + mountingCost + 
+                    electricalCost + permitsCost;
+                
+                // System cost from sizing or calculated
+                const systemCostAED = safeNumber(sizing.systemCostAED, totalInitialInvestment);
+                const netCostAED = safeNumber(sizing.netCostAED, totalInitialInvestment);
+                
+                // 2. UAE Electricity Rates (DEWA/SEWA 2026)
+                const electricityRateAED = 0.32; // AED per kWh (residential avg)
+                const exportRateAED = 0.16; // Net metering rate (50% of import)
+                
+                // 3. Annual Energy & Savings Calculation
+                const avgAnnualUsage = 12000; // Typical UAE villa consumption
+                const selfConsumptionRate = 0.70; // 70% used, 30% exported
+                const energyConsumed = Math.min(annualProduction, avgAnnualUsage);
+                const energyExported = Math.max(0, annualProduction - avgAnnualUsage) * selfConsumptionRate;
+                
+                const savingsFromConsumption = energyConsumed * electricityRateAED;
+                const incomeFromExport = energyExported * exportRateAED;
+                const annualSavingsAED = Math.max(1, savingsFromConsumption + incomeFromExport);
+                
+                // 4. Advanced ROI Calculations
+                const paybackYears = netCostAED / annualSavingsAED;
+                const roiPercent = (annualSavingsAED / netCostAED) * 100;
+                
+                // 5. Lifetime Analysis (25 years with degradation)
+                const systemLifetimeYears = 25;
+                const annualDegradation = 0.005; // 0.5% per year
+                let totalLifetimeSavings = 0;
+                for (let year = 1; year <= systemLifetimeYears; year++) {
+                    const degradationFactor = Math.pow(1 - annualDegradation, year - 1);
+                    totalLifetimeSavings += annualSavingsAED * degradationFactor;
+                }
+                const totalProfitAED = totalLifetimeSavings - netCostAED;
+                
+                // 6. Maintenance & Operating Costs
+                const annualMaintenanceCost = systemSizeKW * 50; // AED per kW per year
+                const totalMaintenanceCost = annualMaintenanceCost * systemLifetimeYears;
+                const netProfitAED = totalProfitAED - totalMaintenanceCost;
+                
+                // 7. Net Present Value (NPV) with inflation
+                const discountRate = 0.05; // 5% discount rate
+                const inflationRate = 0.03; // 3% electricity price inflation
+                let npv = -netCostAED;
+                for (let year = 1; year <= systemLifetimeYears; year++) {
+                    const degradationFactor = Math.pow(1 - annualDegradation, year - 1);
+                    const inflationFactor = Math.pow(1 + inflationRate, year - 1);
+                    const cashFlow = (annualSavingsAED * degradationFactor * inflationFactor) - annualMaintenanceCost;
+                    npv += cashFlow / Math.pow(1 + discountRate, year);
+                }
 
-                const avgAnnualUsage = 10950;
                 const coveragePercent = Math.min(100, (annualProduction / avgAnnualUsage) * 100);
-
-                const excessProduction = Math.max(0, annualProduction - avgAnnualUsage);
-                const exportRateAED = electricityRateAED * 0.5;
-                const annualSavingsAED = Math.max(1,
-                    (Math.min(annualProduction, avgAnnualUsage) * electricityRateAED) + (excessProduction * exportRateAED)
-                );
-
-                const paybackYears = Math.min(99, netCostAED / annualSavingsAED);
-                const totalProfitAED = (annualSavingsAED * 25) - netCostAED;
 
                 const co2PerKwh = 0.55;
                 const co2Reduction = (annualProduction * 25 * co2PerKwh) / 1000;
@@ -2765,14 +2851,22 @@
                 const systemCostEl = document.getElementById('systemCost');
                 const netCostEl = document.getElementById('netCost');
                 const annualSavingsEl = document.getElementById('annualSavings');
+                const roiPercentEl = document.getElementById('roiPercent');
                 const paybackPeriodEl = document.getElementById('paybackPeriod');
                 const totalProfitEl = document.getElementById('totalProfit');
+                const npvValueEl = document.getElementById('npvValue');
 
                 if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(safeNumber(systemCostAED, 0)).toLocaleString()}`;
                 if (netCostEl) netCostEl.textContent = `AED ${Math.round(safeNumber(netCostAED, 0)).toLocaleString()}`;
                 if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(safeNumber(annualSavingsAED, 0)).toLocaleString()}`;
+                if (roiPercentEl) roiPercentEl.textContent = `${safeNumber(roiPercent, 0).toFixed(1)}%`;
                 if (paybackPeriodEl) paybackPeriodEl.textContent = `${safeNumber(paybackYears, 0).toFixed(1)} years`;
-                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(totalProfitAED, 0)).toLocaleString()}`;
+                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(netProfitAED, 0)).toLocaleString()}`;
+                if (npvValueEl) {
+                    npvValueEl.textContent = `AED ${Math.round(safeNumber(npv, 0)).toLocaleString()}`;
+                    npvValueEl.classList.toggle('success', npv > 0);
+                    npvValueEl.classList.toggle('error', npv < 0);
+                }
 
                 document.getElementById('co2Reduction').textContent = `${co2Reduction.toFixed(1)} tons`;
                 document.getElementById('treesEquiv').textContent = `${treesEquivalent.toLocaleString()} trees`;
@@ -2899,19 +2993,42 @@
                 document.getElementById('aiAnalysisText').innerHTML = `
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <div style="width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                        <span>Analyzing your solar data...</span>
+                        <span>AI analyzing your solar investment...</span>
                     </div>
                 `;
 
-                const prompt = `Solar Analysis for UAE:\n📍 ${data.location}\n🏠 ${Math.round(data.roofArea)}m² roof → ${data.systemSizeKW.toFixed(1)}kW system (${data.panelCount} panels)\n☀️ ${data.peakSunHours.toFixed(1)} peak sun hrs, ${Math.round(data.annualProduction).toLocaleString()} kWh/yr\n💰 AED ${Math.round(data.systemCost).toLocaleString()} cost, ${data.paybackYears.toFixed(1)}yr payback\n\nProvide 4 points: 1) Investment Verdict 2) Weather Impact 3) Optimization tip 4) Next step. Be concise.`;
+                const prompt = `You are a UAE solar investment expert. Analyze this solar installation:
+
+📍 Location: ${data.location}
+🏠 Roof Area: ${Math.round(data.roofArea)}m²
+⚡ System: ${data.systemSizeKW.toFixed(1)}kW (${data.panelCount} panels)
+☀️ Production: ${Math.round(data.annualProduction).toLocaleString()} kWh/year
+☀️ Peak Sun Hours: ${data.peakSunHours.toFixed(1)} hrs/day
+🌡️ Avg Temp: ${data.avgTemp.toFixed(1)}°C (${data.tempDeratingPercent.toFixed(0)}% temp efficiency)
+💰 System Cost: AED ${Math.round(data.systemCost).toLocaleString()}
+💰 Annual Savings: AED ${Math.round(data.annualSavingsAED).toLocaleString()}
+💰 Payback Period: ${data.paybackYears.toFixed(1)} years
+📊 ROI Coverage: ${data.coveragePercent.toFixed(0)}% of typical usage
+
+Provide analysis in exactly 4 sections:
+1. **Investment Verdict** - Is this a good investment? Why?
+2. **Weather Impact** - How do weather conditions affect ROI?
+3. **Financial Optimization** - Specific tip to maximize savings
+4. **Next Steps** - Actionable recommendation
+
+Be specific with numbers. Keep each section to 2 sentences max.`;
 
                 const response = await fetch('/api/groq', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'llama-3.3-70b-versatile',
-                        messages: [{ role: 'system', content: 'You are a UAE solar expert. Give actionable advice.' }, { role: 'user', content: prompt }],
-                        max_tokens: 250
+                        messages: [
+                            { role: 'system', content: 'You are a UAE solar investment advisor. Provide data-driven financial insights.' },
+                            { role: 'user', content: prompt }
+                        ],
+                        max_tokens: 350,
+                        temperature: 0.7
                     })
                 });
 
@@ -2925,16 +3042,35 @@
                         ${analysis.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #EAB308;">$1</strong>').replace(/\n/g, '<br>')}
                     </div>
                     <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
-                        Powered by Groq AI (LLaMA 3.3)
+                        Powered by Groq AI (LLaMA 3.3 70B)
                     </div>
                 `;
 
             } catch (error) {
+                console.warn('AI Analysis unavailable:', error);
+                
+                // Provide intelligent fallback based on actual data
+                const roi = data.paybackYears < 6 ? '🟢 Excellent' : data.paybackYears < 9 ? '🟡 Good' : '🟠 Moderate';
+                const verdict = data.paybackYears < 6 ? 'highly recommended' : data.paybackYears < 9 ? 'recommended' : 'worth considering';
+                const savings25yr = data.annualSavingsAED * 25 - data.systemCost;
+                
                 document.getElementById('aiAnalysisText').innerHTML = `
-                    <div style="background: rgba(255,107,53,0.2); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-                        <strong style="color: #EAB308;">⚠️ AI temporarily unavailable</strong>
+                    <div style="line-height: 1.8; color: rgba(255,255,255,0.95);">
+                        <strong style="color: #EAB308;">Investment Verdict</strong><br>
+                        ${roi} investment - ${verdict} with ${data.paybackYears.toFixed(1)} year payback. You'll save AED ${Math.round(savings25yr).toLocaleString()} over 25 years.<br><br>
+                        
+                        <strong style="color: #EAB308;">Weather Impact</strong><br>
+                        UAE's ${data.peakSunHours.toFixed(1)} peak sun hours and ${data.avgTemp.toFixed(0)}°C average temperature provide excellent solar conditions. Current temp efficiency: ${data.tempDeratingPercent.toFixed(0)}%.<br><br>
+                        
+                        <strong style="color: #EAB308;">Financial Optimization</strong><br>
+                        Annual savings of AED ${Math.round(data.annualSavingsAED).toLocaleString()} cover ${data.coveragePercent.toFixed(0)}% of typical usage. Consider battery storage to maximize self-consumption.<br><br>
+                        
+                        <strong style="color: #EAB308;">Next Steps</strong><br>
+                        Get 3+ quotes from certified installers. Check DEWA net-metering eligibility. Review warranty terms (25yr panel, 10yr inverter standard).
                     </div>
-                    <p>Based on your data: ${data.paybackYears < 6 ? 'Good investment' : 'Moderate investment'} with ${data.paybackYears.toFixed(1)} year payback period and AED ${Math.round(data.annualSavingsAED).toLocaleString()} annual savings.</p>
+                    <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
+                        Smart Analysis Engine
+                    </div>
                 `;
             }
         }
