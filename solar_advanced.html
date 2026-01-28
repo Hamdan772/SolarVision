@@ -2496,7 +2496,7 @@
             // Panel dimensions in meters
             const panelWidthM = 1.0;
             const panelHeightM = 1.7;
-            const gapM = 0.02; // 2cm gap for tighter packing
+            const gapM = 0.02; // 2cm gap
 
             // Convert to degrees
             const mPerDegLat = 111320;
@@ -2513,7 +2513,7 @@
             if (!userSetRotation || forceAutoRotation) {
                 let bestRotation = 0;
                 let maxCount = 0;
-                for (let r = 0; r < 180; r += 3) {
+                for (let r = 0; r < 180; r += 2) {
                     const cnt = countPanelsForRotation(roofPolygon, bbox, r, panelW, panelH, gap, gap);
                     if (cnt > maxCount) {
                         maxCount = cnt;
@@ -2526,94 +2526,97 @@
                 document.getElementById('rotationValue').textContent = `${bestRotation}°`;
             }
 
-            const angle = useRotation * Math.PI / 180;
-            const cosA = Math.cos(angle);
-            const sinA = Math.sin(angle);
-
-            // Get all roof vertices to find extent
-            const allLngs = roofPoints.map(p => p[0]);
-            const allLats = roofPoints.map(p => p[1]);
-            const roofMinLng = Math.min(...allLngs);
-            const roofMaxLng = Math.max(...allLngs);
-            const roofMinLat = Math.min(...allLats);
-            const roofMaxLat = Math.max(...allLats);
+            const angle = -useRotation * Math.PI / 180; // Negative to rotate polygon
             
-            // Center of roof
-            const cLng = (roofMinLng + roofMaxLng) / 2;
-            const cLat = (roofMinLat + roofMaxLat) / 2;
-            
-            // Extend search area significantly
-            const spanLng = (roofMaxLng - roofMinLng) * 2;
-            const spanLat = (roofMaxLat - roofMinLat) * 2;
+            // Get centroid for rotation pivot
+            const centroid = turf.centroid(roofPolygon);
+            const cx = centroid.geometry.coordinates[0];
+            const cy = centroid.geometry.coordinates[1];
 
-            // Try multiple grid offsets to find best coverage
+            // Rotate polygon points (inverse rotation)
+            const rotatedPoints = roofPoints.map(p => {
+                const dx = p[0] - cx;
+                const dy = p[1] - cy;
+                return [
+                    cx + dx * Math.cos(angle) - dy * Math.sin(angle),
+                    cy + dx * Math.sin(angle) + dy * Math.cos(angle)
+                ];
+            });
+            const rotatedPolygon = turf.polygon([rotatedPoints]);
+            const rotatedBbox = turf.bbox(rotatedPolygon);
+
+            // Place panels on axis-aligned grid over rotated polygon
+            const minX = rotatedBbox[0];
+            const minY = rotatedBbox[1];
+            const maxX = rotatedBbox[2];
+            const maxY = rotatedBbox[3];
+
+            // Try multiple offsets
             let bestPanels = [];
-            const offsets = [0, 0.25, 0.5, 0.75];
-            
-            for (const offsetX of offsets) {
-                for (const offsetY of offsets) {
+            const offsets = [0, 0.2, 0.4, 0.6, 0.8];
+
+            for (const offX of offsets) {
+                for (const offY of offsets) {
                     const panels = [];
-                    const startLng = cLng - spanLng + (offsetX * stepW);
-                    const startLat = cLat - spanLat + (offsetY * stepH);
                     
-                    for (let lat = startLat; lat <= cLat + spanLat; lat += stepH) {
-                        for (let lng = startLng; lng <= cLng + spanLng; lng += stepW) {
-                            // Grid position relative to center
-                            const dx = lng - cLng;
-                            const dy = lat - cLat;
-                            
-                            // Rotate grid position
-                            const rx = dx * cosA - dy * sinA;
-                            const ry = dx * sinA + dy * cosA;
-                            
-                            // Final panel center
-                            const pcLng = cLng + rx;
-                            const pcLat = cLat + ry;
-                            
-                            // Panel corners (rotated)
+                    for (let y = minY + offY * stepH; y <= maxY; y += stepH) {
+                        for (let x = minX + offX * stepW; x <= maxX; x += stepW) {
+                            // Panel corners in rotated space (axis-aligned)
                             const hw = panelW / 2;
                             const hh = panelH / 2;
-                            const corners = [
-                                [-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]
-                            ].map(([lx, ly]) => {
-                                return [
-                                    pcLng + lx * cosA - ly * sinA,
-                                    pcLat + lx * sinA + ly * cosA
-                                ];
-                            });
-                            
-                            // Check all corners inside roof
+                            const rotCorners = [
+                                [x - hw, y - hh],
+                                [x + hw, y - hh],
+                                [x + hw, y + hh],
+                                [x - hw, y + hh]
+                            ];
+
+                            // Check all corners inside rotated polygon
                             let valid = true;
-                            for (const [pLng, pLat] of corners) {
-                                if (!turf.booleanPointInPolygon(turf.point([pLng, pLat]), roofPolygon)) {
+                            for (const [px, py] of rotCorners) {
+                                if (!turf.booleanPointInPolygon(turf.point([px, py]), rotatedPolygon)) {
                                     valid = false;
                                     break;
                                 }
                             }
-                            
-                            // Check if panel overlaps with any obstacles
-                            if (valid && obstacles.length > 0) {
-                                // Check panel center and corners against obstacles
-                                if (isPointInObstacle(pcLng, pcLat)) {
-                                    valid = false;
-                                }
-                                if (valid) {
-                                    for (const [pLng, pLat] of corners) {
-                                        if (isPointInObstacle(pLng, pLat)) {
-                                            valid = false;
-                                            break;
+
+                            if (valid) {
+                                // Rotate corners back to original space
+                                const invAngle = -angle;
+                                const realCorners = rotCorners.map(([px, py]) => {
+                                    const dx = px - cx;
+                                    const dy = py - cy;
+                                    return [
+                                        cx + dx * Math.cos(invAngle) - dy * Math.sin(invAngle),
+                                        cy + dx * Math.sin(invAngle) + dy * Math.cos(invAngle)
+                                    ];
+                                });
+
+                                // Check obstacles in real space
+                                if (obstacles.length > 0) {
+                                    const centerX = (realCorners[0][0] + realCorners[2][0]) / 2;
+                                    const centerY = (realCorners[0][1] + realCorners[2][1]) / 2;
+                                    if (isPointInObstacle(centerX, centerY)) {
+                                        valid = false;
+                                    }
+                                    if (valid) {
+                                        for (const [px, py] of realCorners) {
+                                            if (isPointInObstacle(px, py)) {
+                                                valid = false;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            
-                            if (valid) {
-                                const dist = Math.sqrt(rx * rx + ry * ry);
-                                panels.push({ corners, dist });
+
+                                if (valid) {
+                                    const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+                                    panels.push({ corners: realCorners, dist });
+                                }
                             }
                         }
                     }
-                    
+
                     if (panels.length > bestPanels.length) {
                         bestPanels = panels;
                     }
@@ -2630,13 +2633,13 @@
             for (let i = 0; i < toDraw; i++) {
                 const p = bestPanels[i];
                 const leafletCoords = p.corners.map(([lng, lat]) => [lat, lng]);
-                
+
                 L.polygon(leafletCoords, {
                     color: '#FDE047',
                     weight: 1,
                     fillColor: '#1E40AF',
                     fillOpacity: 0.9
-                }).addTo(solarPanelsLayer).bindTooltip(`Panel ${i+1}<br>${wattPerPanel}W`);
+                }).addTo(solarPanelsLayer).bindTooltip(`Panel ${i + 1}<br>${wattPerPanel}W`);
             }
 
             actualPanelsFit = toDraw;
@@ -2648,50 +2651,58 @@
         }
 
         function countPanelsForRotation(polygon, bbox, rotation, panelW, panelH, gapX, gapY) {
-            const angleRad = rotation * Math.PI / 180;
-            const cos = Math.cos(angleRad);
-            const sin = Math.sin(angleRad);
+            const angle = -rotation * Math.PI / 180;
             
-            const minLng = bbox[0];
-            const minLat = bbox[1];
-            const maxLng = bbox[2];
-            const maxLat = bbox[3];
-            const centerLng = (minLng + maxLng) / 2;
-            const centerLat = (minLat + maxLat) / 2;
+            // Get centroid for rotation pivot
+            const centroid = turf.centroid(polygon);
+            const cx = centroid.geometry.coordinates[0];
+            const cy = centroid.geometry.coordinates[1];
             
-            const cellW = panelW + gapX;
-            const cellH = panelH + gapY;
+            // Get polygon coordinates
+            const coords = polygon.geometry.coordinates[0];
             
-            const spanW = (maxLng - minLng) * 2;
-            const spanH = (maxLat - minLat) * 2;
+            // Rotate polygon points
+            const rotatedPoints = coords.map(p => {
+                const dx = p[0] - cx;
+                const dy = p[1] - cy;
+                return [
+                    cx + dx * Math.cos(angle) - dy * Math.sin(angle),
+                    cy + dx * Math.sin(angle) + dy * Math.cos(angle)
+                ];
+            });
+            const rotatedPolygon = turf.polygon([rotatedPoints]);
+            const rotatedBbox = turf.bbox(rotatedPolygon);
             
+            const minX = rotatedBbox[0];
+            const minY = rotatedBbox[1];
+            const maxX = rotatedBbox[2];
+            const maxY = rotatedBbox[3];
+            
+            const stepW = panelW + gapX;
+            const stepH = panelH + gapY;
             const hw = panelW / 2;
             const hh = panelH / 2;
-            const corners = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]];
 
             let maxCnt = 0;
-            const offsets = [0, 0.25, 0.5, 0.75];
+            const offsets = [0, 0.2, 0.4, 0.6, 0.8];
             
-            for (const offsetX of offsets) {
-                for (const offsetY of offsets) {
+            for (const offX of offsets) {
+                for (const offY of offsets) {
                     let cnt = 0;
-                    const startLng = centerLng - spanW + (offsetX * cellW);
-                    const startLat = centerLat - spanH + (offsetY * cellH);
                     
-                    for (let y = startLat; y <= centerLat + spanH; y += cellH) {
-                        for (let x = startLng; x <= centerLng + spanW; x += cellW) {
-                            const dx = x - centerLng;
-                            const dy = y - centerLat;
-                            const rx = dx * cos - dy * sin;
-                            const ry = dx * sin + dy * cos;
-                            const cx = centerLng + rx;
-                            const cy = centerLat + ry;
+                    for (let y = minY + offY * stepH; y <= maxY; y += stepH) {
+                        for (let x = minX + offX * stepW; x <= maxX; x += stepW) {
+                            // Panel corners in rotated space
+                            const corners = [
+                                [x - hw, y - hh],
+                                [x + hw, y - hh],
+                                [x + hw, y + hh],
+                                [x - hw, y + hh]
+                            ];
                             
                             let allInside = true;
-                            for (const [lx, ly] of corners) {
-                                const rotX = lx * cos - ly * sin;
-                                const rotY = lx * sin + ly * cos;
-                                if (!turf.booleanPointInPolygon(turf.point([cx + rotX, cy + rotY]), polygon)) {
+                            for (const [px, py] of corners) {
+                                if (!turf.booleanPointInPolygon(turf.point([px, py]), rotatedPolygon)) {
                                     allInside = false;
                                     break;
                                 }
