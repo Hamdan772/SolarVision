@@ -2100,6 +2100,25 @@
 
         // Groq API key is proxied via /api/groq (set GROQ_API_KEY in Vercel env)
         const GROQ_API_KEY = '';
+        
+        // Helper to get the correct API endpoint
+        function getGroqEndpoint() {
+            const isLocalServer = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            return '/api/groq'; // Both local server and Vercel use the same path
+        }
+        
+        // Check if server is available
+        async function checkServerStatus() {
+            try {
+                const resp = await fetch('/api/groq', {
+                    method: 'OPTIONS',
+                    signal: AbortSignal.timeout(2000)
+                });
+                return resp.ok;
+            } catch {
+                return false;
+            }
+        }
 
         // NASA POWER Data Cache
         let nasaPowerAllSkyData = null;
@@ -3300,22 +3319,30 @@
             try {
                 const prompt = `Based on this UAE solar system data, recommend the BEST panel:\nSystem: ${systemData.systemSizeKW} kW, ${systemData.panelCount} panels\nLocation: ${systemData.location}, Temp: ${systemData.avgTemp}°C\nBudget: AED ${Math.round(systemData.budget)}\n\nRespond with JSON only: {"recommended": 1, "reason": "...", "alternativeIndex": 2, "alternativeReason": "..."}`;
 
-                const response = await fetch('/api/groq', {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(getGroqEndpoint(), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: 'llama-3.3-70b-versatile',
                         messages: [{ role: 'user', content: prompt }],
                         max_tokens: 200
-                    })
+                    }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
 
                 if (!response.ok) return null;
                 const aiData = await response.json();
+                if (!aiData.choices || !aiData.choices[0]) return null;
                 let content = aiData.choices[0].message.content.trim();
                 content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
                 return JSON.parse(content);
             } catch (error) {
+                console.log('Panel recommendation unavailable:', error.message);
                 return null;
             }
         }
@@ -3692,7 +3719,10 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
 3. **Savings Strategy** - One specific tip to maximize financial returns
 4. **Action Plan** - Concrete next step the homeowner should take`;
 
-                const response = await fetch('/api/groq', {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                
+                const response = await fetch(getGroqEndpoint(), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -3703,8 +3733,11 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
                         ],
                         max_tokens: 400,
                         temperature: 0.7
-                    })
+                    }),
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
 
                 if (!response.ok) throw new Error('API error');
 
