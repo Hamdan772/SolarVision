@@ -29,7 +29,6 @@
 
 Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, dust, degradation**, and **local UAE electricity pricing**.
 
-👉 **Live App:** [https://solarvision-app.vercel.app](https://solarvision-app.vercel.app)
 
 ---
 
@@ -57,9 +56,6 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 
 ---
 
-## 🖥️ Demo
-
-🔗 **[Launch Live Demo](https://solarvision-app.vercel.app)** — No installation required!
 
 ### Quick Start:
 1. Open the app and go to Calculator
@@ -72,7 +68,6 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 
 ## � Recent updates (2026-01-26)
 - ⚠️ **Panel rendering update reverted**: A planned center-out spiral placement was briefly implemented but reverted on **2026-01-26** by request. The repository now contains the original grid-based placement (see `src/Docs/FIXES_COMPLETE.md`).
-- ✅ **App deployed to Vercel**: Aliased as `https://solarvision-app.vercel.app`.
 
 ## �🛠️ Tech Stack
 
@@ -87,25 +82,6 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 | **Deployment** | Vercel |
 
 ---
-
-## 🚀 Deployment
-
-The application is deployed on Vercel with serverless functions for the API endpoints. Static assets are served directly while `/api/groq` and `/api/overpass` run as Python serverless functions.
-
-**Production (current):** https://solarvision-8ehorhn23-rishisomanisasomosas-projects.vercel.app
-
-**Aliased (friendly URL):** https://solarvision-app.vercel.app
-
-**Deployed by:** `rishisomanisasomosa` on **2026-01-26** using the Vercel CLI. (commit `e928d90`)
-
-[![Vercel](https://vercelbadge.vercel.app/api/solarvision-app)](https://solarvision-app.vercel.app)
-
-To deploy updates from your local machine (CLI):
-```bash
-# make sure you're logged in: `vercel login`
-# deploy a production build and skip prompts
-vercel --prod --yes
-```
 
 CI / Git-linked deployments
 - For automatic deployments, connect the repository to Vercel via the Vercel dashboard (GitHub/GitLab/Bitbucket) and configure protected environment variables there.
@@ -242,7 +218,7 @@ MIT License — see [LICENSE](src/LICENSE)
 </p>
 
 <p align="center">
-  <strong>Rishi</strong><br/>
+  <strong>Rishi Rahul</strong><br/>
   <a href="https://github.com/RishiSomanIsASomosa">
     <img src="https://img.shields.io/badge/GitHub-@RishiSomanIsASomosa-181717?style=flat-square&logo=github" alt="GitHub Rishi">
   </a>
