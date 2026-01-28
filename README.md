@@ -9,12 +9,6 @@
 </p>
 
 <p align="center">
-  <a href="https://solarvision-app.vercel.app">
-    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-EAB308?style=for-the-badge" alt="Live Demo">
-  </a>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/NASA-POWER_Data-0B3D91?style=flat-square&logo=nasa">
   <img src="https://img.shields.io/badge/AI-Groq_Powered-EAB308?style=flat-square">
   <img src="https://img.shields.io/badge/Maps-Leaflet.js-199900?style=flat-square&logo=leaflet">
