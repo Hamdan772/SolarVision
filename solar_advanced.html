@@ -1651,10 +1651,6 @@
                                 <i class="fas fa-layer-group"></i>
                                 <span>Multi-Roof</span>
                             </button>
-                            <button class="feature-btn" id="shadingBtn" onclick="analyzeShadingFromBuildings()" title="Analyze shading from nearby buildings">
-                                <i class="fas fa-cloud-sun"></i>
-                                <span>Shading</span>
-                            </button>
                             <button class="feature-btn" onclick="generatePDFReport()" title="Export detailed PDF report">
                                 <i class="fas fa-file-pdf"></i>
                                 <span>PDF</span>
@@ -1687,18 +1683,6 @@
                                 <span id="totalRoofArea" style="font-size: 12px; color: var(--text-secondary);">Total: 0 m²</span>
                             </div>
                             <div id="roofSectionsList" class="obstacle-list"></div>
-                        </div>
-
-                        <!-- Shading Analysis Section -->
-                        <div id="shadingSection" style="margin-top: 16px; display: none;">
-                            <div style="padding: 12px; background: var(--bg-alt); border-radius: 10px; border-left: 3px solid var(--warning);">
-                                <div style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px;">
-                                    <i class="fas fa-cloud-sun" style="color: var(--warning);"></i> Shading Analysis
-                                </div>
-                                <div id="shadingResult" style="font-size: 12px; color: var(--text-secondary);">
-                                    Click "Shading" to analyze nearby buildings
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -2527,137 +2511,82 @@
             const stepW = panelW + gap;
             const stepH = panelH + gap;
 
-            // Find optimal rotation
-            let useRotation = currentRotation;
-            if (!userSetRotation || forceAutoRotation) {
-                let bestRotation = 0;
-                let maxCount = 0;
-                for (let r = 0; r < 180; r += 2) {
-                    const cnt = countPanelsForRotation(roofPolygon, bbox, r, panelW, panelH, gap, gap);
-                    if (cnt > maxCount) {
-                        maxCount = cnt;
-                        bestRotation = r;
-                    }
-                }
-                useRotation = bestRotation;
-                currentRotation = bestRotation;
-                document.getElementById('rotationSlider').value = bestRotation;
-                document.getElementById('rotationValue').textContent = `${bestRotation}°`;
-            }
+            // Simple grid approach: Fill entire bounding box, then filter
+            const minX = bbox[0];
+            const minY = bbox[1];
+            const maxX = bbox[2];
+            const maxY = bbox[3];
 
-            const angle = -useRotation * Math.PI / 180; // Negative to rotate polygon
+            // Generate complete grid of panels across the entire bounding box
+            const allPanels = [];
+            let rowIndex = 0;
             
-            // Get centroid for rotation pivot
-            const centroid = turf.centroid(roofPolygon);
-            const cx = centroid.geometry.coordinates[0];
-            const cy = centroid.geometry.coordinates[1];
+            for (let y = minY; y <= maxY; y += stepH) {
+                let colIndex = 0;
+                for (let x = minX; x <= maxX; x += stepW) {
+                    // Panel corners (simple rectangle, no rotation)
+                    const hw = panelW / 2;
+                    const hh = panelH / 2;
+                    const corners = [
+                        [x - hw, y - hh],
+                        [x + hw, y - hh],
+                        [x + hw, y + hh],
+                        [x - hw, y + hh]
+                    ];
 
-            // Rotate polygon points (inverse rotation)
-            const rotatedPoints = roofPoints.map(p => {
-                const dx = p[0] - cx;
-                const dy = p[1] - cy;
-                return [
-                    cx + dx * Math.cos(angle) - dy * Math.sin(angle),
-                    cy + dx * Math.sin(angle) + dy * Math.cos(angle)
-                ];
-            });
-            const rotatedPolygon = turf.polygon([rotatedPoints]);
-            const rotatedBbox = turf.bbox(rotatedPolygon);
-
-            // Place panels on axis-aligned grid over rotated polygon
-            const minX = rotatedBbox[0];
-            const minY = rotatedBbox[1];
-            const maxX = rotatedBbox[2];
-            const maxY = rotatedBbox[3];
-
-            // Try multiple offsets
-            let bestPanels = [];
-            const offsets = [0, 0.2, 0.4, 0.6, 0.8];
-
-            for (const offX of offsets) {
-                for (const offY of offsets) {
-                    const panels = [];
+                    // Check if panel center is inside polygon
+                    const centerPoint = turf.point([x, y]);
+                    const centerInside = turf.booleanPointInPolygon(centerPoint, roofPolygon);
                     
-                    for (let y = minY + offY * stepH; y <= maxY; y += stepH) {
-                        for (let x = minX + offX * stepW; x <= maxX; x += stepW) {
-                            // Panel corners in rotated space (axis-aligned)
-                            const hw = panelW / 2;
-                            const hh = panelH / 2;
-                            const rotCorners = [
-                                [x - hw, y - hh],
-                                [x + hw, y - hh],
-                                [x + hw, y + hh],
-                                [x - hw, y + hh]
-                            ];
-
-                            // Check all corners inside rotated polygon
-                            let valid = true;
-                            for (const [px, py] of rotCorners) {
-                                if (!turf.booleanPointInPolygon(turf.point([px, py]), rotatedPolygon)) {
-                                    valid = false;
-                                    break;
-                                }
-                            }
-
-                            if (valid) {
-                                // Rotate corners back to original space
-                                const invAngle = -angle;
-                                const realCorners = rotCorners.map(([px, py]) => {
-                                    const dx = px - cx;
-                                    const dy = py - cy;
-                                    return [
-                                        cx + dx * Math.cos(invAngle) - dy * Math.sin(invAngle),
-                                        cy + dx * Math.sin(invAngle) + dy * Math.cos(invAngle)
-                                    ];
-                                });
-
-                                // Check obstacles in real space
-                                if (obstacles.length > 0) {
-                                    const centerX = (realCorners[0][0] + realCorners[2][0]) / 2;
-                                    const centerY = (realCorners[0][1] + realCorners[2][1]) / 2;
-                                    if (isPointInObstacle(centerX, centerY)) {
-                                        valid = false;
-                                    }
-                                    if (valid) {
-                                        for (const [px, py] of realCorners) {
-                                            if (isPointInObstacle(px, py)) {
-                                                valid = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (valid) {
-                                    // Store row and column position for grid-based ordering
-                                    const row = Math.round((y - minY) / stepH);
-                                    const col = Math.round((x - minX) / stepW);
-                                    panels.push({ 
-                                        corners: realCorners, 
-                                        row: row,
-                                        col: col,
-                                        x: x,
-                                        y: y
-                                    });
-                                }
-                            }
+                    // Check if all corners are inside (stricter)
+                    let allCornersInside = true;
+                    for (const [px, py] of corners) {
+                        if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
+                            allCornersInside = false;
+                            break;
                         }
                     }
 
-                    if (panels.length > bestPanels.length) {
-                        bestPanels = panels;
+                    // Panel is valid if center is inside OR majority of corners are inside
+                    if (centerInside || allCornersInside) {
+                        // Check obstacles
+                        let blockedByObstacle = false;
+                        if (obstacles.length > 0) {
+                            if (isPointInObstacle(x, y)) {
+                                blockedByObstacle = true;
+                            }
+                            if (!blockedByObstacle) {
+                                for (const [px, py] of corners) {
+                                    if (isPointInObstacle(px, py)) {
+                                        blockedByObstacle = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!blockedByObstacle) {
+                            allPanels.push({ 
+                                corners: corners,
+                                row: rowIndex,
+                                col: colIndex,
+                                x: x,
+                                y: y
+                            });
+                        }
                     }
+                    colIndex++;
                 }
+                rowIndex++;
             }
 
-            // Sort by row first, then column (left-to-right, top-to-bottom grid pattern)
-            // This ensures panels fill the rectangle uniformly instead of forming a circle
-            bestPanels.sort((a, b) => {
-                if (a.row !== b.row) {
-                    return a.row - b.row;
-                }
+            // Sort by row then column for uniform grid filling
+            allPanels.sort((a, b) => {
+                if (a.row !== b.row) return a.row - b.row;
                 return a.col - b.col;
             });
+
+            const bestPanels = allPanels;
 
             // Draw panels
             const toDraw = Math.min(count, bestPanels.length);
@@ -4129,163 +4058,6 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
             } else {
                 showStatus('Draw a roof first before adding as section', 'warning');
             }
-        }
-
-        // ============================================
-        // SHADING ANALYSIS
-        // ============================================
-        async function analyzeShadingFromBuildings() {
-            if (!drawnLayer || roofArea === 0) {
-                showStatus('⚠️ Draw a roof first to analyze shading', 'warning');
-                return;
-            }
-
-            const section = document.getElementById('shadingSection');
-            section.style.display = 'block';
-            document.getElementById('shadingBtn').classList.add('active');
-            
-            const resultEl = document.getElementById('shadingResult');
-            resultEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing nearby buildings...';
-
-            try {
-                // Get center of drawn roof
-                const center = map.getCenter();
-                const bounds = L.latLngBounds(
-                    [center.lat - 0.002, center.lng - 0.002],
-                    [center.lat + 0.002, center.lng + 0.002]
-                );
-                
-                const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
-                
-                const isLocalServer = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                let response;
-
-                // Fetch buildings with height data
-                if (isLocalServer) {
-                    response = await fetch(`/api/overpass?bbox=${encodeURIComponent(bbox)}&heights=true`);
-                } else {
-                    const query = `[out:json][timeout:25];(way["building"](${bbox}););out geom;`;
-                    response = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: query });
-                }
-
-                const data = await response.json();
-                nearbyBuildingsData = [];
-                
-                if (data.elements) {
-                    data.elements.forEach(element => {
-                        if (element.geometry && element.tags) {
-                            const height = parseFloat(element.tags.height) || 
-                                          parseFloat(element.tags['building:levels']) * 3 || 
-                                          9; // Default 3 floors
-                            
-                            const coords = element.geometry.map(node => [node.lat, node.lon]);
-                            const buildingPoly = turf.polygon([coords.concat([coords[0]])]);
-                            const buildingCenter = turf.centroid(buildingPoly);
-                            
-                            nearbyBuildingsData.push({
-                                height: height,
-                                center: buildingCenter.geometry.coordinates,
-                                polygon: buildingPoly
-                            });
-                        }
-                    });
-                }
-
-                // Calculate shading impact
-                const shadingAnalysis = calculateShadingImpact(nearbyBuildingsData);
-                shadingAnalysisResult = shadingAnalysis;
-
-                resultEl.innerHTML = `
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: ${shadingAnalysis.lossPercent < 5 ? 'var(--success)' : shadingAnalysis.lossPercent < 15 ? 'var(--warning)' : 'var(--error)'};">
-                            ${shadingAnalysis.lossPercent < 5 ? '☀️ Excellent' : shadingAnalysis.lossPercent < 15 ? '⛅ Moderate' : '☁️ Significant'} Shading
-                        </strong>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
-                        <div>Buildings nearby: <strong>${shadingAnalysis.buildingCount}</strong></div>
-                        <div>Tallest: <strong>${shadingAnalysis.maxHeight.toFixed(0)}m</strong></div>
-                        <div>Shading loss: <strong style="color: ${shadingAnalysis.lossPercent < 5 ? 'var(--success)' : 'var(--warning)'};">-${shadingAnalysis.lossPercent.toFixed(1)}%</strong></div>
-                        <div>Effective hours: <strong>${(5.5 * (1 - shadingAnalysis.lossPercent/100)).toFixed(1)}/day</strong></div>
-                    </div>
-                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted);">
-                        ${shadingAnalysis.recommendation}
-                    </div>
-                `;
-
-                showStatus(`Shading analysis complete - ${shadingAnalysis.lossPercent.toFixed(1)}% estimated loss`, 'success');
-
-            } catch (error) {
-                console.error('Shading analysis error:', error);
-                resultEl.innerHTML = `
-                    <div style="color: var(--success);">
-                        <i class="fas fa-check-circle"></i> No significant shading detected
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                        Unable to fetch nearby building data. Assuming minimal shading.
-                    </div>
-                `;
-                shadingAnalysisResult = { lossPercent: 0, buildingCount: 0, maxHeight: 0 };
-            }
-        }
-
-        function calculateShadingImpact(buildings) {
-            if (!buildings || buildings.length === 0) {
-                return {
-                    lossPercent: 0,
-                    buildingCount: 0,
-                    maxHeight: 0,
-                    recommendation: '✓ No nearby tall buildings detected. Excellent solar potential!'
-                };
-            }
-
-            const roofCenter = turf.centroid(turf.polygon([roofPoints]));
-            const roofCenterCoords = roofCenter.geometry.coordinates;
-            
-            let totalShadingFactor = 0;
-            let maxHeight = 0;
-            let criticalBuildings = 0;
-
-            buildings.forEach(building => {
-                const distance = turf.distance(
-                    turf.point(roofCenterCoords),
-                    turf.point(building.center),
-                    { units: 'meters' }
-                );
-
-                // Calculate sun angle (UAE latitude ~25°, winter sun angle ~40-50°)
-                const sunAngle = 45 * Math.PI / 180; // 45 degrees average
-                const shadowLength = building.height / Math.tan(sunAngle);
-
-                if (distance < shadowLength + 10) {
-                    // Building can cast shadow on our roof
-                    const shadowFactor = Math.max(0, 1 - (distance / shadowLength)) * (building.height / 30);
-                    totalShadingFactor += shadowFactor * 0.1; // Weight factor
-                    criticalBuildings++;
-                }
-
-                if (building.height > maxHeight) {
-                    maxHeight = building.height;
-                }
-            });
-
-            const lossPercent = Math.min(30, totalShadingFactor * 10); // Cap at 30%
-
-            let recommendation = '';
-            if (lossPercent < 5) {
-                recommendation = '✓ Minimal shading impact. Ideal conditions for solar installation.';
-            } else if (lossPercent < 15) {
-                recommendation = '⚠ Moderate shading. Consider optimizing panel placement or using micro-inverters.';
-            } else {
-                recommendation = '⚠ Significant shading from nearby buildings. Consider shade-tolerant panels or alternative locations.';
-            }
-
-            return {
-                lossPercent,
-                buildingCount: buildings.length,
-                maxHeight,
-                criticalBuildings,
-                recommendation
-            };
         }
 
         // ============================================
