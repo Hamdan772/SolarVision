@@ -2534,11 +2534,7 @@
                         [x - hw, y + hh]
                     ];
 
-                    // Check if panel center is inside polygon
-                    const centerPoint = turf.point([x, y]);
-                    const centerInside = turf.booleanPointInPolygon(centerPoint, roofPolygon);
-                    
-                    // Check if all corners are inside (stricter)
+                    // Check if all 4 corners are inside the polygon
                     let allCornersInside = true;
                     for (const [px, py] of corners) {
                         if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
@@ -2547,8 +2543,8 @@
                         }
                     }
 
-                    // Panel is valid if center is inside OR majority of corners are inside
-                    if (centerInside || allCornersInside) {
+                    // Panel is valid only if ALL corners fit inside the roof
+                    if (allCornersInside) {
                         // Check obstacles
                         let blockedByObstacle = false;
                         if (obstacles.length > 0) {
