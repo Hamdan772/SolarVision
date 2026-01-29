@@ -2439,10 +2439,9 @@
             const polygon = turf.polygon([roofPoints]);
             roofArea = turf.area(polygon);
 
-            const panelArea = 2.0;
-            const usableRoofPercent = 0.70;
-            const usableArea = roofArea * usableRoofPercent;
-            maxPanelsForRoof = Math.floor(usableArea / panelArea);
+            // Calculate actual max panels by testing the grid
+            const actualMax = calculateActualMaxPanels();
+            maxPanelsForRoof = actualMax;
 
             const slider = document.getElementById('panelSlider');
             slider.max = maxPanelsForRoof;
@@ -2457,7 +2456,86 @@
             document.getElementById('panelControlSection').style.display = 'block';
             document.getElementById('areaDisplayContainer').classList.add('has-data');
             updateAreaDisplay();
+            
+            // Show status message with actual fit
+            showStatus(`✅ ${maxPanelsForRoof} panels fit perfectly on this roof`, 'success');
+            
             scheduleCalculate();
+        }
+
+        function calculateActualMaxPanels() {
+            if (!roofPoints || roofPoints.length < 3) return 0;
+
+            const roofPolygon = turf.polygon([roofPoints]);
+            const bbox = turf.bbox(roofPolygon);
+
+            // Panel dimensions in meters
+            const panelWidthM = 1.0;
+            const panelHeightM = 1.7;
+            const gapM = 0.02;
+
+            // Convert to degrees
+            const mPerDegLat = 111320;
+            const mPerDegLng = 111320 * Math.cos(currentLat * Math.PI / 180);
+            const panelW = panelWidthM / mPerDegLng;
+            const panelH = panelHeightM / mPerDegLat;
+
+            const stepW = panelW + gapM / mPerDegLng;
+            const stepH = panelH + gapM / mPerDegLat;
+
+            const minX = bbox[0];
+            const minY = bbox[1];
+            const maxX = bbox[2];
+            const maxY = bbox[3];
+
+            let panelCount = 0;
+
+            // Count how many panels actually fit
+            for (let y = minY; y <= maxY; y += stepH) {
+                for (let x = minX; x <= maxX; x += stepW) {
+                    const hw = panelW / 2;
+                    const hh = panelH / 2;
+                    const corners = [
+                        [x - hw, y - hh],
+                        [x + hw, y - hh],
+                        [x + hw, y + hh],
+                        [x - hw, y - hh]
+                    ];
+
+                    // Check if all corners fit
+                    let allCornersInside = true;
+                    for (const [px, py] of corners) {
+                        if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
+                            allCornersInside = false;
+                            break;
+                        }
+                    }
+
+                    if (allCornersInside) {
+                        // Check obstacles
+                        let blocked = false;
+                        if (obstacles.length > 0) {
+                            if (isPointInObstacle(x, y)) {
+                                blocked = true;
+                            }
+                            if (!blocked) {
+                                for (const [px, py] of corners) {
+                                    if (isPointInObstacle(px, py)) {
+                                        blocked = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!blocked) {
+                            panelCount++;
+                        }
+                    }
+                }
+            }
+
+            return panelCount;
         }
 
         function updateAreaDisplay() {
