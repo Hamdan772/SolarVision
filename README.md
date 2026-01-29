@@ -72,18 +72,10 @@ Unlike basic calculators, SolarVision accounts for **cloud cover, heat losses, d
 | **Charts** | Chart.js |
 | **AI** | Groq API (LLaMA 3.3 70B) |
 | **Data** | NASA POWER API |
-| **Backend** | Python (Serverless Functions on Vercel) |
-| **Deployment** | Vercel |
+| **Backend** | Python |
 
 ---
 
-CI / Git-linked deployments
-- For automatic deployments, connect the repository to Vercel via the Vercel dashboard (GitHub/GitLab/Bitbucket) and configure protected environment variables there.
-
-Vercel Environment Variables (required for AI features)
-- The AI endpoint requires a Groq API key to operate. Add this to your Vercel project (Dashboard → Settings → Environment Variables) or via the CLI:
-
-```bash
 # add GROQ_API_KEY for production
 vercel env add GROQ_API_KEY production
 ```
@@ -220,6 +212,6 @@ MIT License — see [LICENSE](src/LICENSE)
 
 
 <p align="center">
-  <strong>Built with ☀️ in the UAE</strong><br>
+  <strong>Built with 💖 in the UAE</strong><br>
   Powered by NASA POWER & Groq AI
 </p>
