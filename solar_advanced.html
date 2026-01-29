@@ -2629,8 +2629,16 @@
                                 }
 
                                 if (valid) {
-                                    const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
-                                    panels.push({ corners: realCorners, dist });
+                                    // Store row and column position for grid-based ordering
+                                    const row = Math.round((y - minY) / stepH);
+                                    const col = Math.round((x - minX) / stepW);
+                                    panels.push({ 
+                                        corners: realCorners, 
+                                        row: row,
+                                        col: col,
+                                        x: x,
+                                        y: y
+                                    });
                                 }
                             }
                         }
@@ -2642,8 +2650,14 @@
                 }
             }
 
-            // Sort from center outward
-            bestPanels.sort((a, b) => a.dist - b.dist);
+            // Sort by row first, then column (left-to-right, top-to-bottom grid pattern)
+            // This ensures panels fill the rectangle uniformly instead of forming a circle
+            bestPanels.sort((a, b) => {
+                if (a.row !== b.row) {
+                    return a.row - b.row;
+                }
+                return a.col - b.col;
+            });
 
             // Draw panels
             const toDraw = Math.min(count, bestPanels.length);
