@@ -21,34 +21,7 @@
         }
 
         :root {
-            --primary: #EAB308;
-            --primary-light: #FACC15;
-            --primary-dark: #CA8A04;
-            --accent: #F59E0B;
-            --accent-light: #FBBF24;
-            --secondary: #1E293B;
-            --secondary-light: #334155;
-            --bg: #FFFFFF;
-            --bg-alt: #FFFBEB;
-            --bg-subtle: #FEF3C7;
-            --bg-card: #FFFFFF;
-            --border: #E2E8F0;
-            --border-light: #F1F5F9;
-            --text: #0F172A;
-            --text-secondary: #334155;
-            --text-muted: #64748B;
-            --success: #10B981;
-            --success-light: #34D399;
-            --warning: #F59E0B;
-            --error: #EF4444;
-            --blue: #3B82F6;
-            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
-            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.1);
-            --transition: ease;
-        }
-
-        [data-theme="dark"] {
+            /* Dark mode only - optimized color scheme */
             --primary: #FACC15;
             --primary-light: #FDE047;
             --primary-dark: #EAB308;
@@ -73,94 +46,95 @@
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+            --transition: ease;
         }
 
         /* Dark mode specific overrides for better readability */
-        [data-theme="dark"] .result-value {
+        .result-value {
             color: #F8FAFC !important;
             font-weight: 700;
         }
-        [data-theme="dark"] .result-label {
+        .result-label {
             color: #CBD5E1 !important;
         }
-        [data-theme="dark"] .stat-value {
+        .stat-value {
             color: #F8FAFC !important;
             font-weight: 700;
         }
-        [data-theme="dark"] .stat-label {
+        .stat-label {
             color: #94A3B8 !important;
         }
-        [data-theme="dark"] .section-title {
+        .section-title {
             color: #F8FAFC !important;
             font-weight: 700;
         }
-        [data-theme="dark"] .section-subtitle {
+        .section-subtitle {
             color: #94A3B8 !important;
         }
-        [data-theme="dark"] input, [data-theme="dark"] select {
+        input, select {
             background: #334155 !important;
             color: #F8FAFC !important;
             border-color: #475569 !important;
         }
-        [data-theme="dark"] .chart-container {
+        .chart-container {
             background: #1E293B;
             border: 1px solid #334155;
             border-radius: 12px;
         }
-        [data-theme="dark"] .tab-btn {
+        .tab-btn {
             color: #CBD5E1;
         }
-        [data-theme="dark"] .tab-btn.active {
+        .tab-btn.active {
             background: var(--primary);
-            color: #0F172A;
+            color: #F8FAFC;
         }
-        [data-theme="dark"] .card {
+        .card {
             background: #1E293B;
             border-color: #334155;
         }
-        [data-theme="dark"] .card-header {
+        .card-header {
             border-color: #334155;
         }
-        [data-theme="dark"] .card-title {
+        .card-title {
             color: #F8FAFC;
         }
-        [data-theme="dark"] .quick-summary {
+        .quick-summary {
             background: linear-gradient(135deg, #CA8A04 0%, #92400E 100%);
         }
-        [data-theme="dark"] .slider-value {
+        .slider-value {
             background: rgba(250, 204, 21, 0.2);
             color: #FDE047;
         }
-        [data-theme="dark"] .result-item {
+        .result-item {
             border-color: #334155;
         }
-        [data-theme="dark"] .status-badge {
+        .status-badge {
             display: none;
         }
-        [data-theme="dark"] .nav-tab {
+        .nav-tab {
             color: #CBD5E1;
             background: transparent;
         }
-        [data-theme="dark"] .nav-tab.active {
+        .nav-tab.active {
             background: rgba(250, 204, 21, 0.15);
             color: #FDE047;
             border-color: rgba(250, 204, 21, 0.3);
         }
-        [data-theme="dark"] .btn-primary {
+        .btn-primary {
             background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
-            color: #0F172A;
+            color: #F8FAFC;
             font-weight: 700;
             box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4);
         }
-        [data-theme="dark"] .btn-primary:hover {
+        .btn-primary:hover {
             box-shadow: 0 6px 30px rgba(250, 204, 21, 0.6);
             transform: translateY(-2px);
         }
-        [data-theme="dark"] .results-tabs .tab-btn {
+        .results-tabs .tab-btn {
             background: transparent;
             color: #CBD5E1;
         }
-        [data-theme="dark"] .results-tabs .tab-btn.active {
+        .results-tabs .tab-btn.active {
             background: rgba(250, 204, 21, 0.15);
             color: #FDE047;
             border-bottom: 2px solid #FACC15;
@@ -228,7 +202,7 @@
             top: -8px;
             right: -8px;
             background: var(--primary);
-            color: #0F172A;
+            color: #F8FAFC;
             width: 24px;
             height: 24px;
             border-radius: 50%;
@@ -275,7 +249,7 @@
         .feature-btn.active {
             background: var(--primary);
             border-color: var(--primary);
-            color: #0F172A;
+            color: #F8FAFC;
         }
 
         .feature-btn i {
@@ -385,32 +359,6 @@
             margin-bottom: 20px;
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .theme-toggle {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-alt);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-size: 18px;
-        }
-
-        .theme-toggle:hover {
-            background: var(--bg-subtle);
-            border-color: var(--primary);
-            transform: rotate(20deg);
-        }
-
         .back-btn {
             display: flex;
             align-items: center;
@@ -453,7 +401,7 @@
             transition: all 0.3s ease;
         }
 
-        [data-theme="dark"] .logo {
+        .logo {
             box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4),
                         0 0 40px rgba(250, 204, 21, 0.2);
         }
@@ -478,7 +426,7 @@
             transition: all 0.3s ease;
         }
 
-        [data-theme="dark"] .brand-text h1 {
+        .brand-text h1 {
             color: #FACC15;
             text-shadow: 
                 0 0 20px rgba(250, 204, 21, 0.6),
@@ -512,7 +460,7 @@
             line-height: 1.6;
         }
 
-        [data-theme="dark"] .brand-text p {
+        .brand-text p {
             color: #CBD5E1;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
@@ -522,7 +470,7 @@
             font-weight: 600;
         }
 
-        [data-theme="dark"] .brand-text p span {
+        .brand-text p span {
             color: #FDE047;
         }
 
@@ -1819,11 +1767,6 @@
                         <i class="fas fa-arrow-left"></i>
                         Back to Home
                     </a>
-                    <div class="header-actions">
-                        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode" id="themeToggleBtn">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                    </div>
                 </div>
                 <div class="header-brand">
                     <div class="logo">
@@ -2339,67 +2282,6 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <script>
-        // ============================================
-        // DARK MODE THEME SYSTEM
-        // ============================================
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-            
-            // Update charts with new theme colors
-            if (typeof savingsChart !== 'undefined' && savingsChart) {
-                const isDark = newTheme === 'dark';
-                const textColor = isDark ? '#CBD5E1' : '#475569';
-                const gridColor = isDark ? '#1E293B' : '#E8E0D8';
-                
-                savingsChart.options.plugins.legend.labels.color = textColor;
-                savingsChart.options.scales.y.ticks.color = textColor;
-                savingsChart.options.scales.y.grid.color = gridColor;
-                savingsChart.options.scales.x.title.color = textColor;
-                savingsChart.options.scales.x.ticks.color = textColor;
-                savingsChart.options.scales.x.grid.color = gridColor;
-                savingsChart.options.plugins.tooltip.backgroundColor = isDark ? '#1E293B' : '#FFFFFF';
-                savingsChart.options.plugins.tooltip.titleColor = isDark ? '#F8FAFC' : '#0F172A';
-                savingsChart.options.plugins.tooltip.bodyColor = isDark ? '#CBD5E1' : '#475569';
-                savingsChart.options.plugins.tooltip.borderColor = isDark ? '#334155' : '#E2E8F0';
-                savingsChart.update('none');
-            }
-            
-            if (typeof monthlyChart !== 'undefined' && monthlyChart) {
-                const isDark = newTheme === 'dark';
-                const textColor = isDark ? '#CBD5E1' : '#475569';
-                const gridColor = isDark ? '#1E293B' : '#E8E0D8';
-                
-                monthlyChart.options.plugins.legend.labels.color = textColor;
-                monthlyChart.options.scales.y.ticks.color = textColor;
-                monthlyChart.options.scales.y.grid.color = gridColor;
-                monthlyChart.options.scales.x.ticks.color = textColor;
-                monthlyChart.options.scales.x.grid.color = gridColor;
-                monthlyChart.update('none');
-            }
-        }
-
-        function updateThemeIcon(theme) {
-            const btn = document.getElementById('themeToggleBtn');
-            if (btn) {
-                btn.innerHTML = theme === 'dark' 
-                    ? '<i class="fas fa-sun"></i>' 
-                    : '<i class="fas fa-moon"></i>';
-            }
-        }
-
-        // Initialize theme on page load
-        initTheme();
-
         // ============================================
         // APPLICATION STATE & GLOBALS
         // ============================================
@@ -3893,10 +3775,10 @@
                 backdrop-filter: blur(4px);
             `;
 
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const bgColor = isDark ? '#1E293B' : '#FFFFFF';
-            const textColor = isDark ? '#F1F5F9' : '#0F172A';
-            const borderColor = isDark ? '#334155' : '#E2E8F0';
+            // Always dark mode now
+            const bgColor = '#1E293B';
+            const textColor = '#F8FAFC';
+            const borderColor = '#334155';
 
             modal.innerHTML = `
                 <div style="background: ${bgColor}; border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3);">
@@ -4655,9 +4537,9 @@
                 colors.push(cumulative >= 0 ? '#10B981' : '#EF4444');
             }
 
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const textColor = isDark ? '#E2E8F0' : '#475569';
-            const gridColor = isDark ? '#334155' : '#E2E8F0';
+            // Always dark mode now
+            const textColor = '#E2E8F0';
+            const gridColor = '#334155';
 
             savingsChart = new Chart(ctx, {
                 type: 'bar',
@@ -5741,7 +5623,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             animation: pulse-glow 2s ease-in-out infinite;
         }
 
-        [data-theme="dark"] .ai-chat-button {
+        .ai-chat-button {
             box-shadow: 0 8px 32px rgba(250, 204, 21, 0.5);
         }
 
@@ -5784,7 +5666,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        [data-theme="dark"] .ai-chat-window {
+        .ai-chat-window {
             background: var(--bg-alt);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
                         0 0 40px rgba(250, 204, 21, 0.1);
@@ -5858,7 +5740,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             background: var(--bg);
         }
 
-        [data-theme="dark"] .chat-messages {
+        .chat-messages {
             background: #1E293B;
         }
 
@@ -5879,7 +5761,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             margin-bottom: 12px;
         }
 
-        [data-theme="dark"] .chat-welcome h3 {
+        .chat-welcome h3 {
             color: var(--text);
         }
 
@@ -5901,7 +5783,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             border-bottom: 1px solid var(--border);
         }
 
-        [data-theme="dark"] .chat-welcome li {
+        .chat-welcome li {
             border-color: #334155;
         }
 
@@ -5935,7 +5817,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             background: var(--secondary);
         }
 
-        [data-theme="dark"] .user-message .message-avatar {
+        .user-message .message-avatar {
             background: var(--primary);
         }
 
@@ -5949,7 +5831,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             line-height: 1.5;
         }
 
-        [data-theme="dark"] .message-content {
+        .message-content {
             background: #334155;
             color: var(--text);
         }
@@ -5959,7 +5841,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             color: white;
         }
 
-        [data-theme="dark"] .user-message .message-content {
+        .user-message .message-content {
             background: rgba(250, 204, 21, 0.2);
             color: var(--text);
             border: 1px solid rgba(250, 204, 21, 0.3);
@@ -5977,7 +5859,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             font-size: 13px;
         }
 
-        [data-theme="dark"] .message-content code {
+        .message-content code {
             background: rgba(255, 255, 255, 0.1);
         }
 
@@ -6026,7 +5908,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             gap: 12px;
         }
 
-        [data-theme="dark"] .chat-input-container {
+        .chat-input-container {
             background: #1E293B;
             border-color: #334155;
         }
@@ -6043,7 +5925,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             transition: all 0.2s ease;
         }
 
-        [data-theme="dark"] #chatInput {
+        #chatInput {
             background: #334155;
             border-color: #475569;
             color: var(--text);
@@ -6055,7 +5937,7 @@ Provide concise, helpful answers (2-3 sentences max unless asked for details). U
             box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
         }
 
-        [data-theme="dark"] #chatInput:focus {
+        #chatInput:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
         }

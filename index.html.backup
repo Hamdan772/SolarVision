@@ -16,7 +16,24 @@
         }
 
         :root {
-            /* Dark mode only - optimized color scheme */
+            --primary: #EAB308;
+            --primary-dark: #CA8A04;
+            --primary-light: #FACC15;
+            --accent: #F59E0B;
+            --secondary: #1E293B;
+            --bg: #FFFFFF;
+            --bg-alt: #FFFBEB;
+            --text: #0F172A;
+            --text-light: #334155;
+            --text-muted: #64748B;
+            --success: #10B981;
+            --blue: #3B82F6;
+            --border: #E2E8F0;
+            --gradient-primary: linear-gradient(135deg, #FACC15 0%, #EAB308 100%);
+            --gradient-hero: linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(250, 204, 21, 0.05) 100%);
+        }
+
+        [data-theme="dark"] {
             --primary: #FACC15;
             --primary-dark: #F59E0B;
             --primary-light: #FDE047;
@@ -57,15 +74,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
 
         nav.scrolled {
             padding: 16px 80px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
         }
 
         .logo {
@@ -550,7 +567,7 @@
             animation: rotate-slow 8s linear infinite;
         }
 
-        .hero-badge {
+        [data-theme="dark"] .hero-badge {
             background: linear-gradient(135deg, var(--bg-alt), rgba(30, 41, 59, 0.9));
             border-color: rgba(250, 204, 21, 0.3);
         }
@@ -842,26 +859,26 @@
         }
 
         /* Dark-mode fixes for feature cards (improve contrast on dark background) */
-        .feature-card {
+        [data-theme="dark"] .feature-card {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
             border: 1px solid rgba(255, 255, 255, 0.04);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
             color: var(--text);
         }
 
-        .feature-card h3 {
+        [data-theme="dark"] .feature-card h3 {
             color: var(--text);
         }
 
-        .feature-card p {
+        [data-theme="dark"] .feature-card p {
             color: var(--text-light);
         }
 
-        .feature-icon {
+        [data-theme="dark"] .feature-icon {
             box-shadow: 0 10px 30px rgba(234, 179, 8, 0.12), 0 2px 6px rgba(0, 0, 0, 0.5) inset;
         }
 
-        .feature-card:hover {
+        [data-theme="dark"] .feature-card:hover {
             border-color: rgba(234, 179, 8, 0.12);
         }
 
@@ -963,31 +980,31 @@
         }
 
         /* Dark-mode fixes for How It Works (improves contrast in dark theme) */
-        .how-it-works {
+        [data-theme="dark"] .how-it-works {
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01)), var(--bg);
             color: var(--text);
         }
 
-        .how-it-works .section-tag {
+        [data-theme="dark"] .how-it-works .section-tag {
             background: rgba(248, 250, 252, 0.04);
             color: var(--primary-light);
         }
 
-        .how-it-works .section-subtitle {
+        [data-theme="dark"] .how-it-works .section-subtitle {
             color: rgba(248, 250, 252, 0.75);
         }
 
-        .step:not(:last-child)::after {
+        [data-theme="dark"] .step:not(:last-child)::after {
             background: rgba(255, 255, 255, 0.06);
         }
 
-        .steps .step-number {
+        [data-theme="dark"] .steps .step-number {
             background: rgba(255, 255, 255, 0.03);
             border-color: rgba(255, 255, 255, 0.06);
             color: var(--accent);
         }
 
-        .step p {
+        [data-theme="dark"] .step p {
             color: var(--text-light);
         }
 
@@ -1040,27 +1057,27 @@
         }
 
         /* Dark-mode fixes for testimonials */
-        .testimonial-card {
+        [data-theme="dark"] .testimonial-card {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
             border: 1px solid rgba(255, 255, 255, 0.04);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
             color: var(--text);
         }
 
-        .testimonial-card::before {
+        [data-theme="dark"] .testimonial-card::before {
             color: rgba(250, 204, 21, 0.12);
             opacity: 0.06;
         }
 
-        .testimonial-card p {
+        [data-theme="dark"] .testimonial-card p {
             color: var(--text-light);
         }
 
-        .testimonial-rating i {
+        [data-theme="dark"] .testimonial-rating i {
             color: #FBBF24;
         }
 
-        .testimonial-card:hover {
+        [data-theme="dark"] .testimonial-card:hover {
             box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 255, 255, 0.06);
         }
@@ -1149,31 +1166,31 @@
         }
 
         /* Dark-mode overrides for footer */
-        footer {
+        [data-theme="dark"] footer {
             background: var(--bg-alt);
             color: var(--text);
         }
 
-        .footer-content {
+        [data-theme="dark"] .footer-content {
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        footer a {
+        [data-theme="dark"] footer a {
             color: var(--text-light);
         }
 
-        .footer-brand .logo-text {
+        [data-theme="dark"] .footer-brand .logo-text {
             color: var(--text);
             text-shadow: 0 0 30px rgba(250, 204, 21, 0.4);
         }
 
         /* Enhanced Dark Mode Styles */
-        nav {
+        [data-theme="dark"] nav {
             background: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid rgba(250, 204, 21, 0.1);
         }
 
-        .logo-text {
+        [data-theme="dark"] .logo-text {
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1181,129 +1198,129 @@
             text-shadow: 0 0 30px rgba(250, 204, 21, 0.3);
         }
 
-        .nav-links a {
+        [data-theme="dark"] .nav-links a {
             color: var(--text-light);
         }
 
-        .nav-links a:hover {
+        [data-theme="dark"] .nav-links a:hover {
             color: var(--primary);
         }
 
-        .hero {
+        [data-theme="dark"] .hero {
             background: 
                 radial-gradient(circle at 20% 50%, rgba(250, 204, 21, 0.08), transparent 50%),
                 radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.06), transparent 50%),
                 var(--bg);
         }
 
-        .hero h1 {
+        [data-theme="dark"] .hero h1 {
             color: var(--text);
         }
 
-        .hero p {
+        [data-theme="dark"] .hero p {
             color: var(--text-light);
         }
 
-        .btn-primary {
+        [data-theme="dark"] .btn-primary {
             background: var(--gradient-primary);
-            color: #F8FAFC;
+            color: #0F172A;
             font-weight: 700;
             box-shadow: 0 8px 32px rgba(250, 204, 21, 0.4);
         }
 
-        .btn-primary:hover {
+        [data-theme="dark"] .btn-primary:hover {
             box-shadow: 0 12px 48px rgba(250, 204, 21, 0.6);
             transform: translateY(-3px);
         }
 
-        .btn-ghost {
+        [data-theme="dark"] .btn-ghost {
             background: transparent;
             color: var(--text);
             border-color: var(--border);
         }
 
-        .btn-ghost:hover {
+        [data-theme="dark"] .btn-ghost:hover {
             background: var(--bg-alt);
             border-color: var(--primary);
             color: var(--primary);
         }
 
-        .section-tag {
+        [data-theme="dark"] .section-tag {
             background: rgba(250, 204, 21, 0.1);
             color: var(--primary);
             border: 1px solid rgba(250, 204, 21, 0.2);
         }
 
-        .section-title {
+        [data-theme="dark"] .section-title {
             color: var(--text);
         }
 
-        .section-subtitle {
+        [data-theme="dark"] .section-subtitle {
             color: var(--text-light);
         }
 
-        .stat-value {
+        [data-theme="dark"] .stat-value {
             color: var(--primary);
             text-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
         }
 
-        .stat-label {
+        [data-theme="dark"] .stat-label {
             color: var(--text-muted);
         }
 
-        .cta-section {
+        [data-theme="dark"] .cta-section {
             background: linear-gradient(135deg, rgba(250, 204, 21, 0.1), rgba(245, 158, 11, 0.05));
             border: 1px solid rgba(250, 204, 21, 0.2);
         }
 
-        .cta-section h2 {
+        [data-theme="dark"] .cta-section h2 {
             color: var(--text);
         }
 
-        .cta-section p {
+        [data-theme="dark"] .cta-section p {
             color: var(--text-light);
         }
 
         /* Improved card readability in dark mode */
-        .feature-card,
-        .step-card,
-        .testimonial-card {
+        [data-theme="dark"] .feature-card,
+        [data-theme="dark"] .step-card,
+        [data-theme="dark"] .testimonial-card {
             background: var(--bg-alt);
             border: 1px solid var(--border);
         }
 
-        .feature-card:hover,
-        .step-card:hover,
-        .testimonial-card:hover {
+        [data-theme="dark"] .feature-card:hover,
+        [data-theme="dark"] .step-card:hover,
+        [data-theme="dark"] .testimonial-card:hover {
             background: rgba(30, 41, 59, 0.8);
             border-color: rgba(250, 204, 21, 0.3);
             box-shadow: 0 20px 60px rgba(250, 204, 21, 0.1);
         }
 
-        .feature-icon,
-        .step-number {
+        [data-theme="dark"] .feature-icon,
+        [data-theme="dark"] .step-number {
             background: rgba(250, 204, 21, 0.15);
             color: var(--primary);
             box-shadow: 0 0 30px rgba(250, 204, 21, 0.2);
         }
 
-        h2,
-        h3,
-        h4 {
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4 {
             color: var(--text);
         }
 
-        p {
+        [data-theme="dark"] p {
             color: var(--text-light);
         }
 
         /* Glow effects for emphasis */
-        .logo-icon {
+        [data-theme="dark"] .logo-icon {
             box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4),
                         0 0 40px rgba(250, 204, 21, 0.2);
         }
 
-        .logo-icon:hover {
+        [data-theme="dark"] .logo-icon:hover {
             box-shadow: 0 6px 30px rgba(250, 204, 21, 0.6),
                         0 0 60px rgba(250, 204, 21, 0.3);
         }
@@ -1870,6 +1887,31 @@
     </footer>
 
     <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateDarkModeIcon(newTheme);
+        }
+
+        function updateDarkModeIcon(theme) {
+            const icon = document.getElementById('darkModeIcon');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // Initialize theme from localStorage and respect system preference when unset
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const preferred = savedTheme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', preferred);
+            updateDarkModeIcon(preferred);
+        }
+
         // Subtle parallax for hero ornaments
         function initParallax() {
             const orbs = document.querySelectorAll('.orb');
@@ -1886,6 +1928,7 @@
         }
 
         // Run on page load
+        initTheme();
         initParallax();
 
         // Navbar scroll effect
