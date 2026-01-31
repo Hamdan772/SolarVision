@@ -4863,23 +4863,68 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
             weatherCard.querySelector('.weather-temp').textContent = `${data.currentTemp.toFixed(1)}°C`;
             weatherCard.querySelector('.weather-condition').textContent = data.condition;
 
+            // Get current month name for context
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentMonth = monthNames[new Date().getMonth()];
+
             weatherDetails.innerHTML = `
-                <div style="margin-top: 12px; font-size: 13px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="opacity: 0.8;">☀️ Sunny days</span>
-                        <span style="font-weight: 600;">${data.sunnyDays}</span>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: rgba(255,255,255,0.9);">
+                        <i class="fas fa-satellite" style="font-size: 16px;"></i>
+                        <span style="font-size: 13px; font-weight: 600;">NASA POWER Satellite Data (2020-2026)</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="opacity: 0.8;">⛅ Partly cloudy</span>
-                        <span style="font-weight: 600;">${data.partlyCloudyDays}</span>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 12px;">
+                        Historical solar irradiation data for <strong>${currentMonth}</strong> at your location. 
+                        This provides more accurate long-term solar predictions than current weather.
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="opacity: 0.8;">☁️ Cloudy days</span>
-                        <span style="font-weight: 600;">${data.cloudyDays}</span>
+                </div>
+                
+                <div style="margin-top: 16px; font-size: 13px;">
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            📊 Monthly Solar Conditions
+                        </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.2);">
-                        <span style="opacity: 0.8;">☀️ Solar efficiency</span>
-                        <span style="font-weight: 700;">${(data.cloudDeratingFactor * 100).toFixed(0)}%</span>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+                        <span style="opacity: 0.8;">☀️ Clear sky irradiation</span>
+                        <span style="font-weight: 700; color: #FDE047;">${data.clearSkyIrradiation.toFixed(1)} kWh/m²</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+                        <span style="opacity: 0.8;">🌤️ All-sky irradiation</span>
+                        <span style="font-weight: 700; color: #FDE047;">${data.allSkyIrradiation.toFixed(1)} kWh/m²</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+                        <span style="opacity: 0.8;">☁️ Average cloud cover</span>
+                        <span style="font-weight: 700;">${data.avgCloudCover.toFixed(1)}%</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+                        <span style="opacity: 0.8;">🌡️ Average temperature</span>
+                        <span style="font-weight: 700;">${data.avgAnnualTemp.toFixed(1)}°C</span>
+                    </div>
+                    
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 2px solid rgba(255,255,255,0.15);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: linear-gradient(135deg, rgba(250, 204, 21, 0.2), rgba(245, 158, 11, 0.1)); border-radius: 8px; border: 1px solid rgba(250, 204, 21, 0.3);">
+                            <span style="opacity: 0.9; font-weight: 600;">⚡ Solar Performance Factor</span>
+                            <span style="font-weight: 700; font-size: 18px; color: #FDE047;">${(data.cloudDeratingFactor * 100).toFixed(1)}%</span>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 11px; color: rgba(255,255,255,0.6); text-align: center;">
+                            Accounts for cloud cover, dust, and atmospheric conditions
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 6px;">
+                            <i class="fas fa-info-circle"></i> <strong>Why Historical Data?</strong>
+                        </div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.5;">
+                            NASA POWER uses 5+ years of satellite data to provide reliable monthly averages. 
+                            This is more accurate for solar system planning than daily weather forecasts.
+                        </div>
                     </div>
                 </div>
             `;
@@ -5460,7 +5505,599 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
             initTiltSlider();
             showStatus('🇦🇪 UAE Solar Calculator ready!', 'success');
         };
+
+        // ============================================================
+        // AI CHATBOT FUNCTIONALITY
+        // ============================================================
+
+        let chatHistory = [];
+        let isChatOpen = false;
+
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            const chatWindow = document.getElementById('aiChatWindow');
+            const chatButton = document.getElementById('aiChatButton');
+            
+            if (isChatOpen) {
+                chatWindow.style.display = 'flex';
+                chatButton.style.display = 'none';
+                // Auto-focus on input
+                setTimeout(() => {
+                    document.getElementById('chatInput').focus();
+                }, 100);
+            } else {
+                chatWindow.style.display = 'none';
+                chatButton.style.display = 'flex';
+            }
+        }
+
+        function addMessageToChat(message, isUser = false) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'ai-message'}`;
+            
+            if (!isUser) {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">${formatMarkdown(message)}</div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">${message}</div>
+                    <div class="message-avatar">👤</div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function formatMarkdown(text) {
+            // Simple markdown formatting
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>')
+                .replace(/`(.*?)`/g, '<code>$1</code>');
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessageToChat(message, true);
+            chatHistory.push({ role: 'user', content: message });
+            input.value = '';
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message ai-message typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                // Build context from current solar calculation
+                const contextInfo = roofArea > 0 ? `
+User's current solar setup:
+- Location: ${currentLat.toFixed(2)}°N, ${currentLon.toFixed(2)}°E (UAE)
+- Roof Area: ${roofArea.toFixed(1)} m²
+- Panel Count: ${currentPanelCount}
+- System Size: ${(currentPanelCount * 0.43).toFixed(2)} kW
+- Annual Output: ${(currentPanelCount * 0.43 * 1650).toFixed(0)} kWh/year
+` : 'User has not yet calculated their solar potential.';
+                
+                const systemPrompt = `You are SolarVision AI Assistant, an expert in solar energy for the UAE. 
+You help users understand:
+- Solar panel specifications and brands (Jinko, LONGi, Canadian Solar, Trina, JA Solar, SunPower, Q CELLS, REC)
+- UAE solar conditions and regulations
+- Financial aspects (ROI, payback, savings)
+- Installation and maintenance
+- Weather impact on solar performance
+- System sizing and optimization
+
+${contextInfo}
+
+Provide concise, helpful answers (2-3 sentences max unless asked for details). Use emojis sparingly. Be friendly and professional.`;
+                
+                const response = await fetch('/api/groq', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'llama-3.3-70b-versatile',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            ...chatHistory.slice(-10) // Keep last 10 messages for context
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Failed to get AI response');
+                
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+                
+                // Remove typing indicator
+                chatMessages.removeChild(typingDiv);
+                
+                // Add AI response
+                addMessageToChat(aiResponse, false);
+                chatHistory.push({ role: 'assistant', content: aiResponse });
+                
+            } catch (error) {
+                console.error('Chat error:', error);
+                chatMessages.removeChild(typingDiv);
+                addMessageToChat('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        function clearChat() {
+            chatHistory = [];
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="chat-welcome">
+                    <div class="welcome-icon">☀️</div>
+                    <h3>Hi! I'm your Solar AI Assistant</h3>
+                    <p>Ask me anything about:</p>
+                    <ul>
+                        <li>🔆 Solar panels and equipment</li>
+                        <li>💰 Costs and ROI calculations</li>
+                        <li>🌤️ Weather impact on solar</li>
+                        <li>🇦🇪 UAE-specific solar info</li>
+                        <li>⚡ Installation and maintenance</li>
+                    </ul>
+                </div>
+            `;
+        }
     </script>
+
+    <!-- AI Chatbot Floating Button -->
+    <div id="aiChatButton" class="ai-chat-button" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+        <span class="chat-badge">AI</span>
+    </div>
+
+    <!-- AI Chat Window -->
+    <div id="aiChatWindow" class="ai-chat-window" style="display: none;">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <i class="fas fa-robot"></i>
+                <span>Solar AI Assistant</span>
+            </div>
+            <div class="chat-header-actions">
+                <button onclick="clearChat()" title="Clear Chat" class="chat-action-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button onclick="toggleChat()" title="Close" class="chat-action-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="chatMessages" class="chat-messages">
+            <div class="chat-welcome">
+                <div class="welcome-icon">☀️</div>
+                <h3>Hi! I'm your Solar AI Assistant</h3>
+                <p>Ask me anything about:</p>
+                <ul>
+                    <li>🔆 Solar panels and equipment</li>
+                    <li>💰 Costs and ROI calculations</li>
+                    <li>🌤️ Weather impact on solar</li>
+                    <li>🇦🇪 UAE-specific solar info</li>
+                    <li>⚡ Installation and maintenance</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="chatInput" 
+                placeholder="Ask about solar panels, costs, UAE regulations..." 
+                onkeypress="handleChatKeyPress(event)"
+            />
+            <button onclick="sendChatMessage()" class="chat-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* AI Chatbot Styles */
+        .ai-chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(234, 179, 8, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] .ai-chat-button {
+            box-shadow: 0 8px 32px rgba(250, 204, 21, 0.5);
+        }
+
+        .ai-chat-button:hover {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 12px 32px rgba(234, 179, 8, 0.6);
+        }
+
+        .ai-chat-button i {
+            font-size: 26px;
+            color: white;
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .ai-chat-window {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 400px;
+            height: 600px;
+            background: var(--bg-alt);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-theme="dark"] .ai-chat-window {
+            background: var(--bg-alt);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+                        0 0 40px rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .chat-header-title i {
+            font-size: 20px;
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg);
+        }
+
+        [data-theme="dark"] .chat-messages {
+            background: #1E293B;
+        }
+
+        .chat-welcome {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce-subtle 2s ease-in-out infinite;
+        }
+
+        .chat-welcome h3 {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        [data-theme="dark"] .chat-welcome h3 {
+            color: var(--text);
+        }
+
+        .chat-welcome p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .chat-welcome ul {
+            text-align: left;
+            display: inline-block;
+            color: var(--text-light);
+            list-style: none;
+            padding: 0;
+        }
+
+        .chat-welcome li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        [data-theme="dark"] .chat-welcome li {
+            border-color: #334155;
+        }
+
+        .chat-welcome li:last-child {
+            border-bottom: none;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 12px;
+            animation: fadeUp 0.3s ease;
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .user-message .message-avatar {
+            background: var(--secondary);
+        }
+
+        [data-theme="dark"] .user-message .message-avatar {
+            background: var(--primary);
+        }
+
+        .message-content {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 16px;
+            max-width: 75%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        [data-theme="dark"] .message-content {
+            background: #334155;
+            color: var(--text);
+        }
+
+        .user-message .message-content {
+            background: var(--primary);
+            color: white;
+        }
+
+        [data-theme="dark"] .user-message .message-content {
+            background: rgba(250, 204, 21, 0.2);
+            color: var(--text);
+            border: 1px solid rgba(250, 204, 21, 0.3);
+        }
+
+        .message-content strong {
+            font-weight: 700;
+        }
+
+        .message-content code {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        [data-theme="dark"] .message-content code {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .typing-indicator .message-content {
+            padding: 16px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typingDot 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .chat-input-container {
+            padding: 16px;
+            background: var(--bg-alt);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+
+        [data-theme="dark"] .chat-input-container {
+            background: #1E293B;
+            border-color: #334155;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] #chatInput {
+            background: #334155;
+            border-color: #475569;
+            color: var(--text);
+        }
+
+        #chatInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
+        }
+
+        [data-theme="dark"] #chatInput:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+        }
+
+        .chat-send-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(234, 179, 8, 0.4);
+        }
+
+        .chat-send-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .ai-chat-window {
+                width: calc(100vw - 32px);
+                height: calc(100vh - 100px);
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .ai-chat-button {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
 </body>
 
 </html>
