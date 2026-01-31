@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        * {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --primary: #EAB308;
             --primary-light: #FACC15;
@@ -129,6 +133,37 @@
         }
         [data-theme="dark"] .result-item {
             border-color: #334155;
+        }
+        [data-theme="dark"] .status-badge {
+            display: none;
+        }
+        [data-theme="dark"] .nav-tab {
+            color: #CBD5E1;
+            background: transparent;
+        }
+        [data-theme="dark"] .nav-tab.active {
+            background: rgba(250, 204, 21, 0.15);
+            color: #FDE047;
+            border-color: rgba(250, 204, 21, 0.3);
+        }
+        [data-theme="dark"] .btn-primary {
+            background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
+            color: #0F172A;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4);
+        }
+        [data-theme="dark"] .btn-primary:hover {
+            box-shadow: 0 6px 30px rgba(250, 204, 21, 0.6);
+            transform: translateY(-2px);
+        }
+        [data-theme="dark"] .results-tabs .tab-btn {
+            background: transparent;
+            color: #CBD5E1;
+        }
+        [data-theme="dark"] .results-tabs .tab-btn.active {
+            background: rgba(250, 204, 21, 0.15);
+            color: #FDE047;
+            border-bottom: 2px solid #FACC15;
         }
 
         /* Obstacle marker styles */
@@ -399,8 +434,11 @@
 
         .header-brand {
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 14px;
+            text-align: center;
+            margin: 0 auto;
         }
 
         .logo {
@@ -411,7 +449,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .logo {
+            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4),
+                        0 0 40px rgba(250, 204, 21, 0.2);
         }
 
         .logo svg {
@@ -420,23 +464,66 @@
             fill: white;
         }
 
+        .brand-text {
+            text-align: center;
+        }
+
         .brand-text h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--secondary);
             letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .brand-text h1 {
+            color: #FACC15;
+            text-shadow: 
+                0 0 20px rgba(250, 204, 21, 0.6),
+                0 0 40px rgba(250, 204, 21, 0.4),
+                0 0 60px rgba(250, 204, 21, 0.2),
+                0 2px 4px rgba(0, 0, 0, 0.5);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                text-shadow: 
+                    0 0 20px rgba(250, 204, 21, 0.6),
+                    0 0 40px rgba(250, 204, 21, 0.4),
+                    0 0 60px rgba(250, 204, 21, 0.2),
+                    0 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                text-shadow: 
+                    0 0 30px rgba(250, 204, 21, 0.8),
+                    0 0 60px rgba(250, 204, 21, 0.6),
+                    0 0 90px rgba(250, 204, 21, 0.4),
+                    0 2px 4px rgba(0, 0, 0, 0.5);
+            }
         }
 
         .brand-text p {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-muted);
             font-weight: 500;
+            line-height: 1.6;
+        }
+
+        [data-theme="dark"] .brand-text p {
+            color: #CBD5E1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .brand-text p span {
             color: var(--primary);
             font-weight: 600;
+        }
+
+        [data-theme="dark"] .brand-text p span {
+            color: #FDE047;
         }
 
         .status-badge {
@@ -660,9 +747,11 @@
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary::before {
@@ -672,14 +761,14 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            transition: left 0.4s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.5s ease;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(234, 179, 8, 0.5);
         }
 
         .btn-primary:hover::before {
@@ -687,7 +776,8 @@
         }
 
         .btn-primary:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
         }
 
         .btn-secondary {
@@ -706,12 +796,36 @@
             background: var(--success);
             color: white;
             box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-success:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-success:hover {
             background: var(--success-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success:active {
+            transform: translateY(0) scale(0.98);
         }
 
         .btn-ghost {
@@ -739,15 +853,36 @@
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 18px;
             box-shadow: var(--shadow-sm);
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
         }
 
         .card:hover {
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
 
         .card-header {
@@ -777,29 +912,50 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 14px;
         }
 
         .stat-item {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 16px;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+            border-radius: 14px;
+            padding: 18px;
             text-align: center;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s var(--transition);
+            border: 2px solid var(--border-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover::before {
+            transform: scaleX(1);
         }
 
         .stat-item:hover {
             border-color: var(--primary);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(234, 179, 8, 0.2);
         }
 
         .stat-value {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--secondary);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .stat-value.highlight {
@@ -889,38 +1045,64 @@
 
         input[type="range"] {
             width: 100%;
-            height: 8px;
+            height: 10px;
             -webkit-appearance: none;
             appearance: none;
-            background: var(--border);
-            border-radius: 4px;
+            background: linear-gradient(to right, 
+                var(--primary) 0%, 
+                var(--primary) var(--slider-progress, 50%), 
+                var(--border) var(--slider-progress, 50%), 
+                var(--border) 100%);
+            border-radius: 6px;
             outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]:hover {
+            box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.1);
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            border: 3px solid var(--primary);
             border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.4);
-            transition: transform 0.2s var(--transition);
+            cursor: grab;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(234, 179, 8, 0.6);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.05);
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            border: 3px solid var(--primary);
             border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.4);
+            cursor: grab;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]::-moz-range-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.05);
         }
 
         /* Map Container */
@@ -1031,6 +1213,84 @@
             display: block;
         }
 
+        /* Results Tab System */
+        .results-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--bg);
+            padding: 6px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+        }
+
+        .results-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .results-tab i {
+            font-size: 14px;
+        }
+
+        .results-tab:hover {
+            color: var(--text);
+            background: var(--bg-alt);
+        }
+
+        .results-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .results-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--primary);
+        }
+
+        .results-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .results-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Charts */
         .chart-container {
             background: var(--bg);
@@ -1099,7 +1359,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 251, 247, 0.95);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1107,7 +1369,7 @@
             z-index: 9999;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s var(--transition);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #loadingOverlay.active {
@@ -1116,13 +1378,15 @@
         }
 
         .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border);
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(234, 179, 8, 0.1);
             border-top-color: var(--primary);
+            border-right-color: var(--primary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.3);
         }
 
         @keyframes spin {
@@ -1132,49 +1396,86 @@
         }
 
         #loadingText {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
-            color: var(--text);
+            color: #FFFFFF;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Status Message */
         .status-message {
             position: fixed;
-            bottom: 24px;
+            bottom: 32px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-size: 14px;
+            transform: translateX(-50%) translateY(120px) scale(0.9);
+            padding: 16px 28px;
+            border-radius: 16px;
+            font-size: 15px;
             font-weight: 600;
             z-index: 10000;
             opacity: 0;
-            transition: all 0.4s var(--transition);
-            box-shadow: var(--shadow-lg);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            justify-content: center;
+        }
+
+        .status-message::before {
+            content: '';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .status-message.success::before {
+            content: '\f058'; /* fa-check-circle */
+        }
+
+        .status-message.error::before {
+            content: '\f06a'; /* fa-exclamation-circle */
+        }
+
+        .status-message.info::before {
+            content: '\f05a'; /* fa-info-circle */
+        }
+
+        .status-message.warning::before {
+            content: '\f071'; /* fa-exclamation-triangle */
         }
 
         .status-message.show {
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0) scale(1);
             opacity: 1;
         }
 
         .status-message.success {
-            background: var(--success);
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             color: white;
         }
 
         .status-message.error {
-            background: var(--error);
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
             color: white;
         }
 
         .status-message.info {
-            background: var(--blue);
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
             color: white;
         }
 
         .status-message.warning {
-            background: var(--warning);
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
             color: white;
         }
 
@@ -1209,31 +1510,60 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border-radius: 16px;
             padding: 24px;
-            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(234, 179, 8, 0.3);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.03)"/></svg>');
+            background-size: 100px 100px;
+            pointer-events: none;
         }
 
         .quick-summary-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-top: 16px;
+            position: relative;
         }
 
         .quick-stat {
             text-align: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-stat:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .quick-stat-value {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .quick-stat-label {
             font-size: 12px;
-            opacity: 0.9;
-            margin-top: 4px;
+            opacity: 0.95;
+            margin-top: 6px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         /* Leaflet Customizations */
@@ -1354,31 +1684,61 @@
         .weather-card {
             background: linear-gradient(135deg, var(--blue) 0%, #2563EB 100%);
             border-radius: 16px;
-            padding: 20px;
+            padding: 24px;
             color: white;
-            margin: 16px 0;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .weather-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 14px;
+            margin-bottom: 18px;
+            position: relative;
         }
 
         .weather-icon {
-            font-size: 32px;
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .weather-temp {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .weather-condition {
             font-size: 14px;
-            opacity: 0.9;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        #weatherDetails {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Calculation Breakdown */
@@ -1476,11 +1836,8 @@
                     </div>
                     <div class="brand-text">
                         <h1>SolarVision</h1>
-                        <p>UAE Solar Calculator • <span>2026</span></p>
+                        <p>UAE Solar Calculator • <span>2026</span> NASA POWER Data Connected</p>
                     </div>
-                </div>
-                <div class="status-badge">
-                    NASA POWER Data Connected
                 </div>
 
                 <!-- Navigation Tabs -->
@@ -1559,13 +1916,13 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-success" onclick="autoDetectBuilding()">
-                            <i class="fas fa-magic"></i>
-                            AI Auto-Detect
+                        <button class="btn btn-success" onclick="smartBuildingDetect()">
+                            <i class="fas fa-brain"></i>
+                            Smart Building Detect
                         </button>
-                        <button class="btn btn-secondary" onclick="fetchOSMBuildings(map.getBounds())">
-                            <i class="fas fa-building"></i>
-                            Load Buildings
+                        <button id="multiSelectBtn" class="btn btn-secondary" onclick="toggleMultiSelect()" style="display: none;">
+                            <i class="fas fa-layer-group"></i>
+                            Multi-Select: OFF
                         </button>
                         <button class="btn btn-ghost" onclick="clearRoof()">
                             <i class="fas fa-trash"></i>
@@ -1581,7 +1938,7 @@
                             </div>
                             <div>
                                 <div class="section-title">Panel Configuration</div>
-                                <div class="section-subtitle">Adjust panel count and rotation</div>
+                                <div class="section-subtitle">Adjust number of solar panels</div>
                             </div>
                         </div>
 
@@ -1596,29 +1953,6 @@
                                 style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
                                 <span>1</span>
                                 <span id="maxPanelText">Max: 100</span>
-                            </div>
-                        </div>
-
-                        <div class="slider-container">
-                            <div class="slider-header">
-                                <span class="slider-label">Panel Rotation</span>
-                                <span class="slider-value" id="rotationValue">0°</span>
-                            </div>
-                            <input type="range" id="rotationSlider" min="0" max="180" value="0"
-                                oninput="updatePanelRotation(this.value)">
-                        </div>
-
-                        <div class="slider-container">
-                            <div class="slider-header">
-                                <span class="slider-label">Panel Tilt (from horizontal)</span>
-                                <span class="slider-value" id="tiltValue">25°</span>
-                            </div>
-                            <input type="range" id="tiltSlider" min="0" max="45" value="25"
-                                oninput="updatePanelTilt(this.value)">
-                            <div
-                                style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-                                <span>Flat (0°)</span>
-                                <span id="optimalTiltHint">Optimal: 25°</span>
                             </div>
                         </div>
 
@@ -1692,57 +2026,78 @@
                         Calculate Solar Potential
                     </button>
 
-                    <!-- Quick Summary -->
-                    <div id="quickSummarySection" class="quick-summary" style="margin-top: 24px;">
-                        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700;">
-                            <i class="fas fa-chart-line"></i> Quick Summary
+                    <!-- Results Section with Tabs -->
+                    <div id="resultsSection" style="margin-top: 24px; display: none;">
+                        <div class="results-tabs">
+                            <button class="results-tab active" onclick="switchResultsTab('summary')">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Quick Summary</span>
+                            </button>
+                            <button class="results-tab" onclick="switchResultsTab('weather')">
+                                <i class="fas fa-cloud-sun"></i>
+                                <span>Weather</span>
+                            </button>
+                            <button class="results-tab" onclick="switchResultsTab('ai')">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Analysis</span>
+                            </button>
                         </div>
-                        <div class="quick-summary-grid">
-                            <div class="quick-stat">
-                                <div class="quick-stat-value" id="quickSystemSize">0 kW</div>
-                                <div class="quick-stat-label">System Size</div>
-                            </div>
-                            <div class="quick-stat">
-                                <div class="quick-stat-value" id="quickPanelCount">0</div>
-                                <div class="quick-stat-label">Panels</div>
-                            </div>
-                            <div class="quick-stat">
-                                <div class="quick-stat-value" id="quickAnnualOutput">0 kWh</div>
-                                <div class="quick-stat-label">Annual Output</div>
-                            </div>
-                            <div class="quick-stat">
-                                <div class="quick-stat-value" id="quickPayback">0 yrs</div>
-                                <div class="quick-stat-label">Payback</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Weather Card -->
-                    <div id="weatherCard" class="weather-card">
-                        <div class="weather-header">
-                            <span class="weather-icon">🌤️</span>
-                            <div>
-                                <div class="weather-temp">--°C</div>
-                                <div class="weather-condition">Loading weather...</div>
+                        <!-- Quick Summary Tab -->
+                        <div id="results-tab-summary" class="results-tab-content active">
+                            <div class="quick-summary">
+                                <div class="quick-summary-grid">
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-value" id="quickSystemSize">0 kW</div>
+                                        <div class="quick-stat-label">System Size</div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-value" id="quickPanelCount">0</div>
+                                        <div class="quick-stat-label">Panels</div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-value" id="quickAnnualOutput">0 kWh</div>
+                                        <div class="quick-stat-label">Annual Output</div>
+                                    </div>
+                                    <div class="quick-stat">
+                                        <div class="quick-stat-value" id="quickPayback">0 yrs</div>
+                                        <div class="quick-stat-label">Payback</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div id="weatherDetails"></div>
-                    </div>
 
-                    <!-- AI Analysis -->
-                    <div class="ai-analysis" style="margin-top: 24px;">
-                        <div class="ai-header">
-                            <div class="ai-icon">🤖</div>
-                            <div>
-                                <div class="ai-title">AI Analysis</div>
-                                <div class="ai-subtitle">Powered by Groq LLaMA 3.3</div>
+                        <!-- Weather Tab -->
+                        <div id="results-tab-weather" class="results-tab-content">
+                            <div id="weatherCard" class="weather-card">
+                                <div class="weather-header">
+                                    <span class="weather-icon">🌤️</span>
+                                    <div>
+                                        <div class="weather-temp">--°C</div>
+                                        <div class="weather-condition">Loading weather...</div>
+                                    </div>
+                                </div>
+                                <div id="weatherDetails"></div>
                             </div>
                         </div>
-                        <div id="aiAnalysisText">
-                            <p style="color: rgba(255,255,255,0.7); font-size: 14px;">
-                                Calculate your solar potential to receive AI-powered recommendations tailored to your
-                                location and requirements.
-                            </p>
+
+                        <!-- AI Analysis Tab -->
+                        <div id="results-tab-ai" class="results-tab-content">
+                            <div class="ai-analysis">
+                                <div class="ai-header">
+                                    <div class="ai-icon">🤖</div>
+                                    <div>
+                                        <div class="ai-title">AI Analysis</div>
+                                        <div class="ai-subtitle">Powered by Groq LLaMA 3.3</div>
+                                    </div>
+                                </div>
+                                <div id="aiAnalysisText">
+                                    <p style="color: rgba(255,255,255,0.7); font-size: 14px;">
+                                        Calculate your solar potential to receive AI-powered recommendations tailored to your
+                                        location and requirements.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1932,6 +2287,12 @@
                             <canvas id="savingsChart"></canvas>
                         </div>
                     </div>
+
+                    <!-- Export PDF Button -->
+                    <button class="btn btn-primary btn-full" onclick="generatePDFReport()" style="margin-top: 16px;">
+                        <i class="fas fa-file-pdf"></i>
+                        Export Professional Report (PDF)
+                    </button>
                 </div>
             </div>
         </div>
@@ -2070,12 +2431,6 @@
         let nearbyBuildingsData = [];
         let lastCalculationData = null;
 
-        // Helpers
-        function safeNumber(val, fallback = 0) {
-            const n = Number(val);
-            return Number.isFinite(n) ? n : fallback;
-        }
-
         // UAE Bounds
         const UAE_BOUNDS = L.latLngBounds(
             L.latLng(22.5, 51.5),
@@ -2132,7 +2487,12 @@
             document.getElementById('panelSliderValue').textContent = currentPanelCount;
             updateStats();
             if (drawnLayer && roofArea > 0) {
-                visualizeSolarPanels(drawnLayer, currentPanelCount);
+                // Check if we're in multi-building mode
+                if (multiBuildings.length > 0) {
+                    visualizeMultiBuildingPanels(multiBuildings, currentPanelCount);
+                } else {
+                    visualizeSolarPanels(drawnLayer, currentPanelCount);
+                }
                 scheduleCalculate();
             }
         }
@@ -2549,6 +2909,77 @@
         let isVisualizing = false;
         let userSetRotation = false; // Track if user manually set rotation
 
+        // Auto-optimize panel rotation to fit maximum panels
+        function optimizePanelRotation(roofPolygon, targetCount) {
+            const rotations = [0, 15, 30, 45, 60, 75, 90];
+            let bestRotation = 0;
+            let bestFit = 0;
+
+            const bbox = turf.bbox(roofPolygon);
+            const panelWidthM = 1.0;
+            const panelHeightM = 1.7;
+            const gapM = 0.02;
+
+            const mPerDegLat = 111320;
+            const mPerDegLng = 111320 * Math.cos(currentLat * Math.PI / 180);
+
+            for (const rotation of rotations) {
+                const angleRad = rotation * Math.PI / 180;
+                let fittingPanels = 0;
+
+                // Quick test: try placing panels at different rotations
+                const cosAngle = Math.cos(angleRad);
+                const sinAngle = Math.sin(angleRad);
+
+                const panelW = panelWidthM / mPerDegLng;
+                const panelH = panelHeightM / mPerDegLat;
+                const gap = gapM / Math.min(mPerDegLat, mPerDegLng);
+
+                const stepW = (panelW + gap) * Math.abs(cosAngle) + (panelH + gap) * Math.abs(sinAngle);
+                const stepH = (panelW + gap) * Math.abs(sinAngle) + (panelH + gap) * Math.abs(cosAngle);
+
+                const minX = bbox[0];
+                const minY = bbox[1];
+                const maxX = bbox[2];
+                const maxY = bbox[3];
+
+                for (let y = minY; y <= maxY && fittingPanels < targetCount; y += stepH) {
+                    for (let x = minX; x <= maxX && fittingPanels < targetCount; x += stepW) {
+                        // Rotated corners
+                        const hw = panelW / 2;
+                        const hh = panelH / 2;
+                        const corners = [
+                            [x + (-hw * cosAngle - (-hh) * sinAngle), y + (-hw * sinAngle + (-hh) * cosAngle)],
+                            [x + (hw * cosAngle - (-hh) * sinAngle), y + (hw * sinAngle + (-hh) * cosAngle)],
+                            [x + (hw * cosAngle - hh * sinAngle), y + (hw * sinAngle + hh * cosAngle)],
+                            [x + (-hw * cosAngle - hh * sinAngle), y + (-hw * sinAngle + hh * cosAngle)]
+                        ];
+
+                        // Check if all corners fit
+                        let allInside = true;
+                        for (const [px, py] of corners) {
+                            if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
+                                allInside = false;
+                                break;
+                            }
+                        }
+
+                        if (allInside) fittingPanels++;
+                    }
+                }
+
+                if (fittingPanels > bestFit) {
+                    bestFit = fittingPanels;
+                    bestRotation = rotation;
+                }
+
+                // Early exit if we found optimal fit
+                if (bestFit >= targetCount) break;
+            }
+
+            return bestRotation;
+        }
+
         function visualizeSolarPanels(layer, count, forceAutoRotation = false) {
             if (visualizePanelsTimeout) clearTimeout(visualizePanelsTimeout);
             visualizePanelsTimeout = setTimeout(() => {
@@ -2572,6 +3003,13 @@
             }
 
             const roofPolygon = turf.polygon([roofPoints]);
+            
+            // Auto-optimize rotation to fit maximum panels
+            const optimalRotation = optimizePanelRotation(roofPolygon, count);
+            const angleRad = optimalRotation * Math.PI / 180;
+            const cosAngle = Math.cos(angleRad);
+            const sinAngle = Math.sin(angleRad);
+            
             const bbox = turf.bbox(roofPolygon);
 
             // Panel dimensions in meters
@@ -2586,8 +3024,8 @@
             const panelH = panelHeightM / mPerDegLat;
             const gap = gapM / Math.min(mPerDegLat, mPerDegLng);
 
-            const stepW = panelW + gap;
-            const stepH = panelH + gap;
+            const stepW = (panelW + gap) * Math.abs(cosAngle) + (panelH + gap) * Math.abs(sinAngle);
+            const stepH = (panelW + gap) * Math.abs(sinAngle) + (panelH + gap) * Math.abs(cosAngle);
 
             // Simple grid approach: Fill entire bounding box, then filter
             const minX = bbox[0];
@@ -2602,14 +3040,14 @@
             for (let y = minY; y <= maxY; y += stepH) {
                 let colIndex = 0;
                 for (let x = minX; x <= maxX; x += stepW) {
-                    // Panel corners (simple rectangle, no rotation)
+                    // Panel corners with rotation
                     const hw = panelW / 2;
                     const hh = panelH / 2;
                     const corners = [
-                        [x - hw, y - hh],
-                        [x + hw, y - hh],
-                        [x + hw, y + hh],
-                        [x - hw, y + hh]
+                        [x + (-hw * cosAngle - (-hh) * sinAngle), y + (-hw * sinAngle + (-hh) * cosAngle)],
+                        [x + (hw * cosAngle - (-hh) * sinAngle), y + (hw * sinAngle + (-hh) * cosAngle)],
+                        [x + (hw * cosAngle - hh * sinAngle), y + (hw * sinAngle + hh * cosAngle)],
+                        [x + (-hw * cosAngle - hh * sinAngle), y + (-hw * sinAngle + hh * cosAngle)]
                     ];
 
                     // Check if all 4 corners are inside the polygon
@@ -2767,6 +3205,7 @@
             actualPanelsFit = 0;
             maxPanelsForRoof = 100;
             drawnLayer = null;
+            multiBuildings = []; // Clear multi-building data
             userSetRotation = false;
             // Reset UI
             document.getElementById('areaDisplayContainer').classList.remove('has-data');
@@ -2796,6 +3235,566 @@
         // Store detected buildings for selection
         let detectedBuildings = [];
         let buildingMarkers = [];
+        let selectedBuildings = []; // Track multiple selected buildings
+        let multiSelectMode = false; // Toggle for multi-select mode
+        let multiBuildings = []; // Track applied multiple buildings for panel rendering
+
+        // ============================================
+        // SMART BUILDING DETECTION (Combined AI + OSM)
+        // ============================================
+        
+        async function smartBuildingDetect() {
+            try {
+                showLoading('🧠 Smart detection: Checking buildings...');
+                
+                // Clear previous building markers
+                clearBuildingMarkers();
+                detectedBuildings = [];
+
+                const bounds = map.getBounds();
+                
+                // Check if we're in UAE
+                if (bounds.getSouth() < 22.5 || bounds.getNorth() > 26.5 || 
+                    bounds.getWest() < 51.5 || bounds.getEast() > 56.5) {
+                    hideLoading();
+                    showStatus('⚠️ Only UAE locations are supported', 'warning');
+                    return;
+                }
+
+                const bbox = `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`;
+
+                // Add timeout to fetch request
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                
+                let response;
+                try {
+                    const isLocalServer = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    
+                    if (isLocalServer) {
+                        response = await fetch(`/api/overpass?bbox=${encodeURIComponent(bbox)}`, {
+                            signal: controller.signal
+                        });
+                    } else {
+                        const query = `[out:json][timeout:25];(way["building"](${bbox});relation["building"](${bbox}););out geom;`;
+                        response = await fetch('https://overpass-api.de/api/interpreter', { 
+                            method: 'POST', 
+                            body: query,
+                            signal: controller.signal
+                        });
+                    }
+                    clearTimeout(timeoutId);
+                } catch (fetchError) {
+                    clearTimeout(timeoutId);
+                    if (fetchError.name === 'AbortError') {
+                        hideLoading();
+                        showStatus('⏱️ Request timed out. Try zooming in closer.', 'warning');
+                        return;
+                    }
+                    throw fetchError;
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    if (data.error.includes('504') || data.error.includes('timeout')) {
+                        hideLoading();
+                        showStatus('⚠️ Server busy. Please try again or zoom in closer.', 'warning');
+                        return;
+                    }
+                    throw new Error(data.error);
+                }
+                
+                if (!data.elements || data.elements.length === 0) {
+                    hideLoading();
+                    showStatus('📍 No buildings found. Try zooming in closer or a different area.', 'warning');
+                    return;
+                }
+
+                // Filter valid buildings with geometry
+                const buildings = data.elements.filter(el => 
+                    (el.type === 'way' || el.type === 'relation') && 
+                    el.geometry && 
+                    el.geometry.length >= 3
+                );
+                
+                if (buildings.length === 0) {
+                    hideLoading();
+                    showStatus('📍 No valid building outlines found. Try a different area.', 'warning');
+                    return;
+                }
+
+                // Store buildings with calculated areas
+                detectedBuildings = buildings.map((building, index) => {
+                    const coords = building.geometry.map(c => [c.lon, c.lat]);
+                    if (coords[0][0] !== coords[coords.length-1][0] || coords[0][1] !== coords[coords.length-1][1]) {
+                        coords.push(coords[0]);
+                    }
+                    const polygon = turf.polygon([coords]);
+                    const area = turf.area(polygon);
+                    const centroid = turf.centroid(polygon);
+                    
+                    // Get building info
+                    const tags = building.tags || {};
+                    const buildingType = tags.building || 'unknown';
+                    const name = tags.name || tags['addr:street'] || '';
+                    
+                    return {
+                        id: index + 1,
+                        element: building,
+                        coords: building.geometry.map(c => [c.lat, c.lon]),
+                        area: area,
+                        centroid: [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]],
+                        type: buildingType,
+                        name: name
+                    };
+                }).sort((a, b) => b.area - a.area); // Sort by area (largest first)
+
+                hideLoading();
+                
+                // Show buildings on map with markers
+                showBuildingsOnMap(detectedBuildings);
+                
+                // Show multi-select button
+                document.getElementById('multiSelectBtn').style.display = 'inline-flex';
+                
+                showStatus(`✅ Found ${detectedBuildings.length} buildings. Click on a building to select it.`, 'success');
+
+            } catch (error) {
+                hideLoading();
+                showStatus(`❌ Building detection failed. Please try zooming in or drawing manually.`, 'error');
+            }
+        }
+
+        function showBuildingsOnMap(buildings) {
+            // Clear previous markers
+            clearBuildingMarkers();
+            
+            buildings.forEach((building, index) => {
+                // Add building polygon to map
+                const polygon = L.polygon(building.coords, {
+                    color: '#EAB308',
+                    weight: 2,
+                    fillOpacity: 0.3,
+                    fillColor: '#FCD34D'
+                }).addTo(buildingsLayer);
+                
+                // Store reference for later updates
+                building.polygon = polygon;
+                
+                // Add click handler to select building
+                polygon.on('click', () => selectBuilding(building));
+                
+                // Add numbered marker at centroid
+                const marker = L.marker(building.centroid, {
+                    icon: L.divIcon({
+                        className: 'building-marker',
+                        html: `<div style="
+                            background: #EAB308;
+                            color: white;
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: bold;
+                            font-size: 14px;
+                            border: 3px solid white;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                            cursor: pointer;
+                        ">${building.id}</div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    })
+                }).addTo(buildingsLayer);
+                
+                marker.on('click', () => selectBuilding(building));
+                
+                // Add tooltip
+                const areaText = building.area > 1000 ? 
+                    `${(building.area / 1000).toFixed(1)}k m²` : 
+                    `${Math.round(building.area)} m²`;
+                const tooltip = `<strong>#${building.id}</strong><br>` +
+                              `Area: ${areaText}<br>` +
+                              `Type: ${building.type}` +
+                              (building.name ? `<br>Name: ${building.name}` : '');
+                polygon.bindTooltip(tooltip);
+                marker.bindTooltip(tooltip);
+            });
+        }
+
+        function toggleMultiSelect() {
+            multiSelectMode = !multiSelectMode;
+            const btn = document.getElementById('multiSelectBtn');
+            
+            if (multiSelectMode) {
+                btn.innerHTML = '<i class="fas fa-layer-group"></i> Multi-Select: ON';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-success');
+                showStatus('✅ Multi-Select Mode: Click multiple buildings to combine them', 'success');
+            } else {
+                btn.innerHTML = '<i class="fas fa-layer-group"></i> Multi-Select: OFF';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+                showStatus('ℹ️ Single-Select Mode: Click one building at a time', 'info');
+            }
+        }
+
+        function selectBuilding(building) {
+            if (multiSelectMode) {
+                // Multi-select mode: add/remove building from selection
+                const index = selectedBuildings.findIndex(b => b.id === building.id);
+                
+                if (index > -1) {
+                    // Deselect building
+                    selectedBuildings.splice(index, 1);
+                    building.polygon.setStyle({
+                        color: '#EAB308',
+                        fillColor: '#FCD34D',
+                        fillOpacity: 0.3
+                    });
+                    showStatus(`🔄 Building #${building.id} deselected. ${selectedBuildings.length} buildings selected.`, 'info');
+                } else {
+                    // Select building
+                    selectedBuildings.push(building);
+                    building.polygon.setStyle({
+                        color: '#10B981',
+                        fillColor: '#34D399',
+                        fillOpacity: 0.6
+                    });
+                    showStatus(`✅ Building #${building.id} selected! ${selectedBuildings.length} buildings selected. Click "Apply Selected" or continue selecting.`, 'success');
+                }
+                
+                // Show/hide apply button based on selection
+                if (selectedBuildings.length > 0) {
+                    showApplySelectedButton();
+                } else {
+                    hideApplySelectedButton();
+                }
+            } else {
+                // Single-select mode: replace current selection
+                if (drawnLayer) {
+                    drawnItems.removeLayer(drawnLayer);
+                    drawnLayer = null;
+                }
+                
+                // Create new roof from building outline
+                drawnLayer = L.polygon(building.coords, {
+                    color: '#EAB308',
+                    weight: 2,
+                    fillOpacity: 0.5,
+                    fillColor: '#FDE047'
+                }).addTo(drawnItems);
+                
+                // Update roof area and panels
+                updateRoofArea(drawnLayer);
+                
+                // Clear building markers
+                clearBuildingMarkers();
+                
+                showStatus(`✅ Building #${building.id} selected! Adjust panels as needed.`, 'success');
+            }
+        }
+
+        function showApplySelectedButton() {
+            const btn = document.getElementById('multiSelectBtn');
+            if (!document.getElementById('applySelectedBtn')) {
+                const applyBtn = document.createElement('button');
+                applyBtn.id = 'applySelectedBtn';
+                applyBtn.className = 'btn btn-primary';
+                applyBtn.style.marginLeft = '8px';
+                applyBtn.innerHTML = `<i class="fas fa-check"></i> Apply Selected (${selectedBuildings.length})`;
+                applyBtn.onclick = applySelectedBuildings;
+                btn.parentNode.insertBefore(applyBtn, btn.nextSibling);
+            } else {
+                document.getElementById('applySelectedBtn').innerHTML = `<i class="fas fa-check"></i> Apply Selected (${selectedBuildings.length})`;
+            }
+        }
+
+        function hideApplySelectedButton() {
+            const btn = document.getElementById('applySelectedBtn');
+            if (btn) btn.remove();
+        }
+
+        function applySelectedBuildings() {
+            if (selectedBuildings.length === 0) {
+                showStatus('⚠️ No buildings selected', 'warning');
+                return;
+            }
+            
+            // Clear existing roof
+            if (drawnLayer) {
+                drawnItems.removeLayer(drawnLayer);
+                drawnLayer = null;
+            }
+            
+            if (selectedBuildings.length === 1) {
+                // Single building: simple polygon
+                drawnLayer = L.polygon(selectedBuildings[0].coords, {
+                    color: '#EAB308',
+                    weight: 2,
+                    fillOpacity: 0.5,
+                    fillColor: '#FDE047'
+                }).addTo(drawnItems);
+                
+                // Update roof area and panels for single building
+                updateRoofArea(drawnLayer);
+            } else {
+                // Multiple buildings: create multipolygon and render panels on each
+                const allCoords = selectedBuildings.map(b => b.coords);
+                drawnLayer = L.polygon(allCoords, {
+                    color: '#EAB308',
+                    weight: 2,
+                    fillOpacity: 0.5,
+                    fillColor: '#FDE047'
+                }).addTo(drawnItems);
+                
+                // Calculate and render panels for multiple buildings
+                updateMultiBuildingRoof(drawnLayer, selectedBuildings);
+            }
+            
+            // Clear building markers and reset
+            const buildingCount = selectedBuildings.length;
+            clearBuildingMarkers();
+            selectedBuildings = [];
+            multiSelectMode = false;
+            hideApplySelectedButton();
+            document.getElementById('multiSelectBtn').style.display = 'none';
+            
+            const buildingText = buildingCount === 1 ? 'building' : 'buildings';
+            showStatus(`✅ ${buildingCount} ${buildingText} selected! Panels rendered on each building.`, 'success');
+        }
+
+        function updateMultiBuildingRoof(layer, buildings) {
+            // Calculate total area and max panels for all buildings
+            let totalArea = 0;
+            let totalMaxPanels = 0;
+            
+            buildings.forEach(building => {
+                totalArea += building.area;
+            });
+            
+            // Calculate max panels for each building
+            buildings.forEach(building => {
+                const buildingPolygon = turf.polygon([building.coords.map(c => [c[1], c[0]])]);
+                const maxPanels = calculateActualMaxPanelsForPolygon(buildingPolygon);
+                building.maxPanels = maxPanels;
+                totalMaxPanels += maxPanels;
+            });
+            
+            // Store buildings for panel rendering
+            multiBuildings = buildings;
+            
+            // Update global roof area for calculations
+            roofArea = totalArea;
+            
+            // Update UI - use existing area display elements
+            const m2 = Math.round(totalArea);
+            const ft2 = Math.round(totalArea * 10.764);
+            document.getElementById('areaDisplay').textContent = `${m2.toLocaleString()} m²`;
+            document.getElementById('areaDisplayFt').textContent = `${ft2.toLocaleString()} ft²`;
+            document.getElementById('areaDisplayContainer').classList.add('has-data');
+            
+            // Update panel slider
+            const slider = document.getElementById('panelSlider');
+            slider.max = totalMaxPanels;
+            slider.value = totalMaxPanels;
+            currentPanelCount = totalMaxPanels;
+            actualPanelsFit = totalMaxPanels;
+            maxPanelsForRoof = totalMaxPanels;
+            
+            document.getElementById('panelSliderValue').textContent = totalMaxPanels;
+            document.getElementById('maxPanelText').textContent = `Max: ${totalMaxPanels}`;
+            
+            // Update stats
+            updateStats();
+            
+            // Show panel controls
+            document.getElementById('panelControlSection').style.display = 'block';
+            
+            // Status message
+            showStatus(`✅ ${totalMaxPanels} panels across ${buildings.length} buildings (${m2.toLocaleString()} m² total)`, 'success');
+            
+            // Render panels on all buildings
+            visualizeMultiBuildingPanels(buildings, totalMaxPanels);
+        }
+
+        function visualizeMultiBuildingPanels(buildings, totalCount) {
+            solarPanelsLayer.clearLayers();
+            
+            if (totalCount === 0) return;
+            
+            // Calculate how many panels for each building based on their max capacity
+            const totalMaxPanels = buildings.reduce((sum, b) => sum + b.maxPanels, 0);
+            
+            let remainingPanels = totalCount;
+            
+            buildings.forEach((building, index) => {
+                // Proportional distribution based on max capacity
+                const buildingPanelCount = Math.min(
+                    Math.round((building.maxPanels / totalMaxPanels) * totalCount),
+                    building.maxPanels,
+                    remainingPanels
+                );
+                
+                if (buildingPanelCount > 0) {
+                    visualizePanelsOnBuilding(building, buildingPanelCount);
+                    remainingPanels -= buildingPanelCount;
+                }
+            });
+        }
+
+        function visualizePanelsOnBuilding(building, count) {
+            if (count === 0) return;
+            
+            // Convert building coords to proper format [lng, lat]
+            const roofPolygon = turf.polygon([building.coords.map(c => [c[1], c[0]])]);
+            const bbox = turf.bbox(roofPolygon);
+
+            // Panel dimensions in meters
+            const panelWidthM = 1.0;
+            const panelHeightM = 1.7;
+            const gapM = 0.02;
+
+            // Convert to degrees
+            const mPerDegLat = 111320;
+            const mPerDegLng = 111320 * Math.cos(building.centroid[0] * Math.PI / 180);
+            const panelW = panelWidthM / mPerDegLng;
+            const panelH = panelHeightM / mPerDegLat;
+            const gap = gapM / Math.min(mPerDegLat, mPerDegLng);
+
+            const stepW = panelW + gap;
+            const stepH = panelH + gap;
+
+            const minX = bbox[0];
+            const minY = bbox[1];
+            const maxX = bbox[2];
+            const maxY = bbox[3];
+
+            // Generate grid of panels
+            const allPanels = [];
+            let rowIndex = 0;
+            
+            for (let y = minY; y <= maxY; y += stepH) {
+                let colIndex = 0;
+                for (let x = minX; x <= maxX; x += stepW) {
+                    const hw = panelW / 2;
+                    const hh = panelH / 2;
+                    const corners = [
+                        [x - hw, y - hh],
+                        [x + hw, y - hh],
+                        [x + hw, y + hh],
+                        [x - hw, y + hh]
+                    ];
+
+                    // Check if all 4 corners are inside the polygon
+                    let allCornersInside = true;
+                    for (const [px, py] of corners) {
+                        if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
+                            allCornersInside = false;
+                            break;
+                        }
+                    }
+
+                    if (allCornersInside) {
+                        allPanels.push({ 
+                            corners: corners,
+                            row: rowIndex,
+                            col: colIndex,
+                            x: x,
+                            y: y
+                        });
+                    }
+                    colIndex++;
+                }
+                rowIndex++;
+            }
+
+            // Sort panels by row, then column
+            allPanels.sort((a, b) => {
+                if (a.row !== b.row) return a.row - b.row;
+                return a.col - b.col;
+            });
+
+            // Take only the requested count
+            const panelsToRender = allPanels.slice(0, count);
+
+            // Render panels
+            panelsToRender.forEach(panel => {
+                const latLngCorners = panel.corners.map(c => [c[1], c[0]]);
+                const panelRect = L.polygon(latLngCorners, {
+                    color: '#1E40AF',
+                    weight: 1,
+                    fillColor: '#3B82F6',
+                    fillOpacity: 0.7
+                }).addTo(solarPanelsLayer);
+            });
+        }
+
+        function calculateActualMaxPanelsForPolygon(roofPolygon) {
+            const bbox = turf.bbox(roofPolygon);
+            
+            // Panel dimensions
+            const panelWidthM = 1.0;
+            const panelHeightM = 1.7;
+            const gapM = 0.02;
+            
+            // Get approximate latitude from bbox
+            const lat = (bbox[1] + bbox[3]) / 2;
+            
+            const mPerDegLat = 111320;
+            const mPerDegLng = 111320 * Math.cos(lat * Math.PI / 180);
+            const panelW = panelWidthM / mPerDegLng;
+            const panelH = panelHeightM / mPerDegLat;
+            const gap = gapM / Math.min(mPerDegLat, mPerDegLng);
+            
+            const stepW = panelW + gap;
+            const stepH = panelH + gap;
+            
+            const minX = bbox[0];
+            const minY = bbox[1];
+            const maxX = bbox[2];
+            const maxY = bbox[3];
+            
+            let validPanelCount = 0;
+            
+            for (let y = minY; y <= maxY; y += stepH) {
+                for (let x = minX; x <= maxX; x += stepW) {
+                    const hw = panelW / 2;
+                    const hh = panelH / 2;
+                    const corners = [
+                        [x - hw, y - hh],
+                        [x + hw, y - hh],
+                        [x + hw, y + hh],
+                        [x - hw, y + hh]
+                    ];
+                    
+                    let allCornersInside = true;
+                    for (const [px, py] of corners) {
+                        if (!turf.booleanPointInPolygon(turf.point([px, py]), roofPolygon)) {
+                            allCornersInside = false;
+                            break;
+                        }
+                    }
+                    
+                    if (allCornersInside) {
+                        validPanelCount++;
+                    }
+                }
+            }
+            
+            return validPanelCount;
+        }
+
+        function clearBuildingMarkers() {
+            buildingsLayer.clearLayers();
+            detectedBuildings = [];
+            selectedBuildings = [];
+            multiSelectMode = false;
+            hideApplySelectedButton();
+            document.getElementById('multiSelectBtn').style.display = 'none';
+        }
 
         async function autoDetectBuilding() {
             try {
@@ -3028,7 +4027,7 @@
                         suggestionsDiv.style.display = 'none';
                     }
                 } catch (error) {
-                    console.error('Autocomplete error:', error);
+                    suggestionsDiv.style.display = 'none';
                 }
             }, 300);
         }
@@ -3117,6 +4116,18 @@
                 // Auto-run calculation when user opens Financial tab
                 scheduleCalculate();
             }
+        }
+
+        function switchResultsTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.results-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.results-tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.closest('.results-tab').classList.add('active');
+            const contentId = 'results-tab-' + tabName;
+            const content = document.getElementById(contentId);
+            if (content) content.classList.add('active');
         }
 
         // NASA POWER Data Functions
@@ -3321,14 +4332,7 @@
                 };
 
             } catch (error) {
-                console.error('Weather data error:', error);
-                // Return UAE default values as fallback
-                return {
-                    avgCloudCover: 15, sunnyDays: 25, partlyCloudyDays: 4, cloudyDays: 1, totalDays: 30,
-                    cloudDeratingFactor: 0.92, currentTemp: 30, avgAnnualTemp: 28, condition: 'Clear',
-                    allSkyIrradiation: 5.8, clearSkyIrradiation: 6.3,
-                    dataSource: '📊 UAE Average', aiEnhanced: false
-                };
+                throw new Error('Unable to fetch weather data. Please check your internet connection.');
             }
         }
 
@@ -3359,7 +4363,6 @@
                 content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
                 return JSON.parse(content);
             } catch (error) {
-                console.log('Panel recommendation unavailable:', error.message);
                 return null;
             }
         }
@@ -3382,41 +4385,46 @@
 
                 weatherData = await fetchWeatherData(currentLat, currentLon);
 
-                // Use defaults if weather data fails
                 if (!weatherData) {
-                    weatherData = {
-                        avgCloudCover: 15, sunnyDays: 25, partlyCloudyDays: 4, cloudyDays: 1, totalDays: 30,
-                        cloudDeratingFactor: 0.92, currentTemp: 30, avgAnnualTemp: 28, condition: 'Clear',
-                        allSkyIrradiation: 5.8, clearSkyIrradiation: 6.3,
-                        dataSource: '📊 UAE Average', aiEnhanced: false
-                    };
+                    throw new Error('Weather data unavailable for this location. Please try a different area.');
                 }
 
-                const dailyIrradiationKWh = safeNumber(weatherData.allSkyIrradiation, 5.8);
+                if (!weatherData.allSkyIrradiation) {
+                    throw new Error('No solar irradiation data available for this location');
+                }
+                
+                const dailyIrradiationKWh = weatherData.allSkyIrradiation;
                 const annualIrradiationPerM2 = dailyIrradiationKWh * 365;
                 const peakSunHours = dailyIrradiationKWh;
 
-                const nasaData = findNearestNasaData(nasaPowerAllSkyData, currentLat, currentLon) || {};
-                // UAE typical monthly irradiation fallback (kWh/m²/day)
-                const UAE_FALLBACK = [4.8, 5.5, 6.2, 6.8, 7.2, 7.1, 6.8, 6.5, 6.3, 5.8, 5.0, 4.5];
+                const nasaData = findNearestNasaData(nasaPowerAllSkyData, currentLat, currentLon);
+                if (!nasaData) {
+                    throw new Error('NASA POWER data not available for this location');
+                }
+                
                 const monthlyIrradiance = [
-                    safeNumber(nasaData.jan, UAE_FALLBACK[0]), safeNumber(nasaData.feb, UAE_FALLBACK[1]), safeNumber(nasaData.mar, UAE_FALLBACK[2]),
-                    safeNumber(nasaData.apr, UAE_FALLBACK[3]), safeNumber(nasaData.may, UAE_FALLBACK[4]), safeNumber(nasaData.jun, UAE_FALLBACK[5]),
-                    safeNumber(nasaData.jul, UAE_FALLBACK[6]), safeNumber(nasaData.aug, UAE_FALLBACK[7]), safeNumber(nasaData.sep, UAE_FALLBACK[8]),
-                    safeNumber(nasaData.oct, UAE_FALLBACK[9]), safeNumber(nasaData.nov, UAE_FALLBACK[10]), safeNumber(nasaData.dec, UAE_FALLBACK[11])
+                    nasaData.jan, nasaData.feb, nasaData.mar,
+                    nasaData.apr, nasaData.may, nasaData.jun,
+                    nasaData.jul, nasaData.aug, nasaData.sep,
+                    nasaData.oct, nasaData.nov, nasaData.dec
                 ];
 
                 const panelEfficiency = 0.22; // 22% modern high-efficiency panels
                 const systemEfficiency = 0.88; // 88% system efficiency (optimized)
                 const performanceRatio = 0.85; // 85% performance ratio (excellent conditions)
 
-                const avgTemp = safeNumber(weatherData.currentTemp, 30);
+                if (!weatherData.currentTemp) {
+                    throw new Error('Temperature data unavailable for this location');
+                }
+                if (!weatherData.cloudDeratingFactor) {
+                    throw new Error('Cloud cover data unavailable for this location');
+                }
+                const avgTemp = weatherData.currentTemp;
                 const tempDerating = Math.max(0.7, 1 - ((avgTemp - 25) * 0.004));
-                const cloudDerating = safeNumber(weatherData.cloudDeratingFactor, 0.92);
+                const cloudDerating = weatherData.cloudDeratingFactor;
 
-                // Apply tilt efficiency factor
-                const optimalTilt = getOptimalTilt();
-                const tiltDerating = calculateTiltEfficiency(currentTilt, optimalTilt);
+                // Assume optimal tilt installation (no derating)
+                const tiltDerating = 1.0;
 
                 displayWeatherCard(weatherData);
 
@@ -3427,7 +4435,7 @@
                 const totalSystemArea = panelCount * panelArea;
                 const annualEnergyFromIrradiation = annualIrradiationPerM2 * totalSystemArea * panelEfficiency * systemEfficiency * performanceRatio * tiltDerating;
                 const annualEnergyFromPower = systemSizeKW * peakSunHours * 365 * performanceRatio * tempDerating * cloudDerating * tiltDerating;
-                const annualProduction = safeNumber(Math.min(annualEnergyFromIrradiation, annualEnergyFromPower), 0);
+                const annualProduction = Math.min(annualEnergyFromIrradiation, annualEnergyFromPower) || 0;
                 const monthlyProduction = annualProduction / 12;
 
                 // ============================================
@@ -3449,8 +4457,8 @@
                     electricalCost + permitsCost;
                 
                 // System cost from sizing or calculated
-                const systemCostAED = safeNumber(sizing.systemCostAED, totalInitialInvestment);
-                const netCostAED = safeNumber(sizing.netCostAED, totalInitialInvestment);
+                const systemCostAED = sizing.systemCostAED || totalInitialInvestment;
+                const netCostAED = sizing.netCostAED || totalInitialInvestment;
                 
                 // 2. UAE Electricity Rates (DEWA/SEWA 2026 - Peak pricing)
                 const electricityRateAED = 0.38; // AED per kWh (realistic peak rates)
@@ -3495,10 +4503,6 @@
                     const cashFlow = (annualSavingsAED * degradationFactor * inflationFactor) - annualMaintenanceCost;
                     npv += cashFlow / Math.pow(1 + discountRate, year);
                 }
-                
-                // Ensure all values are safe numbers
-                const safeNetProfitAED = safeNumber(netProfitAED, 0);
-                const safeNPV = safeNumber(npv, 0);
 
                 const coveragePercent = Math.min(100, (annualProduction / avgAnnualUsage) * 100);
 
@@ -3513,8 +4517,15 @@
                 const bestMonth = monthNames[Math.max(0, monthlyIrradiance.indexOf(maxIrr))];
                 const worstMonth = monthNames[Math.max(0, monthlyIrradiance.indexOf(minIrr))];
 
-                // Update UI
-                document.getElementById('quickSummarySection').style.display = 'block';
+                // Show results section with tabs
+                const resultsSection = document.getElementById('resultsSection');
+                if (resultsSection) {
+                    resultsSection.style.display = 'block';
+                    // Smooth scroll to results after a short delay
+                    setTimeout(() => {
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 300);
+                }
 
                 document.getElementById('quickSystemSize').textContent = `${systemSizeKW.toFixed(1)} kW`;
                 document.getElementById('quickPanelCount').textContent = `${panelCount} panels`;
@@ -3544,16 +4555,16 @@
                 const totalProfitEl = document.getElementById('totalProfit');
                 const npvValueEl = document.getElementById('npvValue');
 
-                if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(safeNumber(systemCostAED, 0)).toLocaleString()}`;
-                if (netCostEl) netCostEl.textContent = `AED ${Math.round(safeNumber(netCostAED, 0)).toLocaleString()}`;
-                if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(safeNumber(annualSavingsAED, 0)).toLocaleString()}`;
-                if (roiPercentEl) roiPercentEl.textContent = `${safeNumber(roiPercent, 0).toFixed(1)}%`;
-                if (paybackPeriodEl) paybackPeriodEl.textContent = `${safeNumber(paybackYears, 0).toFixed(1)} years`;
-                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(safeNumber(safeNetProfitAED, 0)).toLocaleString()}`;
+                if (systemCostEl) systemCostEl.textContent = `AED ${Math.round(systemCostAED).toLocaleString()}`;
+                if (netCostEl) netCostEl.textContent = `AED ${Math.round(netCostAED).toLocaleString()}`;
+                if (annualSavingsEl) annualSavingsEl.textContent = `AED ${Math.round(annualSavingsAED).toLocaleString()}`;
+                if (roiPercentEl) roiPercentEl.textContent = `${roiPercent.toFixed(1)}%`;
+                if (paybackPeriodEl) paybackPeriodEl.textContent = `${paybackYears.toFixed(1)} years`;
+                if (totalProfitEl) totalProfitEl.textContent = `AED ${Math.round(netProfitAED).toLocaleString()}`;
                 if (npvValueEl) {
-                    npvValueEl.textContent = `AED ${Math.round(safeNumber(safeNPV, 0)).toLocaleString()}`;
-                    npvValueEl.classList.toggle('success', safeNPV > 0);
-                    npvValueEl.classList.toggle('error', safeNPV < 0);
+                    npvValueEl.textContent = `AED ${Math.round(npv).toLocaleString()}`;
+                    npvValueEl.classList.toggle('success', npv > 0);
+                    npvValueEl.classList.toggle('error', npv < 0);
                 }
 
                 document.getElementById('co2Reduction').textContent = `${co2Reduction.toFixed(1)} tons`;
@@ -4188,7 +5199,7 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
                 doc.setTextColor(...grayColor);
                 doc.text(`Coordinates: ${currentLat.toFixed(6)}, ${currentLon.toFixed(6)}`, margin, yPos);
                 yPos += 6;
-                doc.text(`Roof Area: ${roofArea.toFixed(1)} m² | Panel Tilt: ${currentTilt}° | Rotation: ${currentRotation}°`, margin, yPos);
+                doc.text(`Roof Area: ${roofArea.toFixed(1)} m²`, margin, yPos);
                 yPos += 12;
 
                 // System Configuration
@@ -4332,6 +5343,64 @@ Provide your analysis in exactly these 4 sections (2-3 sentences each, be specif
                 doc.text(`CO₂ Reduction: ${co2Reduction.toFixed(1)} tons  |  Trees Equivalent: ${treesEquiv}  |  Cars Off Road: ${carsOff}/year`, margin + 5, yPos + 12);
 
                 yPos += 30;
+
+                // Weather Data (if available)
+                if (weatherData) {
+                    doc.setTextColor(...darkColor);
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('🌤️ Weather Conditions', margin, yPos);
+                    yPos += 8;
+
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...grayColor);
+                    
+                    const tempText = weatherData.currentTemp ? `${weatherData.currentTemp.toFixed(1)}°C` : 'N/A';
+                    const irradText = weatherData.allSkyIrradiation ? `${weatherData.allSkyIrradiation.toFixed(2)} kWh/m²/day` : 'N/A';
+                    const conditionText = weatherData.condition || 'Clear';
+                    
+                    doc.text(`Temperature: ${tempText} | Solar Irradiation: ${irradText} | Condition: ${conditionText}`, margin, yPos);
+                    yPos += 6;
+                    
+                    if (weatherData.dataSource) {
+                        doc.setFontSize(9);
+                        doc.text(`Data Source: ${weatherData.dataSource}`, margin, yPos);
+                        yPos += 10;
+                    } else {
+                        yPos += 6;
+                    }
+                }
+
+                // AI Analysis (if available)
+                const aiText = document.getElementById('aiAnalysisText');
+                if (aiText && aiText.textContent.length > 100) {
+                    if (yPos > 230) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    doc.setTextColor(...darkColor);
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('🤖 AI Analysis & Recommendations', margin, yPos);
+                    yPos += 8;
+
+                    doc.setFillColor(243, 244, 246);
+                    const aiContent = aiText.textContent.replace(/\s+/g, ' ').trim();
+                    const maxWidth = pageWidth - 2*margin - 10;
+                    const lines = doc.splitTextToSize(aiContent, maxWidth);
+                    const boxHeight = Math.min(lines.length * 5 + 10, 60);
+                    
+                    doc.roundedRect(margin, yPos, pageWidth - 2*margin, boxHeight, 3, 3, 'F');
+                    
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(...darkColor);
+                    doc.text(lines.slice(0, 10), margin + 5, yPos + 7); // Limit to 10 lines
+                    
+                    yPos += boxHeight + 10;
+                }
 
                 // Shading Analysis (if available)
                 if (shadingAnalysisResult) {
