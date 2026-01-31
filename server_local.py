@@ -13,7 +13,29 @@ import os
 from pathlib import Path
 
 PORT = 8000
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "YOUR_GROQ_API_KEY_HERE")  # Set via environment variable
+
+# Load .env file if it exists
+env_path = Path(__file__).parent / '.env'
+if env_path.exists():
+    print("📄 Loading environment variables from .env file...")
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                os.environ[key.strip()] = value.strip()
+    print("✅ Environment variables loaded successfully")
+else:
+    print("⚠️  No .env file found - using environment variables")
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+if not GROQ_API_KEY or GROQ_API_KEY == "YOUR_GROQ_API_KEY_HERE":
+    print("❌ ERROR: GROQ_API_KEY not found!")
+    print("📝 Please create a .env file with: GROQ_API_KEY=your_key_here")
+    exit(1)
+else:
+    print(f"✅ Groq API Key loaded: {GROQ_API_KEY[:20]}...")
+
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 
 class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -90,24 +112,30 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                 body = self.rfile.read(content_length)
                 
                 print(f"🤖 Proxying Groq AI request...")
+                print(f"📦 Request size: {content_length} bytes")
                 
-                # Parse the request to add timeout and validate
+                # Parse the request to validate
                 try:
                     request_data = json.loads(body.decode('utf-8'))
-                except:
+                    print(f"📝 Model: {request_data.get('model', 'N/A')}")
+                except Exception as parse_err:
+                    print(f"⚠️  Could not parse request: {parse_err}")
                     request_data = {}
                 
+                # Create request with proper headers to avoid Cloudflare blocking
                 req = urllib.request.Request(GROQ_ENDPOINT, data=body, method='POST')
                 req.add_header('Content-Type', 'application/json')
                 req.add_header('Authorization', f'Bearer {GROQ_API_KEY}')
-                req.add_header('User-Agent', 'Mozilla/5.0')
+                req.add_header('User-Agent', 'curl/8.4.0')  # Cloudflare-friendly User-Agent
+                req.add_header('Accept', '*/*')
+                req.add_header('Connection', 'keep-alive')
                 
                 try:
                     with urllib.request.urlopen(req, timeout=30) as response:
                         result = response.read()
                         status = response.getcode()
                     
-                    print(f"✅ Groq API success!")
+                    print(f"✅ Groq API success! Status: {status}")
                     self.send_response(status)
                     self.send_header('Content-Type', 'application/json')
                     self.end_headers()
@@ -118,37 +146,38 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                     error_body = http_err.read().decode('utf-8') if http_err.fp else str(http_err)
                     print(f"❌ Groq API HTTP Error {http_err.code}: {error_body}")
                     
-                    # Return a graceful error response
-                    self.send_response(200)  # Send 200 to prevent frontend errors
+                    if http_err.code == 403:
+                        print("💡 Cloudflare blocking detected - trying alternative approach...")
+                    
+                    # Return error to frontend
+                    self.send_response(http_err.code)
                     self.send_header('Content-Type', 'application/json')
                     self.end_headers()
                     
-                    # Provide fallback AI response
-                    fallback_response = {
-                        "choices": [{
-                            "message": {
-                                "content": "**Investment Analysis**: Based on your solar data, this appears to be a solid investment opportunity.\n\n**Weather Impact**: UAE's excellent solar conditions will maximize your system's efficiency and energy production.\n\n**Optimization**: Consider adjusting panel tilt angle seasonally to capture maximum sunlight year-round.\n\n**Next Step**: Request detailed quotes from 3+ certified installers to compare pricing and warranties."
-                            }
-                        }]
+                    error_response = {
+                        "error": {
+                            "message": f"Groq API Error: {error_body}",
+                            "type": "api_error",
+                            "code": http_err.code
+                        }
                     }
-                    self.wfile.write(json.dumps(fallback_response).encode())
+                    self.wfile.write(json.dumps(error_response).encode())
                 
             except Exception as e:
-                print(f"❌ Groq Proxy Error: {e}")
+                print(f"❌ Groq Proxy Error: {type(e).__name__}: {e}")
                 
-                # Return fallback response instead of error
-                self.send_response(200)
+                # Return error response
+                self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
                 
-                fallback_response = {
-                    "choices": [{
-                        "message": {
-                            "content": "**Investment Analysis**: Your solar configuration shows good potential for energy savings and environmental impact.\n\n**UAE Advantage**: High solar irradiation in your area ensures optimal system performance throughout the year.\n\n**Recommendation**: Focus on quality components and professional installation for maximum ROI.\n\n**Action**: Consult with certified solar installers to finalize your system design."
-                        }
-                    }]
+                error_response = {
+                    "error": {
+                        "message": str(e),
+                        "type": "server_error"
+                    }
                 }
-                self.wfile.write(json.dumps(fallback_response).encode())
+                self.wfile.write(json.dumps(error_response).encode())
         else:
             self.send_response(405)
             self.end_headers()
