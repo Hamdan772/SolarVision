@@ -11,31 +11,46 @@ import urllib.parse
 import urllib.error
 import json
 import os
+import logging
+import re
 from pathlib import Path
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S"
+)
+logger = logging.getLogger("solarvision")
+
 PORT = 8000
+REQUEST_TIMEOUT = 15  # seconds
+
+# Regex to validate bbox format
+BBOX_PATTERN = re.compile(
+    r'^-?\d+\.?\d*,-?\d+\.?\d*,-?\d+\.?\d*,-?\d+\.?\d*$'
+)
 
 # Load .env file if it exists
 env_path = Path(__file__).parent / '.env'
 if env_path.exists():
-    print("📄 Loading environment variables from .env file...")
+    logger.info("Loading environment variables from .env file...")
     with open(env_path) as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith('#') and '=' in line:
                 key, value = line.split('=', 1)
                 os.environ[key.strip()] = value.strip()
-    print("✅ Environment variables loaded successfully")
+    logger.info("Environment variables loaded")
 else:
-    print("⚠️  No .env file found - using environment variables")
+    logger.warning("No .env file found — using environment variables")
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY or GROQ_API_KEY == "YOUR_GROQ_API_KEY_HERE":
-    print("❌ ERROR: GROQ_API_KEY not found!")
-    print("📝 Please create a .env file with: GROQ_API_KEY=your_key_here")
+if not GROQ_API_KEY or GROQ_API_KEY in ("YOUR_GROQ_API_KEY_HERE", "your_groq_api_key_here"):
+    logger.error("GROQ_API_KEY not found or not set!")
+    logger.error("Create a .env file with: GROQ_API_KEY=your_key_here")
     exit(1)
 else:
-    print(f"✅ Groq API Key loaded: {GROQ_API_KEY[:20]}...")
+    logger.info("Groq API Key loaded: %s...", GROQ_API_KEY[:8])
 
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 
@@ -66,6 +81,16 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                     error_data = json.dumps({'error': 'Missing bbox parameter'})
                     self.wfile.write(error_data.encode())
                     return
+
+                # Validate bbox format
+                if not BBOX_PATTERN.match(bbox):
+                    self.send_response(400)
+                    self.send_header('Content-Type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        'error': 'Invalid bbox format. Expected: south_lat,west_lon,north_lat,east_lon'
+                    }).encode())
+                    return
                 
                 overpass_query = f"""
                 [out:json][timeout:25];
@@ -76,7 +101,7 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                 out geom;
                 """
                 
-                print(f"📡 Proxying Overpass request for bbox: {bbox}")
+                logger.info("Overpass request: bbox=%s", bbox)
                 
                 overpass_url = "https://overpass-api.de/api/interpreter"
                 data = overpass_query.encode()
@@ -85,21 +110,39 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                 req.add_header('User-Agent', 'Mozilla/5.0')
                 req.add_header('Content-Type', 'application/x-www-form-urlencoded')
                 
-                with urllib.request.urlopen(req, timeout=30) as response:
+                with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as response:
                     result = response.read()
                 
+                logger.info("Overpass response: %d bytes", len(result))
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
                 self.wfile.write(result)
                 
+            except urllib.error.HTTPError as e:
+                logger.error("Overpass API HTTP %d", e.code)
+                self.send_response(502)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    'error': 'Building data service unavailable. Please try again.'
+                }).encode())
+            except urllib.error.URLError as e:
+                logger.error("Overpass network error: %s", e.reason)
+                self.send_response(502)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    'error': 'Network error. Please try again.'
+                }).encode())
             except Exception as e:
-                print(f"❌ Overpass Proxy Error: {e}")
+                logger.exception("Overpass proxy error")
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                error_data = json.dumps({'error': str(e)})
-                self.wfile.write(error_data.encode())
+                self.wfile.write(json.dumps({
+                    'error': 'Internal server error'
+                }).encode())
         
         else:
             # Serve static files normally
@@ -112,15 +155,14 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                 content_length = int(self.headers.get('Content-Length', 0))
                 body = self.rfile.read(content_length)
                 
-                print(f"🤖 Proxying Groq AI request...")
-                print(f"📦 Request size: {content_length} bytes")
+                logger.info("Groq request: %d bytes", content_length)
                 
                 # Parse the request to validate
                 try:
                     request_data = json.loads(body.decode('utf-8'))
-                    print(f"📝 Model: {request_data.get('model', 'N/A')}")
+                    logger.info("Groq model: %s", request_data.get('model', 'N/A'))
                 except Exception as parse_err:
-                    print(f"⚠️  Could not parse request: {parse_err}")
+                    logger.warning("Could not parse request: %s", parse_err)
                     request_data = {}
                 
                 # Create request with proper headers to avoid Cloudflare blocking
@@ -132,23 +174,22 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                 req.add_header('Connection', 'keep-alive')
                 
                 try:
-                    with urllib.request.urlopen(req, timeout=30) as response:
+                    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as response:
                         result = response.read()
                         status = response.getcode()
                     
-                    print(f"✅ Groq API success! Status: {status}")
+                    logger.info("Groq response: status=%d", status)
                     self.send_response(status)
                     self.send_header('Content-Type', 'application/json')
                     self.end_headers()
                     self.wfile.write(result)
                     
                 except urllib.error.HTTPError as http_err:
-                    # Log the detailed error
                     error_body = http_err.read().decode('utf-8') if http_err.fp else str(http_err)
-                    print(f"❌ Groq API HTTP Error {http_err.code}: {error_body}")
+                    logger.error("Groq API HTTP %d: %s", http_err.code, error_body[:200])
                     
                     if http_err.code == 403:
-                        print("💡 Cloudflare blocking detected - trying alternative approach...")
+                        logger.warning("Possible Cloudflare blocking detected")
                     
                     # Return error to frontend
                     self.send_response(http_err.code)
@@ -165,7 +206,7 @@ class ProxyRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(json.dumps(error_response).encode())
                 
             except Exception as e:
-                print(f"❌ Groq Proxy Error: {type(e).__name__}: {e}")
+                logger.exception("Groq proxy error")
                 
                 # Return error response
                 self.send_response(500)
@@ -190,15 +231,13 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print("=" * 60)
-        print("🚀 SolarVision Local Server Running!")
-        print("=" * 60)
-        print(f"📍 Main App: http://localhost:{PORT}/solar_advanced.html")
-        print(f"📍 Landing Page: http://localhost:{PORT}/index.html")
-        print(f"🔧 Overpass API Proxy: http://localhost:{PORT}/api/overpass")
-        print(f"🤖 Groq AI Proxy: http://localhost:{PORT}/api/groq")
-        print("=" * 60)
-        print(f"✅ All features enabled with NASA POWER data + AI")
-        print(f"Press Ctrl+C to stop the server")
-        print("=" * 60)
+        logger.info("=" * 55)
+        logger.info("SolarVision Local Server Running!")
+        logger.info("=" * 55)
+        logger.info("Main App:      http://localhost:%d/solar_advanced.html", PORT)
+        logger.info("Landing Page:  http://localhost:%d/index.html", PORT)
+        logger.info("Overpass Proxy: http://localhost:%d/api/overpass", PORT)
+        logger.info("Groq AI Proxy:  http://localhost:%d/api/groq", PORT)
+        logger.info("=" * 55)
+        logger.info("Press Ctrl+C to stop the server")
         httpd.serve_forever()

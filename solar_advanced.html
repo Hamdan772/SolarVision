@@ -4539,6 +4539,12 @@
 
         // Groq API key is proxied via /api/groq (set GROQ_API_KEY in Vercel env)
         const GROQ_API_KEY = '';
+
+        // Debug mode — set to true for local development logging
+        const SV_DEBUG = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const _log = SV_DEBUG ? console.log.bind(console) : () => {};
+        const _warn = SV_DEBUG ? console.warn.bind(console) : () => {};
+        const _error = SV_DEBUG ? console.error.bind(console) : () => {};
         
         // Helper to get the correct API endpoint
         function getGroqEndpoint() {
@@ -6399,7 +6405,7 @@ const daylightHoursPerMonth = [
                         csvFilesLoaded++;
                     } catch (err) { }
                 }
-                console.log(`✅ Loaded ${csvFilesLoaded}/${totalCSVFiles} NASA POWER data files`);
+                _log(`Loaded ${csvFilesLoaded}/${totalCSVFiles} NASA POWER data files`);
             }, 1000); // Delay background loading by 1 second
 
             if (!loadedAny) throw new Error('No NASA POWER CSV files found');
@@ -6734,7 +6740,7 @@ const daylightHoursPerMonth = [
                 const azimuthLoss = azimuthDeviation > 45 ? 0.1 : (azimuthDeviation / 45) * 0.05;
                 const azimuthDerating = 1 - azimuthLoss;
 
-                console.log('� Advanced UAE Solar Calculation Factors:', {
+                _log('Advanced UAE Solar Calculation Factors:', {
                     panelEfficiency: `${(panelEfficiency * 100).toFixed(2)}%`,
                     systemEfficiency: `${(systemEfficiency * 100).toFixed(1)}%`,
                     tempDerating: `${(tempDerating * 100).toFixed(1)}% (${avgTemp}°C)`,
@@ -7274,7 +7280,7 @@ Feel free to ask me anything about your solar investment!`;
 
                 addChatMessage(message, 'bot');
             } catch (error) {
-                console.warn('AI Analysis unavailable:', error);
+                _warn('AI Analysis unavailable:', error);
             }
         }
 
@@ -7380,7 +7386,7 @@ Feel free to ask me anything about your solar investment!`;
             } catch (error) {
                 hideTypingIndicator();
                 addChatMessage('Sorry, I encountered an error. Please try again or check your connection.', 'bot');
-                console.error('Chat error:', error);
+                _error('Chat error:', error);
             } finally {
                 input.disabled = false;
                 sendBtn.disabled = false;
@@ -7487,14 +7493,14 @@ ${systemContext}`
                 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
-                    console.error('API Error:', response.status, errorData);
+                    _error('API Error:', response.status, errorData);
                     throw new Error(errorData.error || `API error: ${response.status}`);
                 }
                 
                 const aiData = await response.json();
                 
                 if (!aiData.choices || !aiData.choices[0] || !aiData.choices[0].message) {
-                    console.error('Invalid API response:', aiData);
+                    _error('Invalid API response:', aiData);
                     throw new Error('Invalid response from AI service');
                 }
                 
@@ -7543,7 +7549,7 @@ ${systemContext}`
                 `;
                 messagesContainer.appendChild(errorMsgDiv);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                console.error('Chatbot error:', error);
+                _error('Chatbot error:', error);
             }
         }
 
@@ -8214,7 +8220,7 @@ ${systemContext}`
 
             } catch (error) {
                 hideLoading();
-                console.error('PDF generation error:', error);
+                _error('PDF generation error:', error);
                 showStatus('Error generating PDF: ' + error.message, 'error');
             }
         }
@@ -8418,9 +8424,9 @@ ${systemContext}`
         })();
 
         // Console Branding - Simplified Calculator
-        console.log('%c🌟 SolarVision Calculator', 
+        _log('%c🌟 SolarVision Calculator', 
             'background: linear-gradient(135deg, #FACC15, #F59E0B); color: white; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold;');
-        console.log('%c✨ Clean & Functional Interface', 
+        _log('%c✨ Clean & Functional Interface', 
             'color: #FACC15; font-size: 14px; font-weight: 600;');
 
     </script>
