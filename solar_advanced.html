@@ -2496,6 +2496,361 @@
                 transform: translateY(0);
             }
         }
+
+        /* ===== Solar Investment Rating Card ===== */
+        .investment-card {
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .investment-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            background: repeating-linear-gradient(
+                135deg,
+                transparent,
+                transparent 10px,
+                currentColor 10px,
+                currentColor 11px
+            );
+            pointer-events: none;
+        }
+        /* Rating tiers */
+        .investment-card[data-rating="excellent"] {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(5, 150, 105, 0.08) 100%);
+            border: 1.5px solid rgba(16, 185, 129, 0.35);
+        }
+        .investment-card[data-rating="good"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(37, 99, 235, 0.08) 100%);
+            border: 1.5px solid rgba(59, 130, 246, 0.35);
+        }
+        .investment-card[data-rating="moderate"] {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.08) 100%);
+            border: 1.5px solid rgba(245, 158, 11, 0.35);
+        }
+        .investment-card[data-rating="poor"] {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.14) 0%, rgba(220, 38, 38, 0.08) 100%);
+            border: 1.5px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .investment-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
+        }
+        .investment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .investment-card:hover .investment-icon {
+            transform: scale(1.08) rotate(-3deg);
+        }
+        .investment-card[data-rating="excellent"] .investment-icon {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+            color: white;
+        }
+        .investment-card[data-rating="good"] .investment-icon {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            box-shadow: 0 4px 18px rgba(59, 130, 246, 0.35);
+            color: white;
+        }
+        .investment-card[data-rating="moderate"] .investment-icon {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.35);
+            color: white;
+        }
+        .investment-card[data-rating="poor"] .investment-icon {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            box-shadow: 0 4px 18px rgba(239, 68, 68, 0.35);
+            color: white;
+        }
+
+        .investment-title {
+            font-weight: 700;
+            font-size: 17px;
+            margin-bottom: 3px;
+            transition: color 0.4s ease;
+        }
+        .investment-card[data-rating="excellent"] .investment-title { color: #10B981; }
+        .investment-card[data-rating="good"] .investment-title { color: #3B82F6; }
+        .investment-card[data-rating="moderate"] .investment-title { color: #F59E0B; }
+        .investment-card[data-rating="poor"] .investment-title { color: #EF4444; }
+
+        .investment-subtitle {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Rating score bar */
+        .rating-score-bar {
+            margin: 14px 0 16px;
+            position: relative;
+        }
+        .rating-score-track {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .rating-score-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                        background 0.5s ease;
+            position: relative;
+        }
+        .rating-score-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+            animation: shimmerBar 2s infinite;
+        }
+        @keyframes shimmerBar {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .investment-card[data-rating="excellent"] .rating-score-fill {
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+        .investment-card[data-rating="good"] .rating-score-fill {
+            background: linear-gradient(90deg, #3B82F6, #60A5FA);
+        }
+        .investment-card[data-rating="moderate"] .rating-score-fill {
+            background: linear-gradient(90deg, #F59E0B, #FBBF24);
+        }
+        .investment-card[data-rating="poor"] .rating-score-fill {
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+        .rating-score-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+        .rating-score-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .rating-score-value {
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .investment-card[data-rating="excellent"] .rating-score-value { color: #10B981; }
+        .investment-card[data-rating="good"] .rating-score-value { color: #3B82F6; }
+        .investment-card[data-rating="moderate"] .rating-score-value { color: #F59E0B; }
+        .investment-card[data-rating="poor"] .rating-score-value { color: #EF4444; }
+
+        /* Metric pills */
+        .investment-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .investment-metric {
+            padding: 12px 10px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+        .investment-metric:hover {
+            transform: translateY(-2px);
+        }
+        .investment-card[data-rating="excellent"] .investment-metric {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.18);
+        }
+        .investment-card[data-rating="good"] .investment-metric {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.18);
+        }
+        .investment-card[data-rating="moderate"] .investment-metric {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.18);
+        }
+        .investment-card[data-rating="poor"] .investment-metric {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.18);
+        }
+        .investment-metric-icon {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .investment-metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .investment-card[data-rating="excellent"] .investment-metric-value { color: #10B981; }
+        .investment-card[data-rating="good"] .investment-metric-value { color: #3B82F6; }
+        .investment-card[data-rating="moderate"] .investment-metric-value { color: #F59E0B; }
+        .investment-card[data-rating="poor"] .investment-metric-value { color: #EF4444; }
+        .investment-metric-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Tip footer */
+        .investment-tip {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .investment-tip i {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .investment-card[data-rating="excellent"] .investment-tip {
+            background: rgba(16, 185, 129, 0.06);
+            color: rgba(16, 185, 129, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+        }
+        .investment-card[data-rating="good"] .investment-tip {
+            background: rgba(59, 130, 246, 0.06);
+            color: rgba(59, 130, 246, 0.85);
+            border: 1px solid rgba(59, 130, 246, 0.12);
+        }
+        .investment-card[data-rating="moderate"] .investment-tip {
+            background: rgba(245, 158, 11, 0.06);
+            color: rgba(245, 158, 11, 0.85);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+        }
+        .investment-card[data-rating="poor"] .investment-tip {
+            background: rgba(239, 68, 68, 0.06);
+            color: rgba(239, 68, 68, 0.85);
+            border: 1px solid rgba(239, 68, 68, 0.12);
+        }
+
+        /* ============================
+           UI/UX ENHANCEMENTS
+           ============================ */
+
+        /* Pulse animation for calculate button when roof is drawn */
+        .btn-primary.pulse-ready {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 8px 24px rgba(250, 204, 21, 0.4),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(250, 204, 21, 0.7),
+                            0 0 48px rgba(250, 204, 21, 0.3),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+        .btn-primary.pulse-ready:hover {
+            animation: none;
+        }
+
+        /* Staggered entrance animation for results */
+        .results-enter {
+            animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .results-enter:nth-child(2) { animation-delay: 0.08s; }
+        .results-enter:nth-child(3) { animation-delay: 0.16s; }
+        .results-enter:nth-child(4) { animation-delay: 0.24s; }
+        .results-enter:nth-child(5) { animation-delay: 0.32s; }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Quick stats color coding */
+        .quick-stat[data-type="payback"] .quick-stat-value {
+            transition: color 0.3s ease;
+        }
+        .quick-stat[data-type="payback"].tier-excellent .quick-stat-value { color: #34D399; }
+        .quick-stat[data-type="payback"].tier-good .quick-stat-value { color: #60A5FA; }
+        .quick-stat[data-type="payback"].tier-moderate .quick-stat-value { color: #FBBF24; }
+        .quick-stat[data-type="payback"].tier-poor .quick-stat-value { color: #F87171; }
+
+        /* Calculate button loading state */
+        .btn-calculating {
+            pointer-events: none;
+            position: relative;
+        }
+        .btn-calculating .btn-text {
+            opacity: 0.6;
+        }
+        .btn-calculating .btn-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(7, 11, 20, 0.2);
+            border-top-color: #070B14;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Smooth scroll-to reveal for results section */
+        #resultsSection {
+            scroll-margin-top: 20px;
+        }
+
+        /* Card value highlight animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .value-reveal {
+            animation: countUp 0.4s ease-out both;
+        }
+
+        /* Enhanced focus/accessibility for interactive elements */
+        .btn:focus-visible,
+        .results-tab:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Better scrollbar styling for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(250, 204, 21, 0.2);
+            border-radius: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(250, 204, 21, 0.4);
+        }
+
         
         /* Dashboard Metrics Row */
         .dashboard-metrics {
@@ -4096,9 +4451,9 @@
                     </div>
 
                     <!-- Calculate Button -->
-                    <button class="btn btn-primary btn-full" onclick="calculateSolar()" style="margin-top: 24px;">
-                        <i class="fas fa-calculator"></i>
-                        Calculate Solar Potential
+                    <button class="btn btn-primary btn-full" id="calculateBtn" onclick="calculateSolar()" style="margin-top: 24px;">
+                        <span class="btn-spinner" style="display:none;"></span>
+                        <span class="btn-text"><i class="fas fa-calculator"></i> Calculate Solar Potential</span>
                     </button>
 
                     <!-- Results Section with Tabs -->
@@ -4134,7 +4489,7 @@
                                         <div class="quick-stat-value" id="quickAnnualOutput">0 kWh</div>
                                         <div class="quick-stat-label">Annual Output</div>
                                     </div>
-                                    <div class="quick-stat">
+                                    <div class="quick-stat" id="quickPaybackStat" data-type="payback">
                                         <div class="quick-stat-value" id="quickPayback">0 yrs</div>
                                         <div class="quick-stat-label">Payback</div>
                                     </div>
@@ -4247,34 +4602,49 @@
                         </div>
                     </div>
 
-                    <!-- Solar Benefits Highlight -->
-                    <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%); border-color: rgba(16, 185, 129, 0.3);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-solar-panel" style="color: white; font-size: 24px;"></i>
+                    <!-- Solar Investment Rating (Dynamic) -->
+                    <div class="card investment-card" id="investmentRatingCard" data-rating="excellent">
+                        <div class="investment-card-header">
+                            <div class="investment-icon" id="investmentIcon">
+                                <i class="fas fa-solar-panel"></i>
                             </div>
                             <div>
-                                <div style="font-weight: 700; font-size: 18px; color: #10B981; margin-bottom: 4px;">
-                                    ✨ Excellent Solar Investment
-                                </div>
-                                <div style="font-size: 13px; color: var(--text-muted);">
-                                    Your property shows outstanding solar potential
-                                </div>
+                                <div class="investment-title" id="investmentTitle">Calculating...</div>
+                                <div class="investment-subtitle" id="investmentSubtitle">Analyzing your solar potential</div>
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 16px;">
-                            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2);">
-                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">💰 Monthly Savings</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #10B981;" id="monthlySavingsHighlight">--</div>
+
+                        <div class="rating-score-bar">
+                            <div class="rating-score-track">
+                                <div class="rating-score-fill" id="ratingScoreFill" style="width: 0%"></div>
                             </div>
-                            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2);">
-                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">🌍 CO₂ Reduction</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #10B981;" id="co2ReductionHighlight">--</div>
+                            <div class="rating-score-label">
+                                <span class="rating-score-text">Investment Score</span>
+                                <span class="rating-score-value" id="ratingScoreValue">--</span>
                             </div>
-                            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2);">
-                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">⚡ Clean Energy</div>
-                                <div style="font-size: 20px; font-weight: 700; color: #10B981;">100%</div>
+                        </div>
+
+                        <div class="investment-metrics">
+                            <div class="investment-metric">
+                                <div class="investment-metric-icon">💰</div>
+                                <div class="investment-metric-value" id="metricMonthlySavings">--</div>
+                                <div class="investment-metric-label">Monthly Savings</div>
                             </div>
+                            <div class="investment-metric">
+                                <div class="investment-metric-icon">🌍</div>
+                                <div class="investment-metric-value" id="metricCO2">--</div>
+                                <div class="investment-metric-label">CO₂ Reduction</div>
+                            </div>
+                            <div class="investment-metric">
+                                <div class="investment-metric-icon">⚡</div>
+                                <div class="investment-metric-value" id="metricCleanEnergy">--</div>
+                                <div class="investment-metric-label">Grid Offset</div>
+                            </div>
+                        </div>
+
+                        <div class="investment-tip" id="investmentTip">
+                            <i class="fas fa-lightbulb"></i>
+                            <span id="investmentTipText">Run a calculation to see your investment rating.</span>
                         </div>
                     </div>
 
@@ -4983,6 +5353,10 @@ const daylightHoursPerMonth = [
             
             // Show status message with actual fit
             showStatus(`✅ ${maxPanelsForRoof} panels fit perfectly on this roof`, 'success');
+
+            // Pulse the calculate button to draw attention
+            const calcBtn = document.getElementById('calculateBtn');
+            if (calcBtn) calcBtn.classList.add('pulse-ready');
             
             scheduleCalculate();
         }
@@ -6649,11 +7023,105 @@ const daylightHoursPerMonth = [
             }
         }
 
+        /**
+         * Dynamically update the investment rating card based on calculated solar data.
+         * Rating tiers: excellent (<6yr payback), good (<10yr), moderate (<15yr), poor (≥15yr)
+         */
+        function updateInvestmentRating({
+            paybackYears, roiPercent, annualSavingsAED,
+            co2Reduction, annualProduction, avgAnnualUsage
+        }) {
+            const card = document.getElementById('investmentRatingCard');
+            if (!card) return;
+
+            // Determine rating tier
+            let rating, title, subtitle, score, tip, icon;
+            if (paybackYears < 6) {
+                rating = 'excellent';
+                title = '✨ Excellent Solar Investment';
+                subtitle = 'Outstanding solar potential with rapid payback';
+                score = Math.min(100, Math.round(90 + (6 - paybackYears) * 2));
+                tip = `With a ${paybackYears.toFixed(1)}-year payback and ${roiPercent.toFixed(1)}% ROI, this is an exceptional investment. You'll generate free energy for 20+ years after payback.`;
+                icon = 'fa-solar-panel';
+            } else if (paybackYears < 10) {
+                rating = 'good';
+                title = '👍 Good Solar Investment';
+                subtitle = 'Strong returns with solid payback period';
+                score = Math.round(65 + (10 - paybackYears) * 6.25);
+                tip = `A ${paybackYears.toFixed(1)}-year payback is well within industry standards. Consider optimizing panel placement or energy usage to improve further.`;
+                icon = 'fa-thumbs-up';
+            } else if (paybackYears < 15) {
+                rating = 'moderate';
+                title = '⚠️ Moderate Solar Investment';
+                subtitle = 'Reasonable returns — consider optimization';
+                score = Math.round(35 + (15 - paybackYears) * 6);
+                tip = `Payback of ${paybackYears.toFixed(1)} years is above average. Explore government incentives, higher-efficiency panels, or adjusting system size.`;
+                icon = 'fa-balance-scale';
+            } else {
+                rating = 'poor';
+                title = '⛔ Poor Solar Investment';
+                subtitle = 'High payback period — review feasibility';
+                score = Math.max(5, Math.round(35 - (paybackYears - 15) * 2));
+                tip = `A ${paybackYears.toFixed(1)}-year payback exceeds typical thresholds. Consider a smaller system, better financing, or alternative energy options.`;
+                icon = 'fa-exclamation-triangle';
+            }
+
+            // Update card data attribute (drives CSS theming)
+            card.setAttribute('data-rating', rating);
+
+            // Update text content
+            const titleEl = document.getElementById('investmentTitle');
+            const subtitleEl = document.getElementById('investmentSubtitle');
+            const iconEl = document.getElementById('investmentIcon');
+            const scoreFill = document.getElementById('ratingScoreFill');
+            const scoreValue = document.getElementById('ratingScoreValue');
+            const tipText = document.getElementById('investmentTipText');
+
+            if (titleEl) titleEl.textContent = title;
+            if (subtitleEl) subtitleEl.textContent = subtitle;
+            if (iconEl) iconEl.innerHTML = `<i class="fas ${icon}"></i>`;
+            if (scoreValue) scoreValue.textContent = `${score}/100`;
+            if (tipText) tipText.textContent = tip;
+
+            // Animate score bar
+            if (scoreFill) {
+                scoreFill.style.width = '0%';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        scoreFill.style.width = `${score}%`;
+                    });
+                });
+            }
+
+            // Update metric pills
+            const monthlySavings = Math.round(annualSavingsAED / 12);
+            const gridOffset = Math.min(100, (annualProduction / avgAnnualUsage) * 100);
+
+            const metricSavings = document.getElementById('metricMonthlySavings');
+            const metricCO2 = document.getElementById('metricCO2');
+            const metricEnergy = document.getElementById('metricCleanEnergy');
+
+            if (metricSavings) metricSavings.textContent = `AED ${monthlySavings.toLocaleString()}`;
+            if (metricCO2) metricCO2.textContent = `${co2Reduction.toFixed(1)}t/yr`;
+            if (metricEnergy) metricEnergy.textContent = `${gridOffset.toFixed(0)}%`;
+        }
+
         async function calculateSolar() {
             if (isCalculating) return; // prevent concurrent runs
             if (roofArea === 0) {
                 showStatus('Please draw your roof area first!', 'error');
                 return;
+            }
+
+            // Animate calculate button into loading state
+            const calcBtn = document.getElementById('calculateBtn');
+            if (calcBtn) {
+                calcBtn.classList.add('btn-calculating');
+                calcBtn.classList.remove('pulse-ready');
+                const spinner = calcBtn.querySelector('.btn-spinner');
+                const btnText = calcBtn.querySelector('.btn-text');
+                if (spinner) spinner.style.display = 'inline-block';
+                if (btnText) btnText.innerHTML = 'Analyzing...';
             }
 
             showLoading('Calculating solar potential...');
@@ -6911,15 +7379,15 @@ const daylightHoursPerMonth = [
                 document.getElementById('annualEnergy').textContent = `${Math.round(annualProduction).toLocaleString()} kWh`;
                 document.getElementById('monthlyEnergy').textContent = `${Math.round(monthlyProduction).toLocaleString()} kWh/month`;
 
-                // Update benefits highlight section
-                const monthlySavingsHighlight = document.getElementById('monthlySavingsHighlight');
-                const co2ReductionHighlight = document.getElementById('co2ReductionHighlight');
-                if (monthlySavingsHighlight) {
-                    monthlySavingsHighlight.textContent = `AED ${Math.round(annualSavingsAED / 12).toLocaleString()}`;
-                }
-                if (co2ReductionHighlight) {
-                    co2ReductionHighlight.textContent = `${co2Reduction.toFixed(1)}t/yr`;
-                }
+                // Update dynamic investment rating card
+                updateInvestmentRating({
+                    paybackYears,
+                    roiPercent,
+                    annualSavingsAED,
+                    co2Reduction,
+                    annualProduction,
+                    avgAnnualUsage
+                });
 
                 document.getElementById('peakSunHours').textContent = `${peakSunHours.toFixed(2)} hrs/day`;
                 document.getElementById('annualIrradiance').textContent = `${Math.round(annualIrradiationPerM2).toLocaleString()} kWh/m²`;
@@ -6988,11 +7456,39 @@ const daylightHoursPerMonth = [
                 showStatus('✅ Analysis complete!', 'success');
                 lastCalcTimestamp = Date.now();
 
+                // Apply entrance animations to results cards
+                const resultsCards = document.querySelectorAll('#resultsSection .card, .investment-card, .quick-summary');
+                resultsCards.forEach(card => {
+                    card.classList.remove('results-enter');
+                    void card.offsetWidth; // force reflow
+                    card.classList.add('results-enter');
+                });
+
+                // Color-code payback stat
+                const paybackStat = document.getElementById('quickPaybackStat');
+                if (paybackStat) {
+                    paybackStat.classList.remove('tier-excellent', 'tier-good', 'tier-moderate', 'tier-poor');
+                    if (paybackYears < 6) paybackStat.classList.add('tier-excellent');
+                    else if (paybackYears < 10) paybackStat.classList.add('tier-good');
+                    else if (paybackYears < 15) paybackStat.classList.add('tier-moderate');
+                    else paybackStat.classList.add('tier-poor');
+                }
+
             } catch (error) {
                 showStatus('Error: ' + error.message, 'error');
             } finally {
                 hideLoading();
                 isCalculating = false;
+
+                // Restore calculate button
+                const calcBtn = document.getElementById('calculateBtn');
+                if (calcBtn) {
+                    calcBtn.classList.remove('btn-calculating');
+                    const spinner = calcBtn.querySelector('.btn-spinner');
+                    const btnText = calcBtn.querySelector('.btn-text');
+                    if (spinner) spinner.style.display = 'none';
+                    if (btnText) btnText.innerHTML = '<i class="fas fa-calculator"></i> Calculate Solar Potential';
+                }
             }
         }
 
