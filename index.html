@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="scroll-behavior: smooth;">
+<html lang="en" data-theme="dark" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -544,6 +544,36 @@
         .nav-cta:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 32px rgba(250, 204, 21, 0.5);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-light);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--solar-yellow);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(250, 204, 21, 0.12);
+            border-color: rgba(250, 204, 21, 0.3);
+            transform: translateY(-2px) rotate(15deg);
+            box-shadow: 0 4px 16px rgba(250, 204, 21, 0.2);
         }
 
         /* ===== HERO SECTION ===== */
@@ -2304,6 +2334,15 @@
                 display: none;
             }
 
+            .nav-actions {
+                gap: 12px;
+            }
+
+            .nav-cta {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+
             .hero h1 {
                 font-size: 38px;
                 letter-spacing: -1px;
@@ -2351,6 +2390,561 @@
                 gap: 12px;
             }
         }
+
+        /* ========================================== */
+        /* ===== LIGHT MODE THEME ===== */
+        /* ========================================== */
+        [data-theme="light"] {
+            --bg-primary: #FAFBFC;
+            --bg-secondary: #F1F3F5;
+            --bg-tertiary: #E8EAED;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-muted: #6B7280;
+            --text-dim: #9CA3AF;
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-light: rgba(0, 0, 0, 0.1);
+            --border-glow: rgba(217, 157, 0, 0.3);
+            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.1);
+            --shadow-glow-yellow: 0 0 40px rgba(217, 157, 0, 0.1);
+            --shadow-glow-blue: 0 0 40px rgba(59, 130, 246, 0.1);
+            --solar-yellow: #D49E00;
+            --solar-gold: #B8860B;
+            --solar-amber: #CA9900;
+        }
+
+        [data-theme="light"] body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Loader */
+        [data-theme="light"] .premium-loader {
+            background: linear-gradient(135deg, #FAFBFC 0%, #F1F3F5 50%, #FAFBFC 100%);
+        }
+
+        [data-theme="light"] .loader-logo-wrapper img {
+            filter: drop-shadow(0 0 30px rgba(217, 157, 0, 0.5));
+        }
+
+        [data-theme="light"] .loader-progress-track {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .loader-progress-fill {
+            background: linear-gradient(90deg, #D49E00, #B8860B, #D49E00);
+            box-shadow: 0 0 15px rgba(217, 157, 0, 0.5);
+        }
+
+        /* Background Effects */
+        [data-theme="light"] .bg-grid {
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        }
+
+        [data-theme="light"] .noise-overlay {
+            opacity: 0.008;
+        }
+
+        [data-theme="light"] .orb-1 {
+            background: radial-gradient(circle, rgba(217, 157, 0, 0.08) 0%, transparent 70%);
+        }
+
+        [data-theme="light"] .orb-2 {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+        }
+
+        [data-theme="light"] .orb-3 {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+        }
+
+        /* Navigation */
+        [data-theme="light"] nav {
+            background: rgba(250, 251, 252, 0.85);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] nav.scrolled {
+            background: rgba(250, 251, 252, 0.97);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] .logo-text {
+            color: var(--solar-yellow);
+        }
+
+        [data-theme="light"] .logo-text span {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .logo-img {
+            filter: drop-shadow(0 0 12px rgba(217, 157, 0, 0.3));
+        }
+
+        [data-theme="light"] .nav-links a {
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .nav-cta {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .nav-cta:hover {
+            box-shadow: 0 8px 32px rgba(217, 157, 0, 0.35);
+        }
+
+        [data-theme="light"] .theme-toggle {
+            border-color: rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.8);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(217, 157, 0, 0.1);
+            border-color: rgba(217, 157, 0, 0.3);
+        }
+
+        /* Hero Section */
+        [data-theme="light"] .hero h1 {
+            color: var(--text-primary);
+            text-shadow: none;
+        }
+
+        [data-theme="light"] .hero h1 .highlight {
+            background: linear-gradient(135deg, #D49E00 0%, #CA9900 50%, #D49E00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="light"] .hero h1 .highlight::after {
+            background: linear-gradient(90deg, rgba(217, 157, 0, 0.2), rgba(217, 157, 0, 0.08));
+        }
+
+        [data-theme="light"] .hero p {
+            color: var(--text-secondary);
+            text-shadow: none;
+        }
+
+        [data-theme="light"] .hero-badge {
+            background: rgba(59, 130, 246, 0.06);
+            border-color: rgba(59, 130, 246, 0.12);
+        }
+
+        [data-theme="light"] .hero-trust {
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .trust-logo {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .trust-logo:hover {
+            background: rgba(217, 157, 0, 0.06);
+            border-color: rgba(217, 157, 0, 0.15);
+        }
+
+        [data-theme="light"] .trust-logo i {
+            color: var(--solar-yellow);
+        }
+
+        [data-theme="light"] .hero-stats {
+            border-top-color: rgba(217, 157, 0, 0.12);
+        }
+
+        [data-theme="light"] .stat-value {
+            color: var(--text-primary);
+            text-shadow: none;
+        }
+
+        [data-theme="light"] .stat-value .accent {
+            background: linear-gradient(135deg, #D49E00 0%, #CA9900 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="light"] .stat-item:not(:last-child)::after {
+            background: linear-gradient(180deg, transparent, rgba(217, 157, 0, 0.2) 50%, transparent);
+        }
+
+        /* Buttons */
+        [data-theme="light"] .btn-primary {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 8px 28px rgba(217, 157, 0, 0.3);
+        }
+
+        [data-theme="light"] .btn-primary:hover {
+            background: linear-gradient(135deg, #CA9900 0%, #D49E00 100%);
+            box-shadow: 0 16px 40px rgba(217, 157, 0, 0.35);
+        }
+
+        [data-theme="light"] .pulse-glow {
+            animation-name: pulseGlowLight;
+        }
+
+        @keyframes pulseGlowLight {
+            0%, 100% { box-shadow: 0 8px 28px rgba(217, 157, 0, 0.25); }
+            50% { box-shadow: 0 8px 40px rgba(217, 157, 0, 0.35), 0 0 50px rgba(217, 157, 0, 0.12); }
+        }
+
+        [data-theme="light"] .btn-secondary {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(217, 157, 0, 0.25);
+        }
+
+        /* Trust Badges */
+        [data-theme="light"] .trust-badge {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(0, 0, 0, 0.06);
+            color: var(--text-secondary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="light"] .trust-badge:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(217, 157, 0, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Hero Visual & Floating Cards */
+        [data-theme="light"] .hero-image {
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.1);
+            border-color: rgba(217, 157, 0, 0.15);
+        }
+
+        [data-theme="light"] .hero-image:hover {
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.12);
+            border-color: rgba(217, 157, 0, 0.3);
+        }
+
+        [data-theme="light"] .float-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+            border-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .float-card:hover {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+            border-color: rgba(217, 157, 0, 0.2);
+        }
+
+        [data-theme="light"] .float-card-icon.yellow {
+            background: rgba(217, 157, 0, 0.1);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .float-card-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+
+        /* Sample Results */
+        [data-theme="light"] .sample-results-container {
+            background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.5) 100%);
+            border-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="light"] .sample-results-container::before {
+            background: linear-gradient(90deg, #D49E00 0%, #B8860B 100%);
+        }
+
+        [data-theme="light"] .sample-badge {
+            background: rgba(217, 157, 0, 0.08);
+            border-color: rgba(217, 157, 0, 0.15);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .sample-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .sample-card:hover {
+            border-color: rgba(217, 157, 0, 0.15);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .sample-icon.yellow {
+            background: rgba(217, 157, 0, 0.1);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .sample-disclaimer {
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        /* Feature Cards */
+        [data-theme="light"] .feature-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.5) 100%);
+            border-color: rgba(0, 0, 0, 0.06);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(20px);
+        }
+
+        [data-theme="light"] .feature-card:hover {
+            border-color: rgba(217, 157, 0, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 100%);
+        }
+
+        [data-theme="light"] .feature-card::after {
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(217, 157, 0, 0.04), transparent 40%);
+        }
+
+        [data-theme="light"] .feature-card::before {
+            background: linear-gradient(90deg, #D49E00 0%, #B8860B 100%);
+        }
+
+        [data-theme="light"] .feature-icon {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .feature-card:nth-child(2) .feature-icon,
+        [data-theme="light"] .feature-card:nth-child(5) .feature-icon {
+            background: var(--gradient-blue);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+        }
+
+        [data-theme="light"] .feature-card:nth-child(3) .feature-icon,
+        [data-theme="light"] .feature-card:nth-child(6) .feature-icon {
+            background: linear-gradient(135deg, #059669 0%, #0D9488 100%);
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.2);
+        }
+
+        /* Section Headers */
+        [data-theme="light"] .section-tag {
+            background: rgba(217, 157, 0, 0.08);
+            border-color: rgba(217, 157, 0, 0.15);
+            color: #B8860B;
+            box-shadow: 0 0 0 1px rgba(217, 157, 0, 0.03),
+                        0 4px 12px rgba(217, 157, 0, 0.08);
+        }
+
+        [data-theme="light"] .section-title {
+            text-shadow: none;
+        }
+
+        [data-theme="light"] .section-title .highlight {
+            background: linear-gradient(135deg, #D49E00 0%, #CA9900 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="light"] .section-title .highlight::after {
+            background: linear-gradient(90deg, rgba(217, 157, 0, 0.25), rgba(217, 157, 0, 0.08));
+        }
+
+        /* How It Works */
+        [data-theme="light"] .how-it-works {
+            background: var(--bg-secondary);
+        }
+
+        [data-theme="light"] .steps-timeline {
+            background: linear-gradient(90deg, transparent, rgba(217, 157, 0, 0.2) 10%, rgba(217, 157, 0, 0.2) 90%, transparent);
+        }
+
+        [data-theme="light"] .step-number {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 12px 32px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .step-icon {
+            background: var(--bg-secondary);
+            border-color: #D49E00;
+            color: #D49E00;
+        }
+
+        /* Data Visualization */
+        [data-theme="light"] .data-visual {
+            background: linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 100%);
+            border-color: rgba(217, 157, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .data-visual::before {
+            background: linear-gradient(90deg, #D49E00 0%, #B8860B 100%);
+        }
+
+        [data-theme="light"] .data-visual::after {
+            background: radial-gradient(circle at 30% 30%, rgba(217, 157, 0, 0.02) 0%, transparent 50%);
+        }
+
+        [data-theme="light"] .chart-tabs {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        [data-theme="light"] .chart-tab {
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .chart-tab:hover {
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(217, 157, 0, 0.15);
+        }
+
+        [data-theme="light"] .chart-tab.active {
+            background: #D49E00;
+            border-color: #D49E00;
+            color: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .chart-container {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .data-stat {
+            background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .data-stat:hover {
+            border-color: rgba(217, 157, 0, 0.2);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .data-stat-value {
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .data-feature-icon {
+            background: rgba(217, 157, 0, 0.08);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .chart-title-icon {
+            background: rgba(217, 157, 0, 0.08);
+            color: #B8860B;
+        }
+
+        /* Testimonials */
+        [data-theme="light"] .testimonials {
+            background: var(--bg-secondary);
+        }
+
+        [data-theme="light"] .testimonial-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.6) 100%);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="light"] .testimonial-card::before {
+            color: rgba(217, 157, 0, 0.08);
+        }
+
+        [data-theme="light"] .testimonial-card:hover {
+            border-color: rgba(217, 157, 0, 0.2);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .testimonial-rating i {
+            color: #D49E00;
+        }
+
+        [data-theme="light"] .testimonial-author {
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .testimonial-avatar {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 16px rgba(217, 157, 0, 0.2);
+        }
+
+        /* CTA Section */
+        [data-theme="light"] .cta {
+            background: linear-gradient(180deg, var(--bg-primary) 0%, #F1F3F5 50%, var(--bg-secondary) 100%);
+        }
+
+        [data-theme="light"] .cta-glow {
+            background: radial-gradient(circle, rgba(217, 157, 0, 0.06) 0%, transparent 60%);
+        }
+
+        [data-theme="light"] .cta::before {
+            background: radial-gradient(circle, rgba(217, 157, 0, 0.04) 0%, transparent 50%);
+        }
+
+        [data-theme="light"] .cta::after {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, transparent 60%);
+        }
+
+        [data-theme="light"] .cta-trust i {
+            color: #059669;
+        }
+
+        /* Footer */
+        [data-theme="light"] footer {
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, #E8EAED 100%);
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] footer::before {
+            background: linear-gradient(90deg, transparent, #D49E00, transparent);
+        }
+
+        [data-theme="light"] .social-links a {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .social-links a:hover {
+            background: #D49E00;
+            border-color: #D49E00;
+            color: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .footer-links a::before {
+            background: #D49E00;
+        }
+
+        [data-theme="light"] .footer-links a:hover {
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .footer-bottom {
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        /* Misc Light Adjustments */
+        [data-theme="light"] .particle {
+            background: #D49E00;
+            box-shadow: 0 0 6px rgba(217, 157, 0, 0.3);
+        }
+
+        [data-theme="light"] .hero-bg-map {
+            opacity: 0.04;
+        }
     </style>
 </head>
 <body>
@@ -2394,7 +2988,12 @@
             <a href="#data">Analytics</a>
             <a href="#testimonials">Reviews</a>
         </div>
-        <a href="solar_advanced.html" class="nav-cta">Launch Calculator</a>
+        <div class="nav-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+            <a href="solar_advanced.html" class="nav-cta">Launch Calculator</a>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -2635,7 +3234,7 @@
                         <div class="data-stat-label">Annual Production</div>
                     </div>
                     <div class="data-stat">
-                        <div class="data-stat-value" id="stat-savings">$3,854</div>
+                        <div class="data-stat-value" id="stat-savings">5,572 AED</div>
                         <div class="data-stat-label">Annual Savings</div>
                     </div>
                     <div class="data-stat">
@@ -2815,6 +3414,61 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // ============================================
+        // THEME TOGGLE (syncs with solar_advanced.html)
+        // ============================================
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('sv-theme', next);
+            updateThemeIcon(next);
+            updateChartColors(next);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (!icon) return;
+            if (theme === 'light') {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        function updateChartColors(theme) {
+            if (typeof energyChart === 'undefined') return;
+            const isDark = theme === 'dark';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.05)';
+            const tickColor = isDark ? 'rgba(148, 163, 184, 0.7)' : 'rgba(107, 114, 128, 0.8)';
+            const tooltipBg = isDark ? 'rgba(10, 14, 26, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+            const tooltipBody = isDark ? '#F1F5F9' : '#374151';
+            const tooltipBorder = isDark ? 'rgba(250, 204, 21, 0.2)' : 'rgba(217, 157, 0, 0.15)';
+
+            energyChart.options.scales.x.grid.color = gridColor;
+            energyChart.options.scales.y.grid.color = gridColor;
+            energyChart.options.scales.x.ticks.color = tickColor;
+            energyChart.options.scales.y.ticks.color = tickColor;
+            energyChart.options.plugins.tooltip.backgroundColor = tooltipBg;
+            energyChart.options.plugins.tooltip.bodyColor = tooltipBody;
+            energyChart.options.plugins.tooltip.borderColor = tooltipBorder;
+            energyChart.update('none');
+        }
+
+        // Apply saved theme on load (syncs with solar_advanced.html)
+        (function initTheme() {
+            const saved = localStorage.getItem('sv-theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+                updateThemeIcon(saved);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                updateThemeIcon('light');
+            }
+        })();
         // Premium Loader
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -2943,19 +3597,19 @@
         // Based on NASA POWER data for UAE region (Avg: 5.8 kWh/m²/day)
         const ctx = document.getElementById('energyChart').getContext('2d');
         
-        // Custom plugin for line glow effect (reduced by 20%)
+        // Custom plugin for line glow effect
         const glowPlugin = {
             id: 'lineGlow',
             beforeDatasetsDraw: (chart) => {
                 const ctx = chart.ctx;
+                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
                 ctx.save();
                 
                 chart.data.datasets.forEach((dataset, i) => {
                     const meta = chart.getDatasetMeta(i);
                     if (meta.type === 'line' && meta.data.length > 0) {
-                        // Draw glowing line
                         ctx.shadowColor = dataset.borderColor || '#FACC15';
-                        ctx.shadowBlur = 16; // Reduced from 20 to 16 (20% less)
+                        ctx.shadowBlur = isLight ? 8 : 16;
                         ctx.shadowOffsetX = 0;
                         ctx.shadowOffsetY = 0;
                     }
@@ -2970,17 +3624,19 @@
         Chart.register(glowPlugin);
         
         // System parameters for realistic calculations
+        // Based on UAE/DEWA market conditions 2024
         const systemConfig = {
-            systemSizeKW: 10,           // 10 kW system
-            panelEfficiency: 0.18,       // 18% efficient panels
-            systemLosses: 0.14,          // 14% system losses (inverter, wiring, etc.)
-            degradationRate: 0.005,      // 0.5% annual degradation
-            electricityRate: 0.22,       // $0.22/kWh
-            installCost: 22000           // $22,000 installation cost
+            systemSizeKW: 10,            // 10 kW residential system
+            panelEfficiency: 0.21,       // 21% (modern monocrystalline panels)
+            systemLosses: 0.16,          // 16% total losses (inverter 3%, wiring 2%, soiling 4%, temp 5%, mismatch 2%)
+            degradationRate: 0.005,      // 0.5% annual panel degradation
+            electricityRate: 0.38,       // AED 0.38/kWh (DEWA slab 2 average)
+            installCostPerWatt: 3.2,     // AED 3.2/W (UAE average installed cost)
+            get installCost() { return this.systemSizeKW * 1000 * this.installCostPerWatt; }
         };
         
-        // Monthly solar irradiance data (kWh/m²/day) based on NASA POWER data for UAE
-        const monthlyIrradiance = [4.5, 5.2, 6.1, 6.8, 7.4, 7.6, 7.2, 6.9, 6.5, 5.8, 4.9, 4.3];
+        // Monthly GHI data (kWh/m²/day) — NASA POWER average for Dubai (25.2°N, 55.3°E)
+        const monthlyIrradiance = [4.52, 5.28, 6.14, 6.83, 7.41, 7.58, 7.19, 6.92, 6.47, 5.76, 4.87, 4.25];
         const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         
         // Calculate monthly production (kWh)
@@ -3037,7 +3693,7 @@
             const roi = ((lifetimeSavings - systemConfig.installCost) / systemConfig.installCost) * 100;
             
             document.getElementById('stat-annual').textContent = annualKWh.toLocaleString() + ' kWh';
-            document.getElementById('stat-savings').textContent = '$' + Math.round(annualSavings).toLocaleString();
+            document.getElementById('stat-savings').textContent = Math.round(annualSavings).toLocaleString() + ' AED';
             document.getElementById('stat-payback').textContent = paybackYears.toFixed(1) + ' years';
             document.getElementById('stat-roi').textContent = Math.round(roi) + '%';
         }
@@ -3108,7 +3764,7 @@
                                 const savings = (context.parsed.y * systemConfig.electricityRate).toFixed(0);
                                 return [
                                     `${value} kWh`,
-                                    `$${savings} savings`
+                                    `${savings} AED savings`
                                 ];
                             }
                         }
@@ -3201,6 +3857,9 @@
         
         // Initialize stats
         updateStats('monthly');
+        
+        // Apply light/dark chart colors on load
+        updateChartColors(document.documentElement.getAttribute('data-theme') || 'dark');
 
         // Smooth scroll for anchor links with offset
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
