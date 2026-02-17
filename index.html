@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarVision - AI-Powered Global Rooftop Solar Analysis</title>
     <meta name="description" content="Unlock rooftop solar potential with AI. Get instant solar analysis, financial insights, and CO₂ reduction metrics powered by satellite technology.">
+    <meta name="theme-color" content="#070B14" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#FAFBFC" media="(prefers-color-scheme: light)">
+    <meta property="og:title" content="SolarVision — AI-Powered Rooftop Solar Analysis">
+    <meta property="og:description" content="Instant rooftop solar analysis using NASA data, satellite imagery & AI. Get energy estimates, savings projections, and environmental impact in seconds.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://solarvision.vercel.app">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://solarvision.vercel.app">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
     
     <!-- Fonts -->
@@ -576,6 +584,148 @@
             box-shadow: 0 4px 16px rgba(250, 204, 21, 0.2);
         }
 
+        /* Mobile Hamburger Menu */
+        .mobile-menu-btn {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+        }
+
+        .mobile-nav-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-subtle);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.35s var(--ease-out);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .mobile-nav-panel.active {
+            transform: translateX(0);
+        }
+
+        .mobile-nav-close {
+            align-self: flex-end;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-close:hover {
+            background: rgba(250, 204, 21, 0.1);
+            color: var(--solar-yellow);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mobile-nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a i {
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a:active {
+            background: rgba(250, 204, 21, 0.08);
+            color: var(--solar-yellow);
+        }
+
+        .mobile-nav-links a:hover i {
+            color: var(--solar-yellow);
+        }
+
+        .mobile-nav-cta {
+            margin-top: auto;
+            padding: 18px 24px;
+            background: var(--gradient-solar);
+            color: var(--bg-primary) !important;
+            font-weight: 700 !important;
+            border-radius: 16px !important;
+            text-align: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.3);
+        }
+
+        [data-theme="light"] .mobile-nav-panel {
+            background: #FFFFFF;
+            border-left-color: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] .mobile-nav-links a:hover {
+            background: rgba(217, 157, 0, 0.06);
+            color: #B8860B;
+        }
+
+        [data-theme="light"] .mobile-nav-cta {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF !important;
+        }
+
         /* ===== HERO SECTION ===== */
         .hero {
             min-height: 100vh;
@@ -725,11 +875,8 @@
             right: 0;
             width: 60%;
             height: 100%;
-            background: url('https://maps.googleapis.com/maps/api/staticmap?center=25.2048,55.2708&zoom=12&size=800x600&maptype=satellite&key=YOUR_KEY') center/cover no-repeat;
-            opacity: 0.08;
-            filter: blur(8px);
-            mask-image: linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.5) 0%, transparent 100%);
+            background: radial-gradient(ellipse at 70% 50%, rgba(250, 204, 21, 0.03) 0%, transparent 60%);
+            opacity: 0.6;
             pointer-events: none;
         }
         
@@ -2334,8 +2481,21 @@
                 display: none;
             }
 
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .mobile-nav-overlay,
+            .mobile-nav-panel {
+                display: block;
+            }
+
             .nav-actions {
-                gap: 12px;
+                gap: 10px;
+            }
+
+            .nav-actions .nav-cta {
+                display: none;
             }
 
             .nav-cta {
@@ -2993,8 +3153,26 @@
                 <i class="fas fa-sun" id="themeIcon"></i>
             </button>
             <a href="solar_advanced.html" class="nav-cta">Launch Calculator</a>
+            <button class="mobile-menu-btn" onclick="openMobileMenu()" aria-label="Open menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-nav-panel" id="mobilePanel">
+        <button class="mobile-nav-close" onclick="closeMobileMenu()" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-nav-links">
+            <a href="#features" onclick="closeMobileMenu()"><i class="fas fa-sparkles"></i> Features</a>
+            <a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-route"></i> How It Works</a>
+            <a href="#data" onclick="closeMobileMenu()"><i class="fas fa-chart-bar"></i> Analytics</a>
+            <a href="#testimonials" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Reviews</a>
+            <a href="solar_advanced.html" class="mobile-nav-cta"><i class="fas fa-bolt"></i> Launch Calculator</a>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -3040,8 +3218,8 @@
                         <div class="stat-label">Accuracy Rate</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">$<span class="accent">2.4</span>M</div>
-                        <div class="stat-label">User Savings</div>
+                        <div class="stat-value"><span class="accent">8.7</span>M</div>
+                        <div class="stat-label">AED Saved</div>
                     </div>
                 </div>
                 <div class="trust-badges" data-aos="fade-up" data-aos-delay="400">
@@ -3406,7 +3584,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 SolarVision. All rights reserved.</p>
+            <p>&copy; <span id="footerYear">2026</span> SolarVision. All rights reserved.</p>
             <p>Built with ☀️ for a sustainable future</p>
         </div>
     </footer>
@@ -3469,6 +3647,31 @@
                 updateThemeIcon('light');
             }
         })();
+
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        function openMobileMenu() {
+            const overlay = document.getElementById('mobileOverlay');
+            const panel = document.getElementById('mobilePanel');
+            overlay.classList.add('active');
+            panel.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobileOverlay');
+            const panel = document.getElementById('mobilePanel');
+            overlay.classList.remove('active');
+            panel.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close mobile menu on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileMenu();
+        });
+
         // Premium Loader
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -3935,6 +4138,10 @@
                 btn.style.transform = 'translate(0, 0)';
             });
         });
+
+        // Auto-update footer year
+        const footerYear = document.getElementById('footerYear');
+        if (footerYear) footerYear.textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
