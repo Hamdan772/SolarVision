@@ -1,4 +1,5 @@
-☀️ SolarVision
+<p align="center">
+☀️ **SolarVision**
 
 <p align="center">
   <img src="assets/images/logo.png" alt="SolarVision Logo" width="120" />
