@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarVision | Professional Solar Analysis Platform</title>
     <meta name="description" content="Professional rooftop solar analysis with satellite mapping, NASA weather data, AI-powered insights, financial projections, and environmental impact metrics.">
-    <meta name="theme-color" content="#070B14" media="(prefers-color-scheme: dark)">
-    <meta name="theme-color" content="#FAFBFC" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#070B14">
     <meta property="og:title" content="SolarVision — Professional Solar Calculator">
     <meta property="og:description" content="Analyze your rooftop solar potential with satellite imagery, NASA data & AI. Get energy estimates, savings projections, and environmental impact.">
     <meta property="og:type" content="website">
@@ -916,14 +915,14 @@
         .app-container {
             display: flex;
             height: 100vh;
-            padding: 12px;
-            gap: 12px;
+            padding: 8px;
+            gap: 8px;
         }
 
         /* Premium Sidebar */
         .sidebar {
             position: relative;
-            width: 360px;
+            width: 420px;
             flex-shrink: 0;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.85) 0%,
@@ -2183,15 +2182,6 @@
         .map-coords i {
             color: var(--primary);
             font-size: 10px;
-        }
-
-        [data-theme="light"] .map-coords {
-            background: rgba(255, 255, 255, 0.92);
-            border-color: #E2E8F0;
-            color: #64748B;
-        }
-        [data-theme="light"] .map-coords i {
-            color: #D97706;
         }
 
         /* Map Controls Overlay */
@@ -4333,536 +4323,6 @@
             to { background-position: -200% 0; }
         }
 
-        /* ============================================
-           LIGHT MODE THEME
-           ============================================ */
-        [data-theme="light"] {
-            --primary: #D97706;
-            --primary-light: #F59E0B;
-            --primary-dark: #B45309;
-            --accent: #D97706;
-            --accent-light: #FBBF24;
-            --secondary: #FFFFFF;
-            --secondary-light: #F8FAFC;
-            --bg: #F1F5F9;
-            --bg-alt: #FFFFFF;
-            --bg-elevated: #FFFFFF;
-            --bg-subtle: #E2E8F0;
-            --bg-card: #FFFFFF;
-            --border: #E2E8F0;
-            --border-light: #CBD5E1;
-            --text: #0F172A;
-            --text-secondary: #334155;
-            --text-muted: #64748B;
-            --success: #059669;
-            --success-light: #34D399;
-            --warning: #D97706;
-            --error: #DC2626;
-            --blue: #2563EB;
-            --purple: #7C3AED;
-
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.06);
-            --shadow-glow: 0 0 24px rgba(217, 119, 6, 0.15);
-        }
-
-        [data-theme="light"] body {
-            background: #F0F4F8;
-            background-image:
-                radial-gradient(at 27% 37%, rgba(217, 119, 6, 0.05) 0px, transparent 50%),
-                radial-gradient(at 97% 21%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
-                radial-gradient(at 52% 99%, rgba(5, 150, 105, 0.03) 0px, transparent 50%),
-                radial-gradient(at 70% 60%, rgba(217, 119, 6, 0.03) 0px, transparent 40%);
-            color: #0F172A;
-        }
-
-        [data-theme="light"] body::before {
-            background-image:
-                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-        }
-
-        [data-theme="light"] .sidebar {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(248, 250, 252, 0.78) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
-        }
-
-        [data-theme="light"] .sidebar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.02);
-        }
-        [data-theme="light"] .sidebar::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(217, 119, 6, 0.3) 0%, rgba(217, 119, 6, 0.15) 100%);
-        }
-        [data-theme="light"] .sidebar {
-            scrollbar-color: rgba(217, 119, 6, 0.3) rgba(0, 0, 0, 0.02);
-        }
-
-        [data-theme="light"] .header {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
-            border-bottom-color: rgba(0, 0, 0, 0.04);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        [data-theme="light"] .header.scrolled {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.88) 100%);
-            border-bottom-color: rgba(217, 119, 6, 0.15);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        [data-theme="light"] .brand-text h1 {
-            color: #D97706;
-        }
-        [data-theme="light"] .brand-text h1 span {
-            color: #0F172A;
-        }
-        [data-theme="light"] .brand-text p {
-            color: #64748B;
-        }
-        [data-theme="light"] .brand-text p span {
-            color: #D97706;
-        }
-
-        [data-theme="light"] .logo img {
-            filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.3));
-        }
-
-        [data-theme="light"] .back-btn {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1.5px solid rgba(0, 0, 0, 0.06);
-            color: #64748B;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        [data-theme="light"] .back-btn:hover {
-            background: rgba(217, 119, 6, 0.08);
-            color: #D97706;
-            border-color: rgba(217, 119, 6, 0.25);
-            box-shadow: 0 4px 16px rgba(217, 119, 6, 0.12);
-        }
-
-        [data-theme="light"] .nav-tab {
-            color: #64748B;
-            background: rgba(255, 255, 255, 0.5);
-        }
-        [data-theme="light"] .nav-tab:hover {
-            background: rgba(217, 119, 6, 0.08);
-            color: #D97706;
-        }
-        [data-theme="light"] .nav-tab.active {
-            background: rgba(255, 255, 255, 0.85);
-            color: #D97706;
-            border-color: rgba(217, 119, 6, 0.25);
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-
-        /* Light mode cards */
-        [data-theme="light"] .card {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-                        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(16px) saturate(140%);
-            -webkit-backdrop-filter: blur(16px) saturate(140%);
-        }
-        [data-theme="light"] .card:hover {
-            border-color: rgba(217, 119, 6, 0.25);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                        0 0 0 1px rgba(217, 119, 6, 0.08);
-        }
-        [data-theme="light"] .card::after {
-            background: linear-gradient(45deg, transparent 30%, rgba(217, 119, 6, 0.06) 50%, transparent 70%);
-        }
-
-        [data-theme="light"] .glass-card,
-        [data-theme="light"] .frosted-glass,
-        [data-theme="light"] .glass-premium,
-        [data-theme="light"] .frosted-card {
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px) saturate(150%);
-            -webkit-backdrop-filter: blur(20px) saturate(150%);
-        }
-
-        /* Light mode inputs */
-        [data-theme="light"] input,
-        [data-theme="light"] select {
-            background: rgba(255, 255, 255, 0.8) !important;
-            color: #0F172A !important;
-            border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
-        }
-        [data-theme="light"] input:focus,
-        [data-theme="light"] select:focus {
-            border-color: rgba(217, 119, 6, 0.5) !important;
-            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
-            background: #FFFFFF !important;
-        }
-        [data-theme="light"] input:hover,
-        [data-theme="light"] select:hover {
-            border-color: #CBD5E1 !important;
-        }
-        [data-theme="light"] input::placeholder {
-            color: #94A3B8 !important;
-        }
-
-        /* Light mode buttons */
-        [data-theme="light"] .btn-primary {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-            color: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
-        }
-        [data-theme="light"] .btn-primary:hover {
-            background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
-            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.35),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        [data-theme="light"] .btn-secondary {
-            background: rgba(255, 255, 255, 0.7);
-            color: #334155;
-            border: 1.5px solid rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        [data-theme="light"] .btn-secondary:hover {
-            border-color: rgba(217, 119, 6, 0.3);
-            color: #D97706;
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.1);
-        }
-        [data-theme="light"] .btn-success {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: #FFFFFF;
-        }
-
-        /* Light mode text overrides */
-        [data-theme="light"] .result-value,
-        [data-theme="light"] .stat-value,
-        [data-theme="light"] .section-title,
-        [data-theme="light"] .card-title {
-            color: #0F172A !important;
-        }
-        [data-theme="light"] .result-label,
-        [data-theme="light"] .stat-label,
-        [data-theme="light"] .section-subtitle {
-            color: #64748B !important;
-        }
-
-        /* Light mode section & card header accents */
-        [data-theme="light"] .section-header {
-            border-bottom-color: rgba(0, 0, 0, 0.05);
-        }
-        [data-theme="light"] .section-header::after {
-            background: linear-gradient(90deg, #D97706, transparent);
-        }
-        [data-theme="light"] .card-header::after {
-            background: #D97706;
-        }
-        [data-theme="light"] .card-title i {
-            color: #D97706;
-        }
-        [data-theme="light"] .section-icon {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
-        }
-
-        /* Light mode map buttons */
-        [data-theme="light"] .map-btn {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            color: #334155;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        [data-theme="light"] .map-btn:hover {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: #FFFFFF;
-            border-color: #D97706;
-            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        /* Light mode feature toolbar */
-        [data-theme="light"] .feature-toolbar {
-            background: rgba(248, 250, 252, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        [data-theme="light"] .feature-btn {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            color: #64748B;
-        }
-        [data-theme="light"] .feature-btn:hover {
-            background: rgba(217, 119, 6, 0.06);
-            border-color: rgba(217, 119, 6, 0.25);
-            color: #D97706;
-        }
-        [data-theme="light"] .feature-btn.active {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            border-color: #D97706;
-            color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
-        }
-
-        /* Light mode quick summary */
-        [data-theme="light"] .quick-summary {
-            background: linear-gradient(135deg, #D97706 0%, #92400E 100%);
-            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.25);
-        }
-
-        /* Light mode tabs */
-        [data-theme="light"] .results-tabs .tab-btn,
-        [data-theme="light"] .results-tab {
-            background: rgba(255, 255, 255, 0.5);
-            color: #64748B;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        [data-theme="light"] .results-tabs .tab-btn:hover,
-        [data-theme="light"] .results-tab:hover {
-            background: rgba(217, 119, 6, 0.06);
-            color: #D97706;
-        }
-        [data-theme="light"] .results-tabs .tab-btn.active,
-        [data-theme="light"] .results-tab.active {
-            background: rgba(255, 255, 255, 0.85);
-            color: #D97706;
-            border-color: rgba(217, 119, 6, 0.25);
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-
-        /* Light mode status messages */
-        [data-theme="light"] .status-message.success {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.95) 0%, rgba(4, 120, 87, 0.95) 100%);
-        }
-        [data-theme="light"] .status-message.error {
-            background: linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
-        }
-
-        /* Light mode loading overlay */
-        [data-theme="light"] #loadingOverlay {
-            background: rgba(241, 245, 249, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        [data-theme="light"] #loadingText {
-            color: #0F172A;
-        }
-        [data-theme="light"] .loader {
-            border-color: rgba(217, 119, 6, 0.1);
-            border-top-color: #D97706;
-            border-right-color: #F59E0B;
-            box-shadow: 0 0 24px rgba(217, 119, 6, 0.2);
-        }
-
-        /* Light mode chart container */
-        [data-theme="light"] .chart-container {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-
-        /* Light mode slider */
-        [data-theme="light"] .slider-value {
-            background: rgba(217, 119, 6, 0.1);
-            color: #D97706;
-        }
-
-        /* Light mode result items */
-        [data-theme="light"] .result-item {
-            border-color: rgba(0, 0, 0, 0.05);
-        }
-
-        /* Light mode obstacle items */
-        [data-theme="light"] .obstacle-item,
-        [data-theme="light"] .roof-section-item {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        /* Light mode dashboard metrics */
-        [data-theme="light"] .metric-card,
-        [data-theme="light"] .dashboard-metrics .metric-card {
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        /* Light mode AI chat */
-        [data-theme="light"] .ai-chatbot-container {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        [data-theme="light"] .ai-chat-messages {
-            background: rgba(248, 250, 252, 0.6);
-        }
-        [data-theme="light"] .ai-chat-input {
-            background: rgba(255, 255, 255, 0.8) !important;
-            border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
-            color: #0F172A !important;
-        }
-        [data-theme="light"] .chat-message.assistant {
-            background: rgba(255, 255, 255, 0.7);
-            color: #0F172A;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        [data-theme="light"] .chat-message.user {
-            background: linear-gradient(135deg, #D97706, #B45309);
-            color: #FFFFFF;
-        }
-
-        /* Light mode suggestion chips */
-        [data-theme="light"] .suggestion-chip {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            color: #64748B;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        [data-theme="light"] .suggestion-chip i {
-            color: #D97706;
-        }
-        [data-theme="light"] .suggestion-chip:hover {
-            background: rgba(217, 119, 6, 0.06);
-            border-color: rgba(217, 119, 6, 0.3);
-            color: #D97706;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Light mode investment card */
-        [data-theme="light"] .investment-card {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        }
-        [data-theme="light"] .investment-metric {
-            background: rgba(248, 250, 252, 0.6);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        [data-theme="light"] .rating-score-track {
-            background: #E2E8F0;
-        }
-
-        /* Light mode shading & drawing indicators */
-        [data-theme="light"] .shading-info-box {
-            background: rgba(255, 255, 255, 0.85);
-            color: #0F172A;
-            border: 1px solid rgba(217, 119, 6, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        }
-        [data-theme="light"] .drawing-mode-indicator {
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-        }
-
-        /* Light mode panel recommendation */
-        [data-theme="light"] .rec-badge {
-            background: #059669;
-        }
-
-        /* Light mode premium loader */
-        [data-theme="light"] .premium-loader {
-            background: #F1F5F9;
-        }
-
-        /* Light mode map controls */
-        [data-theme="light"] .leaflet-control-layers {
-            background: rgba(255, 255, 255, 0.85) !important;
-            border: 1px solid rgba(0, 0, 0, 0.06) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
-        }
-
-        /* Light mode weather card — keep the blue gradient, just adjust slightly */
-        [data-theme="light"] #weatherCard,
-        [data-theme="light"] .weather-card {
-            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-            border-color: #1E40AF;
-            color: #FFFFFF;
-            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.25);
-        }
-
-        [data-theme="light"] .weather-card .weather-temp {
-            color: #FFFFFF !important;
-        }
-
-        [data-theme="light"] .weather-card .weather-condition {
-            color: rgba(255, 255, 255, 0.95) !important;
-        }
-
-        [data-theme="light"] .weather-card #weatherDetails {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Light mode particle canvas hidden */
-        [data-theme="light"] #particle-canvas {
-            opacity: 0.3;
-        }
-
-        /* Theme toggle button */
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            border: 1.5px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .theme-toggle:hover {
-            background: rgba(250, 204, 21, 0.15);
-            color: var(--primary);
-            border-color: rgba(250, 204, 21, 0.3);
-            transform: rotate(15deg);
-        }
-        [data-theme="light"] .theme-toggle {
-            border: 1.5px solid rgba(0, 0, 0, 0.06);
-            background: rgba(255, 255, 255, 0.6);
-            color: #64748B;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        [data-theme="light"] .theme-toggle:hover {
-            background: rgba(217, 119, 6, 0.1);
-            color: #D97706;
-            border-color: rgba(217, 119, 6, 0.25);
-        }
-
     </style>
 </head>
 
@@ -4911,9 +4371,6 @@
                         <i class="fas fa-arrow-left" aria-hidden="true"></i>
                         Back to Home
                     </a>
-                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
-                        <i class="fas fa-sun" id="themeIcon"></i>
-                    </button>
                 </div>
                 <div class="header-brand">
                     <div class="logo">
@@ -4939,15 +4396,15 @@
                         <i class="fas fa-cog" aria-hidden="true"></i>
                         Setup
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('production')" role="tab" aria-selected="false" aria-controls="main-tab-production">
+                    <button class="nav-tab data-tab" onclick="switchMainTab('production')" role="tab" aria-selected="false" aria-controls="main-tab-production" style="display:none;">
                         <i class="fas fa-bolt" aria-hidden="true"></i>
                         Energy
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('financial')" role="tab" aria-selected="false" aria-controls="main-tab-financial">
+                    <button class="nav-tab data-tab" onclick="switchMainTab('financial')" role="tab" aria-selected="false" aria-controls="main-tab-financial" style="display:none;">
                         <i class="fas fa-coins" aria-hidden="true"></i>
                         Finance
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('chatbot')" role="tab" aria-selected="false" aria-controls="main-tab-chatbot">
+                    <button class="nav-tab data-tab" onclick="switchMainTab('chatbot')" role="tab" aria-selected="false" aria-controls="main-tab-chatbot" style="display:none;">
                         <i class="fas fa-robot" aria-hidden="true"></i>
                         AI Chat
                     </button>
@@ -5598,51 +5055,16 @@
         const _error = SV_DEBUG ? console.error.bind(console) : () => {};
 
         // ============================================
-        // THEME TOGGLE (Light/Dark)
+        // CHART COLOR HELPER (dark mode only)
         // ============================================
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('sv-theme', next);
-            updateThemeIcon(next);
-        }
-
-        function updateThemeIcon(theme) {
-            const icon = document.getElementById('themeIcon');
-            if (!icon) return;
-            if (theme === 'light') {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            } else {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            }
-        }
-
-        // Theme-aware chart color helper
         function getChartThemeColors() {
-            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
             return {
-                gridColor: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.03)',
-                tickColor: isLight ? 'rgba(107, 114, 128, 0.8)' : 'rgba(148, 163, 184, 0.7)',
-                tooltipBg: isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(10, 14, 26, 0.95)',
-                tooltipBody: isLight ? '#374151' : '#F1F5F9',
+                gridColor: 'rgba(255, 255, 255, 0.03)',
+                tickColor: 'rgba(148, 163, 184, 0.7)',
+                tooltipBg: 'rgba(10, 14, 26, 0.95)',
+                tooltipBody: '#F1F5F9',
             };
         }
-
-        // Apply saved theme on load (or respect OS preference)
-        (function initTheme() {
-            const saved = localStorage.getItem('sv-theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-                updateThemeIcon(saved);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.documentElement.setAttribute('data-theme', 'light');
-                updateThemeIcon('light');
-            }
-        })();
         
         // Helper to get the correct API endpoint
         function getGroqEndpoint() {
@@ -6092,9 +5514,6 @@ const daylightHoursPerMonth = [
             // Pulse the calculate button to draw attention
             const calcBtn = document.getElementById('calculateBtn');
             if (calcBtn) calcBtn.classList.add('pulse-ready');
-            
-            // Auto-calculate after roof selection
-            scheduleCalculate();
         }
 
         function calculateActualMaxPanels() {
@@ -8289,6 +7708,13 @@ const daylightHoursPerMonth = [
 
                 showStatus('✅ Analysis complete!', 'success');
                 lastCalcTimestamp = Date.now();
+
+                // Reveal data tabs (Energy, Finance, AI Chat)
+                document.querySelectorAll('.nav-tab.data-tab').forEach(tab => {
+                    tab.style.display = '';
+                });
+                // Auto-switch to Energy tab
+                switchMainTab('production');
 
                 // Apply entrance animations to results cards
                 const resultsCards = document.querySelectorAll('#resultsSection .card, .investment-card, .quick-summary');
