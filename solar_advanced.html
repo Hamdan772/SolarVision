@@ -60,8 +60,8 @@
             --primary-dark: #EAB308;
             --accent: #FBBF24;
             --accent-light: #FDE68A;
-            --secondary: #070B14;
-            --secondary-light: #0D1321;
+            --secondary: #EAB308;
+            --secondary-light: #FDE047;
             --bg: #070B14;
             --bg-alt: #151B2D;
             --bg-elevated: #1E293B;
@@ -140,7 +140,7 @@
             z-index: 100000;
             padding: 12px 24px;
             background: var(--primary);
-            color: var(--secondary);
+            color: #070B14;
             font-weight: 700;
             border-radius: 0 0 8px 8px;
             text-decoration: none;
@@ -918,9 +918,9 @@
             width: auto;
             min-width: 0;
             max-width: none;
-            border-radius: 20px;
+            border-radius: 16px;
             z-index: 1;
-            padding: 24px;
+            padding: 0;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.98) 0%,
                 rgba(10, 14, 26, 0.98) 100%);
@@ -928,35 +928,65 @@
         }
         
         .app-container.immersive-mode .sidebar .content-section {
-            max-width: 1400px;
+            max-width: 800px;
             margin: 0 auto;
         }
         
         .app-container.immersive-mode .sidebar .header {
-            max-width: 1400px;
-            margin: 0 auto 24px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px 20px;
         }
         
         .app-container.immersive-mode .map-container {
-            display: flex;
-            position: relative;
-            width: 320px;
-            min-width: 320px;
-            max-width: 320px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 280px;
+            height: 220px;
+            min-width: 280px;
+            max-width: 280px;
+            min-height: 220px;
             flex-shrink: 0;
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
+            z-index: 999;
+            border: 2px solid rgba(250, 204, 21, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .app-container.immersive-mode .map-container:hover {
+            width: 420px;
+            height: 340px;
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.8);
+        }
+
+        .app-container.immersive-mode .map-container .map-overlay {
+            display: none;
+        }
+
+        .app-container.immersive-mode .map-container .map-coords {
+            display: none;
+        }
+
+        .app-container.immersive-mode .map-container .drawing-mode-indicator {
+            display: none;
+        }
+
+        .app-container.immersive-mode .map-container .shading-info-box {
+            display: none;
         }
         
         .app-container.immersive-mode .map-container #map {
-            border-radius: 20px;
+            border-radius: 16px;
         }
 
         /* Premium Sidebar */
         .sidebar {
             position: relative;
-            width: 460px;
-            min-width: 460px;
+            width: 420px;
+            min-width: 420px;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.98) 0%,
                 rgba(10, 14, 26, 0.98) 100%);
@@ -1054,9 +1084,30 @@
             box-shadow: 0 4px 20px rgba(250, 204, 21, 0.25);
         }
 
-        /* Immersive Toggle Button - Hidden */
+        /* Immersive Toggle Button */
         .immersive-toggle {
-            display: none;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 1001;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .immersive-toggle:hover {
+            background: rgba(250, 204, 21, 0.15);
+            color: var(--primary);
+            border-color: rgba(250, 204, 21, 0.3);
         }
 
         .header-brand {
@@ -3145,7 +3196,7 @@
 
         /* AI Analysis */
         .ai-analysis {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            background: linear-gradient(135deg, #070B14 0%, #0D1321 100%);
             border-radius: 16px;
             padding: 20px;
             margin-top: 16px;
@@ -3238,7 +3289,7 @@
         .ai-chat-send-btn {
             padding: 12px 20px;
             background: var(--primary);
-            color: var(--secondary);
+            color: #070B14;
             border: none;
             border-radius: 10px;
             font-weight: 600;
@@ -3852,22 +3903,11 @@
 
         /* Wide screens — use more space */
         @media (min-width: 1600px) {
-            .sidebar {
-                width: 520px;
-                min-width: 520px;
-            }
             .content-section {
                 padding: 24px;
             }
             .stats-grid {
                 gap: 12px;
-            }
-        }
-
-        @media (min-width: 1920px) {
-            .sidebar {
-                width: 580px;
-                min-width: 580px;
             }
         }
 
@@ -5738,7 +5778,6 @@ const daylightHoursPerMonth = [
                 } else {
                     visualizeSolarPanels(drawnLayer, currentPanelCount);
                 }
-                scheduleCalculate();
             }
         }
 
@@ -5749,7 +5788,6 @@ const daylightHoursPerMonth = [
             if (drawnLayer && roofArea > 0) {
                 visualizeSolarPanels(drawnLayer, currentPanelCount);
                 tryFitMorePanels();
-                scheduleCalculate();
             }
         }
 
@@ -5760,9 +5798,6 @@ const daylightHoursPerMonth = [
             const optimalTilt = Math.round(currentLat); // Optimal tilt ≈ latitude
             const tiltEfficiency = calculateTiltEfficiency(currentTilt, optimalTilt);
             document.getElementById('optimalTiltHint').textContent = `Optimal: ${optimalTilt}° (${Math.round(tiltEfficiency * 100)}% efficiency)`;
-            if (drawnLayer && roofArea > 0) {
-                scheduleCalculate();
-            }
         }
 
         function calculateTiltEfficiency(tilt, optimalTilt) {
@@ -5787,7 +5822,8 @@ const daylightHoursPerMonth = [
 
         function updateStats() {
             const panelArea = 2.0;
-            const coveragePercent = roofArea > 0 ? ((currentPanelCount * panelArea) / roofArea * 100).toFixed(0) : 0;
+            // Always show 100% coverage
+            const coveragePercent = 100;
             const sizing = computeSystemFromPanelCount(currentPanelCount);
             document.getElementById('sliderSystemSize').textContent = `${sizing.systemSizeKW.toFixed(1)} kW`;
             document.getElementById('sliderCoverage').textContent = `${coveragePercent}%`;
@@ -6071,7 +6107,11 @@ const daylightHoursPerMonth = [
             const calcBtn = document.getElementById('calculateBtn');
             if (calcBtn) calcBtn.classList.add('pulse-ready');
             
-            scheduleCalculate();
+            // Auto-enter immersive mode after area selection
+            const appContainer = document.querySelector('.app-container');
+            if (!appContainer.classList.contains('immersive-mode')) {
+                toggleImmersiveMode();
+            }
         }
 
         function calculateActualMaxPanels() {
@@ -6522,6 +6562,16 @@ const daylightHoursPerMonth = [
             updateAreaDisplay();
             updateStats();
             showStatus('✨ Canvas cleared - draw a new roof!', 'success');
+
+            // Exit immersive mode when clearing
+            const appContainer = document.querySelector('.app-container');
+            if (appContainer.classList.contains('immersive-mode')) {
+                toggleImmersiveMode();
+            }
+
+            // Hide results section
+            const resultsSection = document.getElementById('resultsSection');
+            if (resultsSection) resultsSection.style.display = 'none';
         }
 
         function clearRoof() {
@@ -6858,6 +6908,12 @@ const daylightHoursPerMonth = [
             
             const buildingText = buildingCount === 1 ? 'building' : 'buildings';
             showStatus(`✅ ${buildingCount} ${buildingText} selected! Panels rendered on each building.`, 'success');
+
+            // Auto-enter immersive mode after area selection
+            const appContainer = document.querySelector('.app-container');
+            if (!appContainer.classList.contains('immersive-mode')) {
+                toggleImmersiveMode();
+            }
         }
 
         function updateMultiBuildingRoof(layer, buildings) {
@@ -7460,8 +7516,6 @@ const daylightHoursPerMonth = [
             else if (tabName === 'financial' && savingsChart) savingsChart.update();
             if (tabName === 'financial') {
                 userRequestedFinance = true;
-                // Auto-run calculation when user opens Financial tab
-                scheduleCalculate();
             }
         }
 
