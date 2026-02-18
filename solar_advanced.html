@@ -13,8 +13,31 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://solarvision.vercel.app/solar_advanced.html">
     <link rel="canonical" href="https://solarvision.vercel.app/solar_advanced.html">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="SolarVision">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SolarVision Solar Calculator",
+        "url": "https://solarvision.vercel.app/solar_advanced.html",
+        "description": "Professional rooftop solar analysis with satellite mapping, NASA weather data, AI-powered insights, and financial projections.",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AED" },
+        "creator": { "@type": "Organization", "name": "SolarVision" }
+    }
+    </script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
@@ -100,6 +123,46 @@
         
         @keyframes pageLoadIn {
             to { opacity: 1; }
+        }
+
+        /* Accessibility — Focus Visible */
+        *:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* Skip-to-content link */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 16px;
+            z-index: 100000;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: var(--secondary);
+            font-weight: 700;
+            border-radius: 0 0 8px 8px;
+            text-decoration: none;
+            transition: top 0.2s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Page transition overlay */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--bg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s var(--ease-smooth);
+        }
+        .page-transition.active {
+            opacity: 1;
+            pointer-events: all;
         }
         
         /* Smooth Element Reveal */
@@ -4753,8 +4816,13 @@
 </head>
 
 <body>
+    <!-- Accessibility: Skip to content -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="pageTransition" aria-hidden="true"></div>
+
     <!-- Premium Custom Loading Screen -->
-    <div class="premium-loader" id="premiumLoader">
+    <div class="premium-loader" id="premiumLoader" role="status" aria-label="Loading SolarVision Calculator">
         <div class="loader-container">
             <div class="loader-logo">
                 <img src="assets/images/logo.png" alt="SolarVision" onerror="this.src='data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>☀️</text></svg>'">
@@ -4775,26 +4843,26 @@
     <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
     <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
 
-    <div id="loadingOverlay" style="display: none;">
+    <div id="loadingOverlay" style="display: none;" role="status" aria-label="Processing">
         <div class="loader"></div>
         <div id="loadingText">Loading...</div>
     </div>
 
-    <div id="statusMessage" class="status-message"></div>
+    <div id="statusMessage" class="status-message" role="alert" aria-live="polite"></div>
 
     <div class="app-container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <nav class="sidebar" role="navigation" aria-label="Solar analysis controls">
             <!-- Immersive Toggle Button -->
-            <button class="immersive-toggle" onclick="toggleImmersiveMode()" title="Toggle Full Screen View">
-                <i class="fas fa-expand"></i>
+            <button class="immersive-toggle" onclick="toggleImmersiveMode()" title="Toggle Full Screen View" aria-label="Toggle full screen map view">
+                <i class="fas fa-expand" aria-hidden="true"></i>
             </button>
             
             <!-- Header -->
             <div class="header">
                 <div class="header-top">
-                    <a href="index.html" class="back-btn">
-                        <i class="fas fa-arrow-left"></i>
+                    <a href="index.html" class="back-btn" aria-label="Go back to homepage">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
                         Back to Home
                     </a>
                     <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
@@ -4820,28 +4888,28 @@
                 </div>
 
                 <!-- Navigation Tabs -->
-                <div class="nav-tabs">
-                    <button class="nav-tab active" onclick="switchMainTab('setup')">
-                        <i class="fas fa-cog"></i>
+                <div class="nav-tabs" role="tablist" aria-label="Analysis sections">
+                    <button class="nav-tab active" onclick="switchMainTab('setup')" role="tab" aria-selected="true" aria-controls="main-tab-setup">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
                         Setup
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('production')">
-                        <i class="fas fa-bolt"></i>
+                    <button class="nav-tab" onclick="switchMainTab('production')" role="tab" aria-selected="false" aria-controls="main-tab-production">
+                        <i class="fas fa-bolt" aria-hidden="true"></i>
                         Energy
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('financial')">
-                        <i class="fas fa-coins"></i>
+                    <button class="nav-tab" onclick="switchMainTab('financial')" role="tab" aria-selected="false" aria-controls="main-tab-financial">
+                        <i class="fas fa-coins" aria-hidden="true"></i>
                         Finance
                     </button>
-                    <button class="nav-tab" onclick="switchMainTab('chatbot')">
-                        <i class="fas fa-robot"></i>
+                    <button class="nav-tab" onclick="switchMainTab('chatbot')" role="tab" aria-selected="false" aria-controls="main-tab-chatbot">
+                        <i class="fas fa-robot" aria-hidden="true"></i>
                         AI Chat
                     </button>
                 </div>
             </div>
 
             <!-- Setup Tab -->
-            <div id="main-tab-setup" class="main-tab-content active">
+            <div id="main-tab-setup" class="main-tab-content active" role="tabpanel">
                 <div class="content-section">
                     <!-- Location Input -->
                     <div class="section-header">
@@ -5084,7 +5152,7 @@
             </div>
 
             <!-- Production Tab -->
-            <div id="main-tab-production" class="main-tab-content">
+            <div id="main-tab-production" class="main-tab-content" role="tabpanel">
                 <div class="content-section">
                     <div class="section-header">
                         <div class="section-icon">
@@ -5216,7 +5284,7 @@
             </div>
 
             <!-- Financial Tab -->
-            <div id="main-tab-financial" class="main-tab-content">
+            <div id="main-tab-financial" class="main-tab-content" role="tabpanel">
                 <div class="content-section">
                     <div class="section-header">
                         <div class="section-icon">
@@ -5317,7 +5385,7 @@
             </div>
 
             <!-- AI Chatbot Tab -->
-            <div id="main-tab-chatbot" class="main-tab-content">
+            <div id="main-tab-chatbot" class="main-tab-content" role="tabpanel">
                 <div class="content-section" style="padding-top: 16px;">
                     <!-- Chatbot Interface -->
                     <div class="chatbot-container">
@@ -5362,11 +5430,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
 
         <!-- Map Container -->
-        <div class="map-container">
-            <div id="map"></div>
+        <main id="main-content" class="map-container" role="main">
+            <div id="map" role="application" aria-label="Interactive satellite map for rooftop solar analysis"></div>
             
             <!-- Coordinate Badge -->
             <div class="map-coords" id="mapCoords">
@@ -5389,18 +5457,18 @@
                 <div id="shadingInfoContent">Analyzing nearby buildings...</div>
             </div>
             
-            <div class="map-overlay">
-                <button class="map-btn" onclick="locateMe()" title="My Location">
-                    <i class="fas fa-location-crosshairs"></i>
+            <div class="map-overlay" role="toolbar" aria-label="Map controls">
+                <button class="map-btn" onclick="locateMe()" title="My Location" aria-label="Find my location">
+                    <i class="fas fa-location-crosshairs" aria-hidden="true"></i>
                 </button>
-                <button class="map-btn" onclick="autoDetectBuilding()" title="AI Detect Building">
-                    <i class="fas fa-magic"></i>
+                <button class="map-btn" onclick="autoDetectBuilding()" title="AI Detect Building" aria-label="Detect building with AI">
+                    <i class="fas fa-magic" aria-hidden="true"></i>
                 </button>
-                <button class="map-btn" onclick="clearRoof()" title="Clear Drawing">
-                    <i class="fas fa-eraser"></i>
+                <button class="map-btn" onclick="clearRoof()" title="Clear Drawing" aria-label="Clear roof drawing">
+                    <i class="fas fa-eraser" aria-hidden="true"></i>
                 </button>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Scripts -->
@@ -7321,7 +7389,10 @@ const daylightHoursPerMonth = [
                 content.classList.remove('active');
                 content.style.opacity = '0';
             });
-            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
             const selectedTab = document.getElementById('main-tab-' + tabName);
             if (selectedTab) {
                 selectedTab.classList.add('active');
@@ -7330,7 +7401,13 @@ const daylightHoursPerMonth = [
                     selectedTab.style.opacity = '1';
                 });
             }
-            if (event && event.target) event.target.classList.add('active');
+            if (event && event.target) {
+                const btn = event.target.closest('.nav-tab');
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
+                }
+            }
             
             // Scroll sidebar to top on tab switch
             const sidebar = document.querySelector('.sidebar');
@@ -9636,6 +9713,29 @@ ${systemContext}`
             'background: linear-gradient(135deg, #FACC15, #F59E0B); color: white; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold;');
         _log('%c✨ Clean & Functional Interface', 
             'color: #FACC15; font-size: 14px; font-weight: 600;');
+
+        // Page transition handler
+        document.querySelectorAll('a[href$=".html"], a[href="/"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const dest = this.getAttribute('href');
+                if (!dest || dest.startsWith('http') || dest.startsWith('#')) return;
+                e.preventDefault();
+                const overlay = document.getElementById('pageTransition');
+                if (overlay) {
+                    overlay.classList.add('active');
+                    setTimeout(() => { window.location.href = dest; }, 350);
+                } else {
+                    window.location.href = dest;
+                }
+            });
+        });
+
+        // Register service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
 
     </script>
 

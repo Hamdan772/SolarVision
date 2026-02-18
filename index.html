@@ -12,8 +12,15 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://solarvision.vercel.app">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="SolarVision">
     <link rel="canonical" href="https://solarvision.vercel.app">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,6 +31,28 @@
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SolarVision",
+      "url": "https://solarvision.vercel.app",
+      "description": "AI-powered rooftop solar analysis using NASA data, satellite imagery & AI. Get energy estimates, savings projections, and environmental impact in seconds.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "SolarVision"
+      }
+    }
+    </script>
     
     <style>
         *, *::before, *::after {
@@ -114,6 +143,116 @@
             }
             100% {
                 opacity: 1;
+            }
+        }
+
+        /* ========== FOCUS-VISIBLE ACCESSIBILITY ========== */
+        *:focus-visible {
+            outline: 2px solid var(--solar-yellow);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* Skip to content link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 16px;
+            z-index: 10001;
+            padding: 12px 24px;
+            background: var(--solar-yellow);
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 0 0 12px 12px;
+            text-decoration: none;
+            transition: top 0.3s ease;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* ========== PAGE TRANSITION ========== */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 99998;
+            background: var(--bg-primary);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .page-transition.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ========== SKELETON LOADERS ========== */
+        .skeleton {
+            background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.04) 25%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.04) 75%);
+            background-size: 200% 100%;
+            animation: skeletonShimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        [data-theme="light"] .skeleton {
+            background: linear-gradient(90deg,
+                rgba(0, 0, 0, 0.04) 25%,
+                rgba(0, 0, 0, 0.08) 50%,
+                rgba(0, 0, 0, 0.04) 75%);
+            background-size: 200% 100%;
+        }
+
+        @keyframes skeletonShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 8px;
+            width: 80%;
+        }
+
+        .skeleton-text.short {
+            width: 50%;
+        }
+
+        .skeleton-card {
+            height: 200px;
+            border-radius: 20px;
+        }
+
+        .skeleton-chart {
+            height: 280px;
+            border-radius: 16px;
+        }
+
+        /* ========== REDUCED MOTION ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .orb, .particle, .float-card {
+                animation: none !important;
+            }
+
+            .hero-image {
+                animation: none !important;
+            }
+
+            .skeleton {
+                animation: none !important;
+                background: rgba(255, 255, 255, 0.06);
             }
         }
         
@@ -3257,8 +3396,14 @@
     </style>
 </head>
 <body>
+    <!-- Skip to Content (Accessibility) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="pageTransition" aria-hidden="true"></div>
+
     <!-- Premium Loading Screen -->
-    <div class="premium-loader" id="premiumLoader">
+    <div class="premium-loader" id="premiumLoader" role="status" aria-label="Loading SolarVision">
         <div class="loader-container">
             <div class="loader-logo-wrapper">
                 <img src="assets/images/logo.png" alt="SolarVision" onerror="this.src='data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>☀️</text></svg>';">
@@ -3280,8 +3425,8 @@
     <div class="particle-container" id="particles"></div>
 
     <!-- Navigation -->
-    <nav id="navbar">
-        <a href="#" class="logo">
+    <nav id="navbar" role="navigation" aria-label="Main navigation">
+        <a href="#" class="logo" aria-label="SolarVision - Home">
             <img src="assets/images/logo.png" alt="SolarVision" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="logo-icon" style="display: none;">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -3324,7 +3469,8 @@
     </div>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <main id="main-content">
+    <section class="hero" role="banner">
         <div class="hero-bg-map"></div>
         <div class="hero-content">
             <div class="hero-text" data-aos="fade-right" data-aos-duration="800">
@@ -3387,8 +3533,14 @@
                 </div>
             </div>
             <div class="hero-visual" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
-                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&h=600&fit=crop&q=90" 
-                     alt="Solar Panels on Rooftop" class="hero-image">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&h=600&fit=crop&q=80&fm=webp" 
+                     alt="Solar Panels on Rooftop — illustrating a residential solar installation"
+                     class="hero-image"
+                     loading="eager"
+                     decoding="async"
+                     width="800"
+                     height="600"
+                     fetchpriority="high">
                 <div class="float-card float-card-1" data-aos="fade-up" data-aos-delay="600">
                     <div class="float-card-icon yellow"><i class="fas fa-bolt"></i></div>
                     <div class="float-card-value">12.5 kW</div>
@@ -3696,9 +3848,10 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- Footer -->
-    <footer>
+    <footer role="contentinfo">
         <div class="footer-content">
             <div class="footer-brand">
                 <a href="#" class="logo">
@@ -4317,6 +4470,33 @@
         // Auto-update footer year
         const footerYear = document.getElementById('footerYear');
         if (footerYear) footerYear.textContent = new Date().getFullYear();
+
+        // ============================================
+        // PAGE TRANSITIONS
+        // ============================================
+        document.querySelectorAll('a[href$=".html"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('http')) return;
+                e.preventDefault();
+                const transition = document.getElementById('pageTransition');
+                if (transition) {
+                    transition.classList.add('active');
+                    setTimeout(() => { window.location.href = href; }, 350);
+                } else {
+                    window.location.href = href;
+                }
+            });
+        });
+
+        // ============================================
+        // SERVICE WORKER REGISTRATION
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {});
+            });
+        }
     </script>
 </body>
 </html>
