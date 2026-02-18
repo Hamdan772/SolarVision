@@ -538,14 +538,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
-        .card:hover {
-            transform: translateY(-4px) scale(1.01);
-            box-shadow: 
-                0 30px 80px rgba(0, 0, 0, 0.4),
-                0 0 40px rgba(250, 204, 21, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border-color: rgba(250, 204, 21, 0.3);
-        }
         .card-header {
             border-color: #334155;
         }
@@ -1485,6 +1477,20 @@
             align-items: center;
             gap: 14px;
             margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 56px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 2px;
         }
 
         .section-icon {
@@ -1498,6 +1504,12 @@
             color: #1a1a2e;
             font-size: 18px;
             box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-header:hover .section-icon {
+            transform: scale(1.08) rotate(-3deg);
+            box-shadow: 0 6px 18px rgba(250, 204, 21, 0.4);
         }
 
         .section-title {
@@ -1758,12 +1770,6 @@
             height: 300px;
         }
 
-        .btn-success:hover {
-            background: var(--success-light);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-        }
-
         .btn-success:active {
             transform: translateY(0) scale(0.98);
         }
@@ -1832,6 +1838,25 @@
             margin-bottom: 16px;
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+            opacity: 0.6;
+            transition: width 0.3s ease, opacity 0.3s ease;
+        }
+
+        .card:hover .card-header::after {
+            width: 60px;
+            opacity: 1;
         }
 
         .card-title {
@@ -1846,6 +1871,11 @@
 
         .card-title i {
             color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-title i {
+            transform: scale(1.15);
         }
 
         /* Stats Grid */
@@ -2095,6 +2125,42 @@
             border-radius: 20px;
         }
 
+        /* Map coordinate badge */
+        .map-coords {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            z-index: 500;
+            background: rgba(21, 27, 45, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .map-coords i {
+            color: var(--primary);
+            font-size: 10px;
+        }
+
+        [data-theme="light"] .map-coords {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: #E2E8F0;
+            color: #64748B;
+        }
+        [data-theme="light"] .map-coords i {
+            color: #D97706;
+        }
+
         /* Map Controls Overlay */
         .map-overlay {
             position: absolute;
@@ -2107,31 +2173,40 @@
         }
 
         .map-btn {
-            width: 42px;
-            height: 42px;
-            background: rgba(21, 27, 45, 0.95);
-            border: 1.5px solid var(--border);
+            width: 44px;
+            height: 44px;
+            background: rgba(21, 27, 45, 0.92);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text);
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            font-size: 15px;
         }
 
         .map-btn:hover {
-            background: var(--primary);
-            color: var(--bg);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #1a1a2e;
             border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(250, 204, 21, 0.3);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.35);
         }
 
         .map-btn:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
+        }
+
+        .map-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .map-btn:hover i {
+            transform: scale(1.1);
         }
 
         /* Info Panel on Map */
@@ -2187,10 +2262,13 @@
         /* Tab Content */
         .main-tab-content {
             display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .main-tab-content.active {
             display: block;
+            opacity: 1;
         }
 
         /* Chatbot Styles */
@@ -2377,7 +2455,7 @@
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -2386,12 +2464,23 @@
         .suggestion-chip i {
             font-size: 11px;
             color: var(--primary);
+            transition: transform 0.3s ease;
         }
 
         .suggestion-chip:hover {
             background: rgba(250, 204, 21, 0.1);
             border-color: rgba(250, 204, 21, 0.3);
             color: var(--text);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .suggestion-chip:hover i {
+            transform: scale(1.2);
+        }
+
+        .suggestion-chip:active {
+            transform: translateY(0);
         }
 
         .typing-indicator {
@@ -2430,17 +2519,17 @@
         /* Results Tab System */
         .results-tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 20px;
             background: var(--bg);
-            padding: 6px;
+            padding: 5px;
             border-radius: 14px;
-            border: 2px solid var(--border);
+            border: 1.5px solid var(--border);
         }
 
         .results-tab {
             flex: 1;
-            padding: 12px 16px;
+            padding: 11px 14px;
             border: none;
             background: transparent;
             border-radius: 10px;
@@ -2458,6 +2547,7 @@
 
         .results-tab i {
             font-size: 14px;
+            transition: transform 0.3s ease;
         }
 
         .results-tab:hover {
@@ -2465,24 +2555,20 @@
             background: var(--bg-alt);
         }
 
-        .results-tab.active {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
-            transform: translateY(-1px);
+        .results-tab:hover i {
+            transform: scale(1.15);
         }
 
-        .results-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid var(--primary);
+        .results-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #1a1a2e;
+            box-shadow: 0 4px 14px rgba(234, 179, 8, 0.35);
+            transform: translateY(-1px);
+            font-weight: 700;
+        }
+
+        .results-tab.active i {
+            transform: scale(1.1);
         }
 
         .results-tab-content {
@@ -4410,6 +4496,38 @@
             color: #64748B !important;
         }
 
+        /* Light mode section & card header accents */
+        [data-theme="light"] .section-header {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="light"] .section-header::after {
+            background: linear-gradient(90deg, #D97706, transparent);
+        }
+        [data-theme="light"] .card-header::after {
+            background: #D97706;
+        }
+        [data-theme="light"] .card-title i {
+            color: #D97706;
+        }
+        [data-theme="light"] .section-icon {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+        }
+
+        /* Light mode map buttons */
+        [data-theme="light"] .map-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #E2E8F0;
+            color: #334155;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        [data-theme="light"] .map-btn:hover {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #FFFFFF;
+            border-color: #D97706;
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
+        }
+
         /* Light mode feature toolbar */
         [data-theme="light"] .feature-toolbar {
             background: #F8FAFC;
@@ -4529,6 +4647,22 @@
         [data-theme="light"] .chat-message.user {
             background: linear-gradient(135deg, #D97706, #B45309);
             color: #FFFFFF;
+        }
+
+        /* Light mode suggestion chips */
+        [data-theme="light"] .suggestion-chip {
+            background: #FFFFFF;
+            border-color: #E2E8F0;
+            color: #64748B;
+        }
+        [data-theme="light"] .suggestion-chip i {
+            color: #D97706;
+        }
+        [data-theme="light"] .suggestion-chip:hover {
+            background: rgba(217, 119, 6, 0.06);
+            border-color: rgba(217, 119, 6, 0.3);
+            color: #D97706;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
         /* Light mode investment card */
@@ -5234,6 +5368,12 @@
         <div class="map-container">
             <div id="map"></div>
             
+            <!-- Coordinate Badge -->
+            <div class="map-coords" id="mapCoords">
+                <i class="fas fa-crosshairs"></i>
+                <span id="mapCoordsText">25.2048°N, 55.2708°E</span>
+            </div>
+            
             <!-- Drawing Mode Indicator -->
             <div id="drawingModeIndicator" class="drawing-mode-indicator">
                 <i class="fas fa-hand-pointer"></i>
@@ -5702,6 +5842,17 @@ const daylightHoursPerMonth = [
             map.on('drag', function () {
                 map.panInsideBounds(UAE_BOUNDS, { animate: false });
             });
+
+            // Update coordinate badge on map move
+            function updateMapCoords() {
+                const center = map.getCenter();
+                const el = document.getElementById('mapCoordsText');
+                if (el) {
+                    el.textContent = `${center.lat.toFixed(4)}°N, ${center.lng.toFixed(4)}°E`;
+                }
+            }
+            map.on('moveend', updateMapCoords);
+            updateMapCoords();
 
             // Handle map clicks for obstacle placement
             map.on('click', function(e) {
@@ -7166,11 +7317,25 @@ const daylightHoursPerMonth = [
         }
 
         function switchMainTab(tabName) {
-            document.querySelectorAll('.main-tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.main-tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.opacity = '0';
+            });
             document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
             const selectedTab = document.getElementById('main-tab-' + tabName);
-            if (selectedTab) selectedTab.classList.add('active');
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+                // Smooth fade-in
+                requestAnimationFrame(() => {
+                    selectedTab.style.opacity = '1';
+                });
+            }
             if (event && event.target) event.target.classList.add('active');
+            
+            // Scroll sidebar to top on tab switch
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.scrollTo({ top: 0, behavior: 'smooth' });
+            
             if (tabName === 'production' && monthlyChart) monthlyChart.update();
             else if (tabName === 'financial' && savingsChart) savingsChart.update();
             if (tabName === 'financial') {
@@ -9347,12 +9512,13 @@ ${systemContext}`
             });
         })();
 
-        // Simple header scroll effect
+        // Simple header scroll effect (for sidebar)
         (function() {
             const header = document.querySelector('.header');
-            if (header) {
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 40) {
+            const sidebar = document.querySelector('.sidebar');
+            if (header && sidebar) {
+                sidebar.addEventListener('scroll', () => {
+                    if (sidebar.scrollTop > 40) {
                         header.classList.add('scrolled');
                     } else {
                         header.classList.remove('scrolled');

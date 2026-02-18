@@ -751,7 +751,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 22px;
+            padding: 10px 20px 10px 14px;
             background: rgba(59, 130, 246, 0.08);
             border: 1px solid rgba(59, 130, 246, 0.15);
             border-radius: 100px;
@@ -760,6 +760,7 @@
             color: var(--sky-blue);
             margin-bottom: 28px;
             animation: badgePulse 3s ease-in-out infinite;
+            letter-spacing: 0.3px;
         }
         
         @keyframes badgePulse {
@@ -768,7 +769,14 @@
         }
 
         .hero-badge i {
-            font-size: 14px;
+            font-size: 13px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.12);
+            border-radius: 50%;
         }
 
         .hero h1 {
@@ -1408,6 +1416,19 @@
             z-index: 1;
         }
 
+        /* Section Divider */
+        .section-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(250, 204, 21, 0.2) 50%, transparent 100%);
+            margin: 0;
+            border: none;
+        }
+
+        [data-theme="light"] .section-divider {
+            background: linear-gradient(90deg, transparent 0%, rgba(217, 157, 0, 0.15) 50%, transparent 100%);
+        }
+
         .section-header {
             text-align: center;
             max-width: 760px;
@@ -1628,6 +1649,32 @@
             line-height: 1.75;
         }
 
+        /* Feature card numbering */
+        .feature-card .feature-number {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.03);
+            line-height: 1;
+            pointer-events: none;
+            transition: color 0.4s ease;
+        }
+
+        .feature-card:hover .feature-number {
+            color: rgba(250, 204, 21, 0.06);
+        }
+
+        [data-theme="light"] .feature-card .feature-number {
+            color: rgba(0, 0, 0, 0.03);
+        }
+
+        [data-theme="light"] .feature-card:hover .feature-number {
+            color: rgba(217, 157, 0, 0.06);
+        }
+
         /* ===== HOW IT WORKS ===== */
         .how-it-works {
             padding: 120px 60px;
@@ -1638,35 +1685,58 @@
 
         .steps-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .steps-timeline {
-            position: absolute;
-            top: 56px;
-            left: 12%;
-            right: 12%;
-            height: 3px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(250, 204, 21, 0.3) 10%, 
-                rgba(250, 204, 21, 0.3) 90%, 
-                transparent);
-            border-radius: 2px;
-            z-index: 0;
-        }
-
-        .steps-container {
-            display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 32px;
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+        }
+
+        .steps-timeline {
+            position: absolute;
+            top: 44px;
+            left: 12%;
+            right: 12%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(250, 204, 21, 0.15) 10%, 
+                rgba(250, 204, 21, 0.15) 90%, 
+                transparent);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        /* Animated dashes on the timeline */
+        .steps-timeline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: repeating-linear-gradient(90deg,
+                rgba(250, 204, 21, 0.4) 0px,
+                rgba(250, 204, 21, 0.4) 8px,
+                transparent 8px,
+                transparent 20px
+            );
+            border-radius: 2px;
+            animation: dashMove 20s linear infinite;
+        }
+
+        @keyframes dashMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(40px); }
+        }
+
+        [data-theme="light"] .steps-timeline::after {
+            background: repeating-linear-gradient(90deg,
+                rgba(217, 157, 0, 0.3) 0px,
+                rgba(217, 157, 0, 0.3) 8px,
+                transparent 8px,
+                transparent 20px
+            );
         }
 
         .step-card {
@@ -2116,6 +2186,18 @@
             color: var(--text-primary);
             font-size: 16px;
             margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .testimonial-name .verified-icon {
+            color: var(--electric-blue);
+            font-size: 13px;
+        }
+
+        [data-theme="light"] .testimonial-name .verified-icon {
+            color: #2563EB;
         }
 
         .testimonial-role {
@@ -2184,6 +2266,28 @@
             max-width: 720px;
             margin: 0 auto;
             position: relative;
+        }
+
+        .cta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: rgba(250, 204, 21, 0.1);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--solar-yellow);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        [data-theme="light"] .cta-badge {
+            background: rgba(217, 157, 0, 0.08);
+            border-color: rgba(217, 157, 0, 0.15);
+            color: #B8860B;
         }
 
         .cta h2 {
@@ -2416,6 +2520,51 @@
         .footer-bottom p {
             font-size: 13px;
             color: var(--text-dim);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--gradient-solar);
+            color: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s var(--ease-out);
+            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.35);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(250, 204, 21, 0.5);
+        }
+
+        [data-theme="light"] .back-to-top {
+            background: linear-gradient(135deg, #D49E00 0%, #B8860B 100%);
+            color: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(217, 157, 0, 0.25);
+        }
+
+        [data-theme="light"] .back-to-top:hover {
+            box-shadow: 0 12px 32px rgba(217, 157, 0, 0.35);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -3302,6 +3451,8 @@
         </div>
     </section>
 
+    <hr class="section-divider">
+
     <!-- Features Section -->
     <section class="features" id="features">
         <div class="section-header" data-aos="fade-up">
@@ -3311,37 +3462,45 @@
         </div>
         <div class="features-grid">
             <div class="feature-card" data-aos="fade-up" data-aos-delay="0">
+                <span class="feature-number">01</span>
                 <div class="feature-icon"><i class="fas fa-satellite-dish"></i></div>
                 <h3>Satellite Mapping</h3>
                 <p>High-resolution satellite imagery with automatic roof detection and measurement using Google Maps integration.</p>
             </div>
             <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <span class="feature-number">02</span>
                 <div class="feature-icon"><i class="fas fa-sun"></i></div>
                 <h3>NASA Weather Data</h3>
                 <p>Access 6 years of historical solar irradiance data from NASA POWER satellite for accurate energy estimates.</p>
             </div>
             <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <span class="feature-number">03</span>
                 <div class="feature-icon"><i class="fas fa-robot"></i></div>
                 <h3>AI Analysis</h3>
                 <p>Machine learning algorithms analyze roof orientation, shading, and local conditions for optimal panel placement.</p>
             </div>
             <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <span class="feature-number">04</span>
                 <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>Financial Projections</h3>
                 <p>Detailed ROI calculations with local electricity rates, incentives, installation costs, and payback periods.</p>
             </div>
             <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                <span class="feature-number">05</span>
                 <div class="feature-icon"><i class="fas fa-chart-area"></i></div>
                 <h3>Production Forecasts</h3>
                 <p>Monthly and yearly energy production projections with interactive charts showing seasonal variations.</p>
             </div>
             <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                <span class="feature-number">06</span>
                 <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
                 <h3>Environmental Impact</h3>
                 <p>Calculate your carbon footprint reduction in CO₂ tons and see equivalent trees planted for sustainability metrics.</p>
             </div>
         </div>
     </section>
+
+    <hr class="section-divider">
 
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
@@ -3475,7 +3634,7 @@
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">AK</div>
                     <div>
-                        <div class="testimonial-name">Ahmed Khan</div>
+                        <div class="testimonial-name">Ahmed Khan <i class="fas fa-circle-check verified-icon"></i></div>
                         <div class="testimonial-role">Homeowner, Dubai</div>
                     </div>
                 </div>
@@ -3492,7 +3651,7 @@
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">SR</div>
                     <div>
-                        <div class="testimonial-name">Sarah Rahman</div>
+                        <div class="testimonial-name">Sarah Rahman <i class="fas fa-circle-check verified-icon"></i></div>
                         <div class="testimonial-role">Solar Installer, Abu Dhabi</div>
                     </div>
                 </div>
@@ -3509,7 +3668,7 @@
                 <div class="testimonial-author">
                     <div class="testimonial-avatar">MJ</div>
                     <div>
-                        <div class="testimonial-name">Mohammed Jabri</div>
+                        <div class="testimonial-name">Mohammed Jabri <i class="fas fa-circle-check verified-icon"></i></div>
                         <div class="testimonial-role">Business Owner, Sharjah</div>
                     </div>
                 </div>
@@ -3521,6 +3680,7 @@
     <section class="cta">
         <div class="cta-glow"></div>
         <div class="cta-content" data-aos="fade-up">
+            <div class="cta-badge"><i class="fas fa-bolt"></i> Get Started Free</div>
             <h2>Ready to Unlock Your Solar Potential?</h2>
             <p>Start your free solar analysis today and discover how much you can save while reducing your carbon footprint.</p>
             <div class="cta-buttons">
@@ -3571,7 +3731,7 @@
                 <ul>
                     <li><a href="#">Documentation</a></li>
                     <li><a href="#">Solar Guide</a></li>
-                    <li><a href="#">Blog</a></li>
+                    <li><a href="https://github.com/Hamdan772/SolarVision" target="_blank">GitHub</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -3579,7 +3739,7 @@
                 <ul>
                     <li><a href="#">About Us</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy</a></li>
                 </ul>
             </div>
         </div>
@@ -3588,6 +3748,11 @@
             <p>Built with ☀️ for a sustainable future</p>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -3693,6 +3858,7 @@
 
         // Navbar scroll effect with smooth transition
         const navbar = document.getElementById('navbar');
+        const backToTopBtn = document.getElementById('backToTop');
         let lastScroll = 0;
         
         window.addEventListener('scroll', () => {
@@ -3702,6 +3868,15 @@
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
+            }
+
+            // Back to top button visibility
+            if (backToTopBtn) {
+                if (currentScroll > 600) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
             }
             
             lastScroll = currentScroll;
