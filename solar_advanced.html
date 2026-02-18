@@ -904,86 +904,6 @@
             height: 100vh;
             padding: 12px;
             gap: 12px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Expanded Mode - Sidebar takes most space, map becomes mini sidebar */
-        .app-container.immersive-mode {
-            flex-direction: row;
-        }
-        
-        .app-container.immersive-mode .sidebar {
-            position: relative;
-            flex: 1;
-            width: auto;
-            min-width: 0;
-            max-width: none;
-            border-radius: 16px;
-            z-index: 1;
-            padding: 0;
-            background: linear-gradient(135deg,
-                rgba(15, 20, 35, 0.98) 0%,
-                rgba(10, 14, 26, 0.98) 100%);
-            overflow-y: auto;
-        }
-
-        .app-container.immersive-mode .sidebar-resize-handle {
-            display: none;
-        }
-        
-        .app-container.immersive-mode .sidebar .content-section {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .app-container.immersive-mode .sidebar .header {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 16px 20px;
-        }
-        
-        .app-container.immersive-mode .map-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 280px;
-            height: 220px;
-            min-width: 280px;
-            max-width: 280px;
-            min-height: 220px;
-            flex-shrink: 0;
-            border-radius: 16px;
-            overflow: hidden;
-            z-index: 999;
-            border: 2px solid rgba(250, 204, 21, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .app-container.immersive-mode .map-container:hover {
-            width: 420px;
-            height: 340px;
-            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.8);
-        }
-
-        .app-container.immersive-mode .map-container .map-overlay {
-            display: none;
-        }
-
-        .app-container.immersive-mode .map-container .map-coords {
-            display: none;
-        }
-
-        .app-container.immersive-mode .map-container .drawing-mode-indicator {
-            display: none;
-        }
-
-        .app-container.immersive-mode .map-container .shading-info-box {
-            display: none;
-        }
-        
-        .app-container.immersive-mode .map-container #map {
-            border-radius: 16px;
         }
 
         /* Premium Sidebar */
@@ -1080,7 +1000,7 @@
         .header {
             position: relative;
             z-index: 1000;
-            padding: 16px;
+            padding: 12px 16px;
             border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
             background: linear-gradient(180deg, 
                 rgba(10, 14, 26, 0.9) 0%, 
@@ -1092,7 +1012,7 @@
         }
 
         .header.scrolled {
-            padding: 12px 16px;
+            padding: 10px 16px;
             background: linear-gradient(180deg, 
                 rgba(10, 14, 26, 0.98) 0%, 
                 rgba(21, 27, 45, 0.98) 100%);
@@ -1106,7 +1026,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
         .back-btn {
@@ -1135,32 +1055,7 @@
             box-shadow: 0 4px 20px rgba(250, 204, 21, 0.25);
         }
 
-        /* Immersive Toggle Button */
-        .immersive-toggle {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 1001;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .immersive-toggle:hover {
-            background: rgba(250, 204, 21, 0.15);
-            color: var(--primary);
-            border-color: rgba(250, 204, 21, 0.3);
-        }
-
+        /* Header Brand */
         .header-brand {
             display: flex;
             flex-direction: row;
@@ -1171,8 +1066,8 @@
         }
 
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1180,7 +1075,7 @@
         }
         
         .logo img {
-            height: 76px;
+            height: 52px;
             width: auto;
             filter: drop-shadow(0 4px 16px rgba(250, 204, 21, 0.5));
             transition: all 0.3s ease;
@@ -1203,11 +1098,11 @@
 
         .brand-text h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             color: #FACC15;
             letter-spacing: -0.5px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .brand-text h1 span {
@@ -4883,11 +4778,26 @@
             border-color: #E2E8F0 !important;
         }
 
-        /* Light mode weather card */
+        /* Light mode weather card — keep the blue gradient, just adjust slightly */
         [data-theme="light"] #weatherCard,
         [data-theme="light"] .weather-card {
-            background: #F8FAFC;
-            border-color: #E2E8F0;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            border-color: #1E40AF;
+            color: #FFFFFF;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.25);
+        }
+
+        [data-theme="light"] .weather-card .weather-temp {
+            color: #FFFFFF !important;
+        }
+
+        [data-theme="light"] .weather-card .weather-condition {
+            color: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        [data-theme="light"] .weather-card #weatherDetails {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         /* Light mode particle canvas hidden */
@@ -4971,10 +4881,6 @@
         <nav class="sidebar" role="navigation" aria-label="Solar analysis controls">
             <!-- Resize Handle -->
             <div class="sidebar-resize-handle" id="sidebarResizeHandle" aria-hidden="true"></div>
-            <!-- Immersive Toggle Button -->
-            <button class="immersive-toggle" onclick="toggleImmersiveMode()" title="Toggle Full Screen View" aria-label="Toggle full screen map view">
-                <i class="fas fa-expand" aria-hidden="true"></i>
-            </button>
             
             <!-- Header -->
             <div class="header">
@@ -6167,12 +6073,6 @@ const daylightHoursPerMonth = [
             
             // Auto-calculate after roof selection
             scheduleCalculate();
-
-            // Auto-enter immersive mode after area selection
-            const appContainer = document.querySelector('.app-container');
-            if (!appContainer.classList.contains('immersive-mode')) {
-                toggleImmersiveMode();
-            }
         }
 
         function calculateActualMaxPanels() {
@@ -6631,12 +6531,6 @@ const daylightHoursPerMonth = [
             updateStats();
             showStatus('✨ Canvas cleared - draw a new roof!', 'success');
 
-            // Exit immersive mode when clearing
-            const appContainer = document.querySelector('.app-container');
-            if (appContainer.classList.contains('immersive-mode')) {
-                toggleImmersiveMode();
-            }
-
             // Hide results section
             const resultsSection = document.getElementById('resultsSection');
             if (resultsSection) resultsSection.style.display = 'none';
@@ -6976,12 +6870,6 @@ const daylightHoursPerMonth = [
             
             const buildingText = buildingCount === 1 ? 'building' : 'buildings';
             showStatus(`✅ ${buildingCount} ${buildingText} selected! Panels rendered on each building.`, 'success');
-
-            // Auto-enter immersive mode after area selection
-            const appContainer = document.querySelector('.app-container');
-            if (!appContainer.classList.contains('immersive-mode')) {
-                toggleImmersiveMode();
-            }
         }
 
         function updateMultiBuildingRoof(layer, buildings) {
@@ -7526,29 +7414,6 @@ const daylightHoursPerMonth = [
             } finally {
                 hideLoading();
             }
-        }
-
-        // Immersive Mode Toggle - Expand sidebar, map becomes mini sidebar
-        function toggleImmersiveMode() {
-            const appContainer = document.querySelector('.app-container');
-            const toggleBtn = document.querySelector('.immersive-toggle i');
-            
-            appContainer.classList.toggle('immersive-mode');
-            
-            if (appContainer.classList.contains('immersive-mode')) {
-                toggleBtn.classList.remove('fa-expand');
-                toggleBtn.classList.add('fa-compress');
-            } else {
-                toggleBtn.classList.remove('fa-compress');
-                toggleBtn.classList.add('fa-expand');
-            }
-            
-            // Refresh map after layout change
-            setTimeout(() => {
-                if (window.map) {
-                    window.map.invalidateSize();
-                }
-            }, 350);
         }
 
         function switchMainTab(tabName) {
