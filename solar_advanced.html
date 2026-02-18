@@ -926,6 +926,10 @@
                 rgba(10, 14, 26, 0.98) 100%);
             overflow-y: auto;
         }
+
+        .app-container.immersive-mode .sidebar-resize-handle {
+            display: none;
+        }
         
         .app-container.immersive-mode .sidebar .content-section {
             max-width: 800px;
@@ -985,8 +989,9 @@
         /* Premium Sidebar */
         .sidebar {
             position: relative;
-            width: 420px;
-            min-width: 420px;
+            width: 360px;
+            min-width: 280px;
+            max-width: 600px;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.98) 0%,
                 rgba(10, 14, 26, 0.98) 100%);
@@ -995,7 +1000,53 @@
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 16px 56px rgba(0, 0, 0, 0.8);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Sidebar resize handle */
+        .sidebar-resize-handle {
+            position: absolute;
+            top: 0;
+            right: -4px;
+            width: 8px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 1002;
+            background: transparent;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-resize-handle:hover,
+        .sidebar-resize-handle.active {
+            background: rgba(250, 204, 21, 0.3);
+        }
+
+        .sidebar-resize-handle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 32px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-resize-handle:hover::after,
+        .sidebar-resize-handle.active::after {
+            background: var(--primary);
+            height: 48px;
+        }
+
+        body.sidebar-resizing {
+            cursor: col-resize !important;
+            user-select: none !important;
+        }
+
+        body.sidebar-resizing * {
+            cursor: col-resize !important;
         }
 
         .sidebar::-webkit-scrollbar {
@@ -3924,9 +3975,14 @@
             .sidebar {
                 width: 100%;
                 min-width: unset;
+                max-width: unset;
                 max-height: none;
                 border-radius: 16px;
                 order: 2;
+            }
+
+            .sidebar-resize-handle {
+                display: none;
             }
 
             .map-container {
@@ -4913,6 +4969,8 @@
     <div class="app-container">
         <!-- Sidebar -->
         <nav class="sidebar" role="navigation" aria-label="Solar analysis controls">
+            <!-- Resize Handle -->
+            <div class="sidebar-resize-handle" id="sidebarResizeHandle" aria-hidden="true"></div>
             <!-- Immersive Toggle Button -->
             <button class="immersive-toggle" onclick="toggleImmersiveMode()" title="Toggle Full Screen View" aria-label="Toggle full screen map view">
                 <i class="fas fa-expand" aria-hidden="true"></i>
@@ -6107,6 +6165,9 @@ const daylightHoursPerMonth = [
             const calcBtn = document.getElementById('calculateBtn');
             if (calcBtn) calcBtn.classList.add('pulse-ready');
             
+            // Auto-calculate after roof selection
+            scheduleCalculate();
+
             // Auto-enter immersive mode after area selection
             const appContainer = document.querySelector('.app-container');
             if (!appContainer.classList.contains('immersive-mode')) {
@@ -6436,32 +6497,39 @@ const daylightHoursPerMonth = [
 
             const bestPanels = allPanels;
 
-            // Draw panels — cap at 500 rendered polygons for performance
-            const MAX_RENDERED = 500;
+            // Draw panels
             const toDraw = Math.min(count, bestPanels.length);
-            const renderCount = Math.min(toDraw, MAX_RENDERED);
             const wattPerPanel = computeSystemFromPanelCount(count).panelWattage || 550;
 
-            for (let i = 0; i < renderCount; i++) {
-                const p = bestPanels[i];
-                const leafletCoords = p.corners.map(([lng, lat]) => [lat, lng]);
-
-                const opts = {
+            // Performance: use solid fill overlay for large panel counts
+            if (toDraw > 100) {
+                // Draw a single filled overlay on the roof polygon for performance
+                const roofLatLngs = roofPoints.map(([lng, lat]) => [lat, lng]);
+                L.polygon(roofLatLngs, {
                     color: '#FDE047',
-                    weight: 1,
+                    weight: 2,
                     fillColor: '#1E40AF',
-                    fillOpacity: 0.9,
-                    interactive: renderCount <= 200 // disable hover/tooltip when many panels
-                };
-                const poly = L.polygon(leafletCoords, opts).addTo(solarPanelsLayer);
-                if (renderCount <= 200) {
+                    fillOpacity: 0.55,
+                    interactive: true,
+                    dashArray: '6 3'
+                }).addTo(solarPanelsLayer).bindTooltip(
+                    `${toDraw} panels · ${(toDraw * wattPerPanel / 1000).toFixed(1)} kW`,
+                    { sticky: true }
+                );
+            } else {
+                // Individual panels for small counts (≤100)
+                for (let i = 0; i < toDraw; i++) {
+                    const p = bestPanels[i];
+                    const leafletCoords = p.corners.map(([lng, lat]) => [lat, lng]);
+                    const poly = L.polygon(leafletCoords, {
+                        color: '#FDE047',
+                        weight: 1,
+                        fillColor: '#1E40AF',
+                        fillOpacity: 0.9,
+                        interactive: true
+                    }).addTo(solarPanelsLayer);
                     poly.bindTooltip(`Panel ${i + 1}<br>${wattPerPanel}W`);
                 }
-            }
-
-            // If we capped rendering, show a note
-            if (toDraw > MAX_RENDERED) {
-                showStatus(`✅ ${toDraw} panels placed (showing ${MAX_RENDERED} for performance)`, 'success');
             }
 
             actualPanelsFit = toDraw;
@@ -9622,6 +9690,71 @@ ${systemContext}`
             initMap();
             initTiltSlider();
             
+            // --- Sidebar resize handle ---
+            (function() {
+                const handle = document.getElementById('sidebarResizeHandle');
+                const sidebar = document.querySelector('.sidebar');
+                if (!handle || !sidebar) return;
+
+                let isDragging = false;
+                let startX = 0;
+                let startWidth = 0;
+
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    isDragging = true;
+                    startX = e.clientX;
+                    startWidth = sidebar.getBoundingClientRect().width;
+                    document.body.classList.add('sidebar-resizing');
+                    handle.classList.add('active');
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const delta = e.clientX - startX;
+                    const newWidth = Math.max(280, Math.min(600, startWidth + delta));
+                    sidebar.style.width = newWidth + 'px';
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    document.body.classList.remove('sidebar-resizing');
+                    handle.classList.remove('active');
+                    // Invalidate map size after resize
+                    if (window.map) {
+                        setTimeout(() => window.map.invalidateSize(), 100);
+                    }
+                });
+
+                // Touch support for mobile/tablet
+                handle.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    isDragging = true;
+                    startX = e.touches[0].clientX;
+                    startWidth = sidebar.getBoundingClientRect().width;
+                    document.body.classList.add('sidebar-resizing');
+                    handle.classList.add('active');
+                }, { passive: false });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const delta = e.touches[0].clientX - startX;
+                    const newWidth = Math.max(280, Math.min(600, startWidth + delta));
+                    sidebar.style.width = newWidth + 'px';
+                });
+
+                document.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    document.body.classList.remove('sidebar-resizing');
+                    handle.classList.remove('active');
+                    if (window.map) {
+                        setTimeout(() => window.map.invalidateSize(), 100);
+                    }
+                });
+            })();
+
             // Delay status message slightly for smoother UX
             setTimeout(() => {
                 showStatus('🇦🇪 UAE Solar Calculator ready!', 'success');
