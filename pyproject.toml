@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solarvision"
+version = "0.0.1"
+description = "SolarVision - AI-powered rooftop solar analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
+
+[tool]
+# Minimal marker so tools that expect a [project] table succeed
+
