@@ -1199,6 +1199,23 @@
             filter: drop-shadow(0 2px 8px rgba(250, 204, 21, 0.5));
         }
 
+        .nav-tab.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: grayscale(0.6);
+            position: relative;
+        }
+
+        .nav-tab.disabled::after {
+            content: '🔒';
+            font-size: 9px;
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            opacity: 0.7;
+        }
+
         /* Progress Steps Indicator */
         .progress-steps {
             display: flex;
@@ -4396,15 +4413,15 @@
                         <i class="fas fa-cog" aria-hidden="true"></i>
                         Setup
                     </button>
-                    <button class="nav-tab data-tab" onclick="switchMainTab('production')" role="tab" aria-selected="false" aria-controls="main-tab-production" style="display:none;">
+                    <button class="nav-tab data-tab disabled" onclick="switchMainTab('production')" role="tab" aria-selected="false" aria-controls="main-tab-production" title="Run calculation first">
                         <i class="fas fa-bolt" aria-hidden="true"></i>
                         Energy
                     </button>
-                    <button class="nav-tab data-tab" onclick="switchMainTab('financial')" role="tab" aria-selected="false" aria-controls="main-tab-financial" style="display:none;">
+                    <button class="nav-tab data-tab disabled" onclick="switchMainTab('financial')" role="tab" aria-selected="false" aria-controls="main-tab-financial" title="Run calculation first">
                         <i class="fas fa-coins" aria-hidden="true"></i>
                         Finance
                     </button>
-                    <button class="nav-tab data-tab" onclick="switchMainTab('chatbot')" role="tab" aria-selected="false" aria-controls="main-tab-chatbot" style="display:none;">
+                    <button class="nav-tab data-tab disabled" onclick="switchMainTab('chatbot')" role="tab" aria-selected="false" aria-controls="main-tab-chatbot" title="Run calculation first">
                         <i class="fas fa-robot" aria-hidden="true"></i>
                         AI Chat
                     </button>
@@ -6887,6 +6904,11 @@ const daylightHoursPerMonth = [
         }
 
         function switchMainTab(tabName) {
+            // Block switching to disabled tabs
+            if (event && event.target) {
+                const clickedBtn = event.target.closest('.nav-tab');
+                if (clickedBtn && clickedBtn.classList.contains('disabled')) return;
+            }
             document.querySelectorAll('.main-tab-content').forEach(content => {
                 content.classList.remove('active');
                 content.style.opacity = '0';
@@ -7744,9 +7766,10 @@ const daylightHoursPerMonth = [
                 showStatus('✅ Analysis complete!', 'success');
                 lastCalcTimestamp = Date.now();
 
-                // Reveal data tabs (Energy, Finance, AI Chat)
+                // Unlock data tabs (Energy, Finance, AI Chat)
                 document.querySelectorAll('.nav-tab.data-tab').forEach(tab => {
-                    tab.style.display = '';
+                    tab.classList.remove('disabled');
+                    tab.removeAttribute('title');
                 });
                 // Auto-switch to Energy tab
                 switchMainTab('production');
