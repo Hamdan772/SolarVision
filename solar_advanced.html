@@ -902,8 +902,8 @@
         .app-container {
             display: flex;
             height: 100vh;
-            padding: 20px;
-            gap: 20px;
+            padding: 12px;
+            gap: 12px;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
@@ -955,14 +955,14 @@
         /* Premium Sidebar */
         .sidebar {
             position: relative;
-            width: 420px;
-            min-width: 420px;
+            width: 460px;
+            min-width: 460px;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.98) 0%,
                 rgba(10, 14, 26, 0.98) 100%);
             backdrop-filter: blur(24px) saturate(150%);
             overflow-y: auto;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 16px 56px rgba(0, 0, 0, 0.8);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -999,7 +999,7 @@
         .header {
             position: relative;
             z-index: 1000;
-            padding: 20px 16px;
+            padding: 16px;
             border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
             background: linear-gradient(180deg, 
                 rgba(10, 14, 26, 0.9) 0%, 
@@ -1011,7 +1011,7 @@
         }
 
         .header.scrolled {
-            padding: 16px;
+            padding: 12px 16px;
             background: linear-gradient(180deg, 
                 rgba(10, 14, 26, 0.98) 0%, 
                 rgba(21, 27, 45, 0.98) 100%);
@@ -1025,7 +1025,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         .back-btn {
@@ -1061,17 +1061,16 @@
 
         .header-brand {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 12px;
-            text-align: center;
-            margin: 0 auto;
-            padding: 8px 0;
+            gap: 14px;
+            text-align: left;
+            padding: 4px 0;
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1079,7 +1078,7 @@
         }
         
         .logo img {
-            height: 56px;
+            height: 76px;
             width: auto;
             filter: drop-shadow(0 4px 16px rgba(250, 204, 21, 0.5));
             transition: all 0.3s ease;
@@ -1097,16 +1096,16 @@
         }
 
         .brand-text {
-            text-align: center;
+            text-align: left;
         }
 
         .brand-text h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #FACC15;
             letter-spacing: -0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .brand-text h1 span {
@@ -1160,12 +1159,12 @@
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            padding: 8px;
-            margin: 0 16px;
+            gap: 6px;
+            padding: 6px;
+            margin: 0 12px;
             background: var(--bg);
-            border-radius: 14px;
-            margin-top: 24px;
+            border-radius: 12px;
+            margin-top: 16px;
             position: relative;
             overflow: hidden;
         }
@@ -1185,10 +1184,10 @@
         .nav-tab {
             flex: 1;
             min-width: 0;
-            padding: 16px 12px;
+            padding: 12px 10px;
             background: rgba(255, 255, 255, 0.03);
             border: 2px solid transparent;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 12px;
             font-weight: 700;
             color: var(--text-muted);
@@ -1532,15 +1531,15 @@
 
         /* Content Sections */
         .content-section {
-            padding: 28px 24px;
+            padding: 20px 20px;
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             position: relative;
         }
@@ -1862,9 +1861,9 @@
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 18px;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
             box-shadow: var(--shadow-sm);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -1945,15 +1944,15 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
+            gap: 10px;
         }
 
         .stat-item {
             background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 16px;
             text-align: center;
-            border: 2px solid var(--border-light);
+            border: 1.5px solid var(--border-light);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -2011,13 +2010,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0;
-            border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.4s var(--ease-smooth);
         }
 
         .result-item:hover {
-            padding-left: 8px;
+            padding-left: 6px;
             border-bottom-color: rgba(250, 204, 21, 0.2);
         }
 
@@ -2174,7 +2173,7 @@
         .map-container {
             flex: 1;
             background: var(--bg-card);
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
             position: relative;
             border: 1.5px solid var(--border);
@@ -2185,7 +2184,7 @@
         #map {
             width: 100%;
             height: 100%;
-            border-radius: 20px;
+            border-radius: 16px;
         }
 
         /* Map coordinate badge */
@@ -3851,6 +3850,27 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E");
         }
 
+        /* Wide screens — use more space */
+        @media (min-width: 1600px) {
+            .sidebar {
+                width: 520px;
+                min-width: 520px;
+            }
+            .content-section {
+                padding: 24px;
+            }
+            .stats-grid {
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .sidebar {
+                width: 580px;
+                min-width: 580px;
+            }
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 1024px) {
             .app-container {
@@ -3865,7 +3885,7 @@
                 width: 100%;
                 min-width: unset;
                 max-height: none;
-                border-radius: 20px;
+                border-radius: 16px;
                 order: 2;
             }
 
@@ -3873,11 +3893,11 @@
                 min-height: 50vh;
                 height: 50vh;
                 order: 1;
-                border-radius: 20px;
+                border-radius: 16px;
             }
 
             .header {
-                padding: 20px;
+                padding: 16px;
             }
 
             .header-brand {
@@ -4873,7 +4893,7 @@
                     <div class="logo">
                         <img src="assets/images/logo.png" alt="SolarVision" 
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            style="height: 80px; width: auto; filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));">
+                            style="height: 100px; width: auto; filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
                             <path
                                 d="M12 3V1M12 23V21M21 12H23M1 12H3M18.364 5.636L19.778 4.222M4.222 19.778L5.636 18.364M18.364 18.364L19.778 19.778M4.222 4.222L5.636 5.636"
@@ -6080,10 +6100,12 @@ const daylightHoursPerMonth = [
             const maxY = bbox[3];
 
             let panelCount = 0;
+            const MAX_PANELS = 2000; // Safety cap for very large areas
 
             // Count how many panels actually fit
             for (let y = minY; y <= maxY; y += stepH) {
                 for (let x = minX; x <= maxX; x += stepW) {
+                    if (panelCount >= MAX_PANELS) break;
                     const hw = panelW / 2;
                     const hh = panelH / 2;
                     const corners = [
@@ -6173,7 +6195,10 @@ const daylightHoursPerMonth = [
 
         // Auto-optimize panel rotation to fit maximum panels
         function optimizePanelRotation(roofPolygon, targetCount) {
-            const rotations = [0, 15, 30, 45, 60, 75, 90];
+            // Skip rotation optimization for very large areas (>500 panels) — just use 0°
+            if (targetCount > 500) return 0;
+
+            const rotations = [0, 45, 90]; // Reduced set for speed
             let bestRotation = 0;
             let bestFit = 0;
 
@@ -6254,7 +6279,7 @@ const daylightHoursPerMonth = [
             } else {
                 visualizePanelsTimeout = setTimeout(() => {
                     visualizeSolarPanelsImmediate(layer, count, forceAutoRotation);
-                }, 150);
+                }, 250);
             }
         }
 
@@ -6371,24 +6396,35 @@ const daylightHoursPerMonth = [
 
             const bestPanels = allPanels;
 
-            // Draw panels
+            // Draw panels — cap at 500 rendered polygons for performance
+            const MAX_RENDERED = 500;
             const toDraw = Math.min(count, bestPanels.length);
+            const renderCount = Math.min(toDraw, MAX_RENDERED);
             const wattPerPanel = computeSystemFromPanelCount(count).panelWattage || 550;
 
-            for (let i = 0; i < toDraw; i++) {
+            for (let i = 0; i < renderCount; i++) {
                 const p = bestPanels[i];
                 const leafletCoords = p.corners.map(([lng, lat]) => [lat, lng]);
 
-                L.polygon(leafletCoords, {
+                const opts = {
                     color: '#FDE047',
                     weight: 1,
                     fillColor: '#1E40AF',
-                    fillOpacity: 0.9
-                }).addTo(solarPanelsLayer).bindTooltip(`Panel ${i + 1}<br>${wattPerPanel}W`);
+                    fillOpacity: 0.9,
+                    interactive: renderCount <= 200 // disable hover/tooltip when many panels
+                };
+                const poly = L.polygon(leafletCoords, opts).addTo(solarPanelsLayer);
+                if (renderCount <= 200) {
+                    poly.bindTooltip(`Panel ${i + 1}<br>${wattPerPanel}W`);
+                }
+            }
+
+            // If we capped rendering, show a note
+            if (toDraw > MAX_RENDERED) {
+                showStatus(`✅ ${toDraw} panels placed (showing ${MAX_RENDERED} for performance)`, 'success');
             }
 
             actualPanelsFit = toDraw;
-            // Removed panel fit warning for cleaner UX
             updateStats();
             isVisualizing = false;
         }
@@ -6975,19 +7011,24 @@ const daylightHoursPerMonth = [
                 return a.col - b.col;
             });
 
-            // Take only the requested count
+            // Take only the requested count, cap rendered for performance
+            const MAX_RENDERED_PER_BUILDING = 300;
             const panelsToRender = allPanels.slice(0, count);
+            const renderLimit = Math.min(panelsToRender.length, MAX_RENDERED_PER_BUILDING);
+            const interactive = renderLimit <= 150;
 
             // Render panels
-            panelsToRender.forEach(panel => {
+            for (let i = 0; i < renderLimit; i++) {
+                const panel = panelsToRender[i];
                 const latLngCorners = panel.corners.map(c => [c[1], c[0]]);
-                const panelRect = L.polygon(latLngCorners, {
+                L.polygon(latLngCorners, {
                     color: '#1E40AF',
                     weight: 1,
                     fillColor: '#3B82F6',
-                    fillOpacity: 0.7
+                    fillOpacity: 0.7,
+                    interactive: interactive
                 }).addTo(solarPanelsLayer);
-            });
+            }
         }
 
         function calculateActualMaxPanelsForPolygon(roofPolygon) {
@@ -7016,9 +7057,11 @@ const daylightHoursPerMonth = [
             const maxY = bbox[3];
             
             let validPanelCount = 0;
+            const MAX_PANELS = 2000;
             
             for (let y = minY; y <= maxY; y += stepH) {
                 for (let x = minX; x <= maxX; x += stepW) {
+                    if (validPanelCount >= MAX_PANELS) break;
                     const hw = panelW / 2;
                     const hh = panelH / 2;
                     const corners = [
