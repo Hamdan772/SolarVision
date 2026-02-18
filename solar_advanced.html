@@ -924,8 +924,7 @@
         .sidebar {
             position: relative;
             width: 360px;
-            min-width: 280px;
-            max-width: 600px;
+            flex-shrink: 0;
             background: linear-gradient(135deg,
                 rgba(15, 20, 35, 0.85) 0%,
                 rgba(10, 14, 26, 0.92) 100%);
@@ -938,52 +937,6 @@
                         inset 0 1px 0 rgba(255, 255, 255, 0.08),
                         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
             transition: box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        /* Sidebar resize handle */
-        .sidebar-resize-handle {
-            position: absolute;
-            top: 0;
-            right: -4px;
-            width: 8px;
-            height: 100%;
-            cursor: col-resize;
-            z-index: 1002;
-            background: transparent;
-            transition: background 0.2s ease;
-        }
-
-        .sidebar-resize-handle:hover,
-        .sidebar-resize-handle.active {
-            background: rgba(250, 204, 21, 0.3);
-        }
-
-        .sidebar-resize-handle::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 3px;
-            height: 32px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.15);
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-resize-handle:hover::after,
-        .sidebar-resize-handle.active::after {
-            background: var(--primary);
-            height: 48px;
-        }
-
-        body.sidebar-resizing {
-            cursor: col-resize !important;
-            user-select: none !important;
-        }
-
-        body.sidebar-resizing * {
-            cursor: col-resize !important;
         }
 
         .sidebar::-webkit-scrollbar {
@@ -1077,14 +1030,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
             text-align: center;
-            padding: 4px 0;
+            padding: 8px 0;
         }
 
         .logo {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1092,7 +1045,7 @@
         }
         
         .logo img {
-            height: 44px;
+            height: 52px;
             width: auto;
             filter: drop-shadow(0 4px 16px rgba(250, 204, 21, 0.5));
             transition: all 0.3s ease;
@@ -1115,11 +1068,11 @@
 
         .brand-text h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: #FACC15;
             letter-spacing: -0.5px;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
         }
 
         .brand-text h1 span {
@@ -3897,10 +3850,6 @@
                 order: 2;
             }
 
-            .sidebar-resize-handle {
-                display: none;
-            }
-
             .map-container {
                 min-height: 50vh;
                 height: 50vh;
@@ -4230,15 +4179,6 @@
             z-index: 10;
         }
 
-        .brand-text h1 {
-            font-size: 28px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 4px 12px rgba(250, 204, 21, 0.3));
-        }
-
         /* Animated Background Blobs */
         .bg-blob {
             position: fixed;
@@ -4428,11 +4368,12 @@
         }
 
         [data-theme="light"] body {
-            background: #F1F5F9;
+            background: #F0F4F8;
             background-image:
-                radial-gradient(at 27% 37%, rgba(217, 119, 6, 0.06) 0px, transparent 50%),
+                radial-gradient(at 27% 37%, rgba(217, 119, 6, 0.05) 0px, transparent 50%),
                 radial-gradient(at 97% 21%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
-                radial-gradient(at 52% 99%, rgba(5, 150, 105, 0.04) 0px, transparent 50%);
+                radial-gradient(at 52% 99%, rgba(5, 150, 105, 0.03) 0px, transparent 50%),
+                radial-gradient(at 70% 60%, rgba(217, 119, 6, 0.03) 0px, transparent 40%);
             color: #0F172A;
         }
 
@@ -4443,10 +4384,13 @@
         }
 
         [data-theme="light"] .sidebar {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(248, 250, 252, 0.78) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
         }
 
         [data-theme="light"] .sidebar::-webkit-scrollbar-track {
@@ -4460,13 +4404,16 @@
         }
 
         [data-theme="light"] .header {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
-            border-bottom-color: #E2E8F0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.75) 100%);
+            border-bottom-color: rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         [data-theme="light"] .header.scrolled {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
-            border-bottom-color: rgba(217, 119, 6, 0.2);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.88) 100%);
+            border-bottom-color: rgba(217, 119, 6, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         [data-theme="light"] .brand-text h1 {
@@ -4487,40 +4434,50 @@
         }
 
         [data-theme="light"] .back-btn {
-            background: rgba(0, 0, 0, 0.03);
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1.5px solid rgba(0, 0, 0, 0.06);
             color: #64748B;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         [data-theme="light"] .back-btn:hover {
             background: rgba(217, 119, 6, 0.08);
             color: #D97706;
-            border-color: rgba(217, 119, 6, 0.3);
+            border-color: rgba(217, 119, 6, 0.25);
+            box-shadow: 0 4px 16px rgba(217, 119, 6, 0.12);
         }
 
         [data-theme="light"] .nav-tab {
             color: #64748B;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.5);
         }
         [data-theme="light"] .nav-tab:hover {
-            background: rgba(217, 119, 6, 0.06);
+            background: rgba(217, 119, 6, 0.08);
             color: #D97706;
         }
         [data-theme="light"] .nav-tab.active {
-            background: rgba(217, 119, 6, 0.1);
+            background: rgba(255, 255, 255, 0.85);
             color: #D97706;
-            border-color: rgba(217, 119, 6, 0.3);
+            border-color: rgba(217, 119, 6, 0.25);
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
         /* Light mode cards */
         [data-theme="light"] .card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            backdrop-filter: none;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
         }
         [data-theme="light"] .card:hover {
-            border-color: rgba(217, 119, 6, 0.3);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(217, 119, 6, 0.1);
+            border-color: rgba(217, 119, 6, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                        0 0 0 1px rgba(217, 119, 6, 0.08);
         }
         [data-theme="light"] .card::after {
             background: linear-gradient(45deg, transparent 30%, rgba(217, 119, 6, 0.06) 50%, transparent 70%);
@@ -4530,23 +4487,26 @@
         [data-theme="light"] .frosted-glass,
         [data-theme="light"] .glass-premium,
         [data-theme="light"] .frosted-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: #E2E8F0;
-            box-shadow: var(--shadow-md);
-            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
         }
 
         /* Light mode inputs */
         [data-theme="light"] input,
         [data-theme="light"] select {
-            background: #F8FAFC !important;
+            background: rgba(255, 255, 255, 0.8) !important;
             color: #0F172A !important;
-            border: 2px solid #E2E8F0 !important;
+            border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
         }
         [data-theme="light"] input:focus,
         [data-theme="light"] select:focus {
             border-color: rgba(217, 119, 6, 0.5) !important;
-            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1) !important;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
             background: #FFFFFF !important;
         }
         [data-theme="light"] input:hover,
@@ -4561,21 +4521,26 @@
         [data-theme="light"] .btn-primary {
             background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
             color: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
         [data-theme="light"] .btn-primary:hover {
             background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
-            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.4);
+            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.35),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
         [data-theme="light"] .btn-secondary {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.7);
             color: #334155;
-            border: 2px solid #E2E8F0;
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         [data-theme="light"] .btn-secondary:hover {
-            border-color: rgba(217, 119, 6, 0.4);
+            border-color: rgba(217, 119, 6, 0.3);
             color: #D97706;
-            background: rgba(217, 119, 6, 0.04);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.1);
         }
         [data-theme="light"] .btn-success {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -4615,36 +4580,43 @@
 
         /* Light mode map buttons */
         [data-theme="light"] .map-btn {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             color: #334155;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         [data-theme="light"] .map-btn:hover {
             background: linear-gradient(135deg, #F59E0B, #D97706);
             color: #FFFFFF;
             border-color: #D97706;
-            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.3);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         /* Light mode feature toolbar */
         [data-theme="light"] .feature-toolbar {
-            background: #F8FAFC;
+            background: rgba(248, 250, 252, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         [data-theme="light"] .feature-btn {
-            background: #FFFFFF;
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             color: #64748B;
         }
         [data-theme="light"] .feature-btn:hover {
-            background: rgba(217, 119, 6, 0.04);
-            border-color: #D97706;
+            background: rgba(217, 119, 6, 0.06);
+            border-color: rgba(217, 119, 6, 0.25);
             color: #D97706;
         }
         [data-theme="light"] .feature-btn.active {
-            background: #D97706;
+            background: linear-gradient(135deg, #F59E0B, #D97706);
             border-color: #D97706;
             color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
         }
 
         /* Light mode quick summary */
@@ -4656,9 +4628,9 @@
         /* Light mode tabs */
         [data-theme="light"] .results-tabs .tab-btn,
         [data-theme="light"] .results-tab {
-            background: #F8FAFC;
+            background: rgba(255, 255, 255, 0.5);
             color: #64748B;
-            border-color: #E2E8F0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         [data-theme="light"] .results-tabs .tab-btn:hover,
         [data-theme="light"] .results-tab:hover {
@@ -4667,9 +4639,11 @@
         }
         [data-theme="light"] .results-tabs .tab-btn.active,
         [data-theme="light"] .results-tab.active {
-            background: rgba(217, 119, 6, 0.1);
+            background: rgba(255, 255, 255, 0.85);
             color: #D97706;
-            border-color: rgba(217, 119, 6, 0.4);
+            border-color: rgba(217, 119, 6, 0.25);
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
         /* Light mode status messages */
@@ -4682,7 +4656,9 @@
 
         /* Light mode loading overlay */
         [data-theme="light"] #loadingOverlay {
-            background: rgba(248, 250, 252, 0.92);
+            background: rgba(241, 245, 249, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         [data-theme="light"] #loadingText {
             color: #0F172A;
@@ -4696,8 +4672,8 @@
 
         /* Light mode chart container */
         [data-theme="light"] .chart-container {
-            background: #FFFFFF;
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
 
         /* Light mode slider */
@@ -4708,40 +4684,50 @@
 
         /* Light mode result items */
         [data-theme="light"] .result-item {
-            border-color: #E2E8F0;
+            border-color: rgba(0, 0, 0, 0.05);
         }
 
         /* Light mode obstacle items */
         [data-theme="light"] .obstacle-item,
         [data-theme="light"] .roof-section-item {
-            background: #F8FAFC;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         /* Light mode dashboard metrics */
         [data-theme="light"] .metric-card,
         [data-theme="light"] .dashboard-metrics .metric-card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            box-shadow: var(--shadow-sm);
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         /* Light mode AI chat */
         [data-theme="light"] .ai-chatbot-container {
-            background: #FFFFFF;
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         [data-theme="light"] .ai-chat-messages {
-            background: #F8FAFC;
+            background: rgba(248, 250, 252, 0.6);
         }
         [data-theme="light"] .ai-chat-input {
-            background: #F8FAFC !important;
-            border-color: #E2E8F0 !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1.5px solid rgba(0, 0, 0, 0.08) !important;
             color: #0F172A !important;
         }
         [data-theme="light"] .chat-message.assistant {
-            background: #F1F5F9;
+            background: rgba(255, 255, 255, 0.7);
             color: #0F172A;
-            border-color: #E2E8F0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         [data-theme="light"] .chat-message.user {
             background: linear-gradient(135deg, #D97706, #B45309);
@@ -4750,9 +4736,11 @@
 
         /* Light mode suggestion chips */
         [data-theme="light"] .suggestion-chip {
-            background: #FFFFFF;
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             color: #64748B;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         [data-theme="light"] .suggestion-chip i {
             color: #D97706;
@@ -4766,12 +4754,16 @@
 
         /* Light mode investment card */
         [data-theme="light"] .investment-card {
-            background: #FFFFFF;
-            border-color: #E2E8F0;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
         [data-theme="light"] .investment-metric {
-            background: #F8FAFC;
-            border-color: #E2E8F0;
+            background: rgba(248, 250, 252, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
         [data-theme="light"] .rating-score-track {
             background: #E2E8F0;
@@ -4779,9 +4771,12 @@
 
         /* Light mode shading & drawing indicators */
         [data-theme="light"] .shading-info-box {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.85);
             color: #0F172A;
-            border-color: rgba(217, 119, 6, 0.3);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
         [data-theme="light"] .drawing-mode-indicator {
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
@@ -4799,8 +4794,11 @@
 
         /* Light mode map controls */
         [data-theme="light"] .leaflet-control-layers {
-            background: #FFFFFF !important;
-            border-color: #E2E8F0 !important;
+            background: rgba(255, 255, 255, 0.85) !important;
+            border: 1px solid rgba(0, 0, 0, 0.06) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06) !important;
         }
 
         /* Light mode weather card — keep the blue gradient, just adjust slightly */
@@ -4853,14 +4851,16 @@
             transform: rotate(15deg);
         }
         [data-theme="light"] .theme-toggle {
-            border-color: #E2E8F0;
-            background: rgba(0, 0, 0, 0.03);
+            border: 1.5px solid rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.6);
             color: #64748B;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         [data-theme="light"] .theme-toggle:hover {
-            background: rgba(217, 119, 6, 0.08);
+            background: rgba(217, 119, 6, 0.1);
             color: #D97706;
-            border-color: rgba(217, 119, 6, 0.3);
+            border-color: rgba(217, 119, 6, 0.25);
         }
 
     </style>
@@ -4904,9 +4904,6 @@
     <div class="app-container">
         <!-- Sidebar -->
         <nav class="sidebar" role="navigation" aria-label="Solar analysis controls">
-            <!-- Resize Handle -->
-            <div class="sidebar-resize-handle" id="sidebarResizeHandle" aria-hidden="true"></div>
-            
             <!-- Header -->
             <div class="header">
                 <div class="header-top">
@@ -4922,7 +4919,7 @@
                     <div class="logo">
                         <img src="assets/images/logo.png" alt="SolarVision" 
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            style="height: 44px; width: auto; filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));">
+                            style="height: 52px; width: auto; filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
                             <path
                                 d="M12 3V1M12 23V21M21 12H23M1 12H3M18.364 5.636L19.778 4.222M4.222 19.778L5.636 18.364M18.364 18.364L19.778 19.778M4.222 4.222L5.636 5.636"
@@ -9573,71 +9570,6 @@ ${systemContext}`
             
             initMap();
             initTiltSlider();
-            
-            // --- Sidebar resize handle ---
-            (function() {
-                const handle = document.getElementById('sidebarResizeHandle');
-                const sidebar = document.querySelector('.sidebar');
-                if (!handle || !sidebar) return;
-
-                let isDragging = false;
-                let startX = 0;
-                let startWidth = 0;
-
-                handle.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    isDragging = true;
-                    startX = e.clientX;
-                    startWidth = sidebar.getBoundingClientRect().width;
-                    document.body.classList.add('sidebar-resizing');
-                    handle.classList.add('active');
-                });
-
-                document.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    const delta = e.clientX - startX;
-                    const newWidth = Math.max(280, Math.min(600, startWidth + delta));
-                    sidebar.style.width = newWidth + 'px';
-                });
-
-                document.addEventListener('mouseup', () => {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    document.body.classList.remove('sidebar-resizing');
-                    handle.classList.remove('active');
-                    // Invalidate map size after resize
-                    if (window.map) {
-                        setTimeout(() => window.map.invalidateSize(), 100);
-                    }
-                });
-
-                // Touch support for mobile/tablet
-                handle.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    isDragging = true;
-                    startX = e.touches[0].clientX;
-                    startWidth = sidebar.getBoundingClientRect().width;
-                    document.body.classList.add('sidebar-resizing');
-                    handle.classList.add('active');
-                }, { passive: false });
-
-                document.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    const delta = e.touches[0].clientX - startX;
-                    const newWidth = Math.max(280, Math.min(600, startWidth + delta));
-                    sidebar.style.width = newWidth + 'px';
-                });
-
-                document.addEventListener('touchend', () => {
-                    if (!isDragging) return;
-                    isDragging = false;
-                    document.body.classList.remove('sidebar-resizing');
-                    handle.classList.remove('active');
-                    if (window.map) {
-                        setTimeout(() => window.map.invalidateSize(), 100);
-                    }
-                });
-            })();
 
             // Delay status message slightly for smoother UX
             setTimeout(() => {
