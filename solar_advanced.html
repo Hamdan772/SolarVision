@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarVision | Professional Solar Analysis Platform</title>
     <meta name="description" content="Professional rooftop solar analysis with satellite mapping, NASA weather data, AI-powered insights, financial projections, and environmental impact metrics.">
-    <meta name="theme-color" content="#070B14">
+    <meta name="theme-color" content="#1f1d01">
     <meta property="og:title" content="SolarVision — Professional Solar Calculator">
     <meta property="og:description" content="Analyze your rooftop solar potential with satellite imagery, NASA data & AI. Get energy estimates, savings projections, and environmental impact.">
     <meta property="og:type" content="website">
@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Geist:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
@@ -53,36 +53,36 @@
         }
 
         :root {
-            /* Premium Dark Mode Palette */
-            --primary: #FACC15;
-            --primary-light: #FDE047;
-            --primary-dark: #EAB308;
-            --accent: #FBBF24;
-            --accent-light: #FDE68A;
-            --secondary: #EAB308;
-            --secondary-light: #FDE047;
-            --bg: #070B14;
-            --bg-alt: #151B2D;
-            --bg-elevated: #1E293B;
-            --bg-subtle: #334155;
-            --bg-card: #151B2D;
-            --border: #1E293B;
-            --border-light: #334155;
-            --text: #FFFFFF;
-            --text-secondary: #F1F5F9;
-            --text-muted: #94A3B8;
-            --success: #10B981;
-            --success-light: #86EFAC;
-            --warning: #FCD34D;
-            --error: #FB7185;
-            --blue: #60A5FA;
-            --purple: #A78BFA;
+            /* Adnaut Command Center Palette */
+            --primary: #ffe900;
+            --primary-light: #ffff4d;
+            --primary-dark: #e6d400;
+            --accent: #ffe900;
+            --accent-light: #ffff4d;
+            --secondary: #00ff1a;
+            --secondary-light: #66ff66;
+            --bg: #1f1d01;
+            --bg-alt: #282828;
+            --bg-elevated: #333333;
+            --bg-subtle: #404040;
+            --bg-card: #2a2a2a;
+            --border: #404040;
+            --border-light: #555555;
+            --text: #d7d7d7;
+            --text-secondary: #e0e0e0;
+            --text-muted: #707070;
+            --success: #00ff1a;
+            --success-light: #66ff66;
+            --warning: #ffe900;
+            --error: #ff3333;
+            --blue: #00ccff;
+            --purple: #cc99ff;
             
-            /* Premium Shadows */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
-            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.8);
-            --shadow-glow: 0 0 40px rgba(250, 204, 21, 0.3);
+            /* Adnaut Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.7);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.8);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.9);
+            --shadow-glow: 0 0 40px rgba(255, 233, 0, 0.25);
             
             /* Timing Functions - Premium Smooth */
             --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -139,7 +139,7 @@
             z-index: 100000;
             padding: 12px 24px;
             background: var(--primary);
-            color: #070B14;
+            color: #1f1d01;
             font-weight: 700;
             border-radius: 0 0 8px 8px;
             text-decoration: none;
@@ -882,14 +882,14 @@
         }
 
         body {
-            font-family: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
             height: 100vh;
             overflow: hidden;
-            background: #070B14;
+            background: #1f1d01;
             background-image: 
-                radial-gradient(at 27% 37%, rgba(250, 204, 21, 0.12) 0px, transparent 50%),
-                radial-gradient(at 97% 21%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
-                radial-gradient(at 52% 99%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+                radial-gradient(at 27% 37%, rgba(255, 233, 0, 0.08) 0px, transparent 50%),
+                radial-gradient(at 97% 21%, rgba(0, 255, 26, 0.05) 0px, transparent 50%),
+                radial-gradient(at 52% 99%, rgba(0, 204, 255, 0.04) 0px, transparent 50%);
             color: var(--text);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
