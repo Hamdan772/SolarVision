@@ -1,3844 +1,722 @@
 <!DOCTYPE html>
-<html lang="en" style="scroll-behavior: smooth;">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SolarVision - AI-Powered Global Rooftop Solar Analysis</title>
+    <title>SolarVision — AI-Powered Rooftop Solar Analysis</title>
     <meta name="description" content="Unlock rooftop solar potential with AI. Get instant solar analysis, financial insights, and CO₂ reduction metrics powered by satellite technology.">
-    <meta name="theme-color" content="#070B14">
+    <meta name="theme-color" content="#1f1d01">
     <meta property="og:title" content="SolarVision — AI-Powered Rooftop Solar Analysis">
     <meta property="og:description" content="Instant rooftop solar analysis using NASA data, satellite imagery & AI. Get energy estimates, savings projections, and environmental impact in seconds.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://solarvision.vercel.app">
-    <meta name="twitter:card" content="summary_large_image">
     <meta name="robots" content="index, follow">
     <meta name="author" content="SolarVision">
     <link rel="canonical" href="https://solarvision.vercel.app">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
     
-    <!-- Preconnect for performance -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Structured Data (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "SolarVision",
-      "url": "https://solarvision.vercel.app",
-      "description": "AI-powered rooftop solar analysis using NASA data, satellite imagery & AI. Get energy estimates, savings projections, and environmental impact in seconds.",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "creator": {
-        "@type": "Organization",
-        "name": "SolarVision"
-      }
-    }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Archivo:wght@100;300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        *, *::before, *::after {
+        :root {
+            /* Adnaut Color System */
+            --color-deep-space: #1f1d01;
+            --color-charcoal-canvas: #282828;
+            --color-graphite: #707070;
+            --color-silver-text: #d7d7d7;
+            --color-pure-white: #ffffff;
+            --color-smoke: #c0c0c0;
+            --color-pale-mist: #f2f2f2;
+            --color-ink-black: #000000;
+            --color-adnaut-gold: #ffe900;
+            --color-terminal-green: #00ff1a;
+            
+            /* Typography */
+            --font-geist: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-archivo: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-geistmono: 'Space Mono', monospace;
+            
+            /* Spacing */
+            --spacing-8: 8px;
+            --spacing-16: 16px;
+            --spacing-24: 24px;
+            --spacing-32: 32px;
+            --spacing-48: 48px;
+            --spacing-64: 64px;
+            
+            /* Border Radius */
+            --radius-sm: 3.69px;
+            --radius-md: 4px;
+            --radius-lg: 16px;
+            --radius-2xl: 24px;
+            
+            /* Section gap */
+            --section-gap: 48px;
+        }
+
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            /* Core Colors - Deep Navy Dark Mode */
-            --bg-primary: #070B14;
-            --bg-secondary: #0D1321;
-            --bg-tertiary: #131B2E;
-            --bg-card: rgba(19, 27, 46, 0.7);
-            
-            /* Accent Colors */
-            --solar-yellow: #FACC15;
-            --solar-gold: #F59E0B;
-            --solar-amber: #FDE047;
-            --electric-blue: #3B82F6;
-            --sky-blue: #60A5FA;
-            --emerald: #10B981;
-            --teal: #14B8A6;
-            
-            /* Text Colors */
-            --text-primary: #FFFFFF;
-            --text-secondary: #E2E8F0;
-            --text-muted: #94A3B8;
-            --text-dim: #64748B;
-            
-            /* Borders & Effects */
-            --border-subtle: rgba(255, 255, 255, 0.06);
-            --border-light: rgba(255, 255, 255, 0.1);
-            --border-glow: rgba(250, 204, 21, 0.3);
-            
-            /* Gradients */
-            --gradient-solar: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
-            --gradient-blue: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
-            --gradient-emerald: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
-            --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
-            
-            /* Glass Effects */
-            --glass-bg: rgba(255, 255, 255, 0.04);
-            --glass-blur: blur(24px);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            
-            /* Shadows */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.5);
-            --shadow-glow-yellow: 0 0 40px rgba(250, 204, 21, 0.15);
-            --shadow-glow-blue: 0 0 40px rgba(59, 130, 246, 0.15);
-            
-            /* Timing */
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Global Smooth Scrolling & Transitions */
-        * {
-            scroll-behavior: smooth;
-        }
-
         html {
             scroll-behavior: smooth;
+            background: var(--color-deep-space);
         }
-        
-        /* Ultra-smooth scrolling on macOS */
-        @supports (-webkit-overflow-scrolling: touch) {
-            html { -webkit-overflow-scrolling: touch; }
-        }
-        
-        /* Page Loading Animation */
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: var(--font-geist);
+            background: var(--color-deep-space);
+            color: var(--color-silver-text);
+            line-height: 1.5;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            opacity: 0;
-            animation: pageLoad 0.8s ease-out 2.5s forwards;
-        }
-        
-        @keyframes pageLoad {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
         }
 
-        /* ========== FOCUS-VISIBLE ACCESSIBILITY ========== */
-        *:focus-visible {
-            outline: 2px solid var(--solar-yellow);
-            outline-offset: 3px;
-            border-radius: 4px;
-        }
-
-        /* Skip to content link for screen readers */
+        /* ========== SKIP LINK ========== */
         .skip-link {
             position: absolute;
-            top: -100%;
+            top: -40px;
             left: 16px;
             z-index: 10001;
-            padding: 12px 24px;
-            background: var(--solar-yellow);
-            color: var(--bg-primary);
-            font-weight: 700;
+            padding: 8px 16px;
+            background: var(--color-adnaut-gold);
+            color: var(--color-ink-black);
+            font-weight: 600;
             font-size: 14px;
-            border-radius: 0 0 12px 12px;
+            border-radius: var(--radius-md);
             text-decoration: none;
-            transition: top 0.3s ease;
         }
 
         .skip-link:focus {
-            top: 0;
+            top: 16px;
         }
 
-        /* ========== PAGE TRANSITION ========== */
-        .page-transition {
-            position: fixed;
-            inset: 0;
-            z-index: 99998;
-            background: var(--bg-primary);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        *:focus-visible {
+            outline: 2px solid var(--color-adnaut-gold);
+            outline-offset: 2px;
         }
 
-        .page-transition.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ========== SKELETON LOADERS ========== */
-        .skeleton {
-            background: linear-gradient(90deg,
-                rgba(255, 255, 255, 0.04) 25%,
-                rgba(255, 255, 255, 0.08) 50%,
-                rgba(255, 255, 255, 0.04) 75%);
-            background-size: 200% 100%;
-            animation: skeletonShimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-
-        @keyframes skeletonShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .skeleton-text {
-            height: 14px;
-            margin-bottom: 8px;
-            width: 80%;
-        }
-
-        .skeleton-text.short {
-            width: 50%;
-        }
-
-        .skeleton-card {
-            height: 200px;
-            border-radius: 20px;
-        }
-
-        .skeleton-chart {
-            height: 280px;
-            border-radius: 16px;
-        }
-
-        /* ========== REDUCED MOTION ========== */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-
-            .orb, .particle, .float-card {
-                animation: none !important;
-            }
-
-            .hero-image {
-                animation: none !important;
-            }
-
-            .skeleton {
-                animation: none !important;
-                background: rgba(255, 255, 255, 0.06);
-            }
-        }
-        
-        /* ========== PREMIUM LOADING SCREEN ========== */
-        .premium-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #070B14 0%, #0D1321 50%, #070B14 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-        
-        .premium-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        
-        .loader-container {
-            text-align: center;
-            position: relative;
-        }
-        
-        .loader-logo-wrapper {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 32px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .loader-logo-wrapper img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 40px rgba(250, 204, 21, 0.7));
-            animation: logoPulseMain 2s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .loader-ring-outer,
-        .loader-ring-inner {
-            display: none;
-        }
-        
-        @keyframes logoPulseMain {
-            0%, 100% { 
-                transform: scale(1); 
-                filter: drop-shadow(0 0 40px rgba(250, 204, 21, 0.7)); 
-            }
-            50% { 
-                transform: scale(1.08); 
-                filter: drop-shadow(0 0 60px rgba(250, 204, 21, 1)); 
-            }
-        }
-        
-        .loader-brand {
-            display: none;
-        }
-        
-        .loader-tagline {
-            display: none;
-        }
-        
-        .loader-progress-track {
-            width: 260px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            margin: 0 auto;
-            overflow: hidden;
-            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4),
-                        0 0 20px rgba(250, 204, 21, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(8px);
-        }
-        
-        .loader-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #FACC15, #FDE047, #F59E0B, #FACC15);
-            background-size: 300% 100%;
-            border-radius: 20px;
-            animation: progressFill 2s ease-in-out forwards, shimmerEffect 0.8s linear infinite;
-            box-shadow: 0 0 20px rgba(250, 204, 21, 0.6),
-                        0 0 40px rgba(250, 204, 21, 0.3),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-        
-        @keyframes progressFill {
-            0% { width: 0%; }
-            30% { width: 35%; }
-            60% { width: 70%; }
-            100% { width: 100%; }
-        }
-        
-        @keyframes shimmerEffect {
-            to { background-position: -200% 0; }
-        }
-        
-        /* Smooth Reveal Animation Classes */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
-        }
-        
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .reveal-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
-        }
-        
-        .reveal-left.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .reveal-right {
-            opacity: 0;
-            transform: translateX(50px);
-            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
-        }
-        
-        .reveal-right.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .reveal-scale {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
-        }
-        
-        .reveal-scale.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        /* Staggered animations */
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
-        .stagger-5 { transition-delay: 0.5s; }
-        .stagger-6 { transition-delay: 0.6s; }
-
-        /* ===== ANIMATED BACKGROUND ===== */
-        .bg-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: 0;
-            pointer-events: none;
-            animation: gridFade 2s ease-out forwards;
-            opacity: 0;
-        }
-        
-        @keyframes gridFade {
-            to { opacity: 1; }
-        }
-        
-        /* Premium Noise Texture Overlay */
-        .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.015;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
-        }
-
-        .bg-orbs {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0;
-            animation: orbFloat 25s ease-in-out infinite, orbFadeIn 1.5s ease-out forwards;
-        }
-        
-        @keyframes orbFadeIn {
-            to { opacity: 0.4; }
-        }
-
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.35) 0%, transparent 70%);
-            top: -200px;
-            left: -200px;
-            animation-delay: 0s, 0.3s;
-        }
-
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
-            top: 40%;
-            right: -150px;
-            animation-delay: -8s, 0.5s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
-            bottom: -100px;
-            left: 30%;
-            animation-delay: -16s, 0.7s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            25% { transform: translate(40px, -40px) scale(1.08) rotate(5deg); }
-            50% { transform: translate(-30px, 30px) scale(0.95) rotate(-5deg); }
-            75% { transform: translate(30px, 15px) scale(1.05) rotate(3deg); }
-        }
-
-        /* Particle Grid - Hidden for cleaner look */
-        .particle-container {
-            display: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--solar-yellow);
-            border-radius: 50%;
-            opacity: 0;
-            animation: particleRise 15s linear infinite;
-            box-shadow: 0 0 6px rgba(250, 204, 21, 0.5);
-        }
-
-        @keyframes particleRise {
-            0% { opacity: 0; transform: translateY(100vh) scale(0); }
-            5% { opacity: 0.7; }
-            95% { opacity: 0.7; }
-            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
-        }
-        
-        /* Floating Glow Dots - Hidden for cleaner look */
-        .glow-dot {
-            display: none;
-        }
-
-        /* ===== NAVIGATION ===== */
+        /* ========== NAVIGATION ========== */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 12px 60px;
+            padding: var(--spacing-24) 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(7, 11, 20, 0.6);
-            backdrop-filter: blur(32px) saturate(200%);
-            -webkit-backdrop-filter: blur(32px) saturate(200%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04),
-                        0 4px 24px rgba(0,0,0,0.2);
-            transition: all 0.4s var(--ease-smooth);
-            transform: translateY(-100%);
-            animation: navSlideIn 0.8s var(--ease-out) 0.5s forwards;
-        }
-        
-        @keyframes navSlideIn {
-            to { transform: translateY(0); }
+            background: linear-gradient(180deg, rgba(31, 29, 1, 0.95) 0%, rgba(31, 29, 1, 0.8) 100%);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--color-graphite);
+            transition: all 0.3s ease;
         }
 
         nav.scrolled {
-            padding: 10px 60px;
-            background: rgba(7, 11, 20, 0.97);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(250, 204, 21, 0.05);
-            border-bottom-color: rgba(250, 204, 21, 0.08);
+            padding: var(--spacing-16) 60px;
+            border-bottom-color: var(--color-adnaut-gold);
+            border-bottom-color: rgba(255, 233, 0, 0.2);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: var(--spacing-16);
             text-decoration: none;
+            transition: all 0.3s ease;
         }
-        
-        .logo-img {
-            height: 52px;
-            width: auto;
-            object-fit: contain;
-            transition: all 0.3s var(--ease-out);
-            filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.5));
-        }
-        
-        .logo:hover .logo-img {
-            transform: scale(1.08);
-            filter: drop-shadow(0 0 30px rgba(250, 204, 21, 0.7));
+
+        .logo:hover {
+            opacity: 0.8;
         }
 
         .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-solar);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
-            transition: all 0.3s var(--ease-out);
-        }
-        
-        .logo:hover .logo-icon {
-            transform: rotate(-5deg) scale(1.05);
-            box-shadow: 0 8px 30px rgba(250, 204, 21, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-        }
-
-        .logo-icon svg {
-            width: 26px;
-            height: 26px;
-            fill: var(--bg-primary);
+            font-size: 32px;
+            line-height: 1;
         }
 
         .logo-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--solar-yellow);
+            font-family: var(--font-archivo);
+            font-size: 24px;
+            font-weight: 300;
+            color: var(--color-pure-white);
             letter-spacing: -0.5px;
         }
 
-        .logo-text span {
-            color: var(--text-primary);
+        .logo-text strong {
+            font-weight: 600;
+            color: var(--color-adnaut-gold);
         }
 
         .nav-links {
             display: flex;
-            align-items: center;
-            gap: 44px;
+            gap: var(--spacing-48);
+            list-style: none;
         }
 
-        .nav-links a {
-            color: var(--text-muted);
+        .nav-link {
+            font-family: var(--font-geistmono);
+            font-size: 14px;
+            color: var(--color-silver-text);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            position: relative;
-            letter-spacing: 0.2px;
-            padding: 8px 0;
+            transition: color 0.3s ease;
+            font-weight: 400;
         }
 
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-solar);
-            transition: all 0.3s var(--ease-out);
-            border-radius: 1px;
-            transform: translateX(-50%);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            height: 4px;
-            background: var(--solar-yellow);
-            border-radius: 50%;
-            transform: translateX(-50%) scale(0);
-            transition: transform 0.3s var(--ease-out);
-            opacity: 0;
-        }
-        
-        .nav-links a:hover::before {
-            transform: translateX(-50%) scale(1);
-            opacity: 1;
-            bottom: -8px;
+        .nav-link:hover {
+            color: var(--color-adnaut-gold);
         }
 
         .nav-cta {
-            padding: 12px 28px;
-            background: var(--gradient-solar);
-            color: var(--bg-primary);
-            font-weight: 700;
-            font-size: 15px;
-            border: none;
-            border-radius: 12px;
+            background: var(--color-adnaut-gold);
+            color: var(--color-ink-black);
+            padding: var(--spacing-16) var(--spacing-32);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s var(--ease-out);
-            box-shadow: 0 4px 20px rgba(250, 204, 21, 0.35);
-            letter-spacing: 0.3px;
+            border: none;
+            transition: all 0.3s ease;
+            font-family: var(--font-geist);
         }
 
         .nav-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 32px rgba(250, 204, 21, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 233, 0, 0.3);
         }
 
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        /* Mobile Hamburger Menu */
-        .mobile-menu-btn {
-            display: none;
-            width: 44px;
-            height: 44px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 22px;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn:hover {
-            color: var(--text-primary);
-            background: var(--glass-bg);
-        }
-
-        .mobile-nav-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 1999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .mobile-nav-overlay.active {
-            opacity: 1;
-        }
-
-        .mobile-nav-panel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            border-left: 1px solid var(--border-subtle);
-            z-index: 2000;
-            transform: translateX(100%);
-            transition: transform 0.35s var(--ease-out);
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-        }
-
-        .mobile-nav-panel.active {
-            transform: translateX(0);
-        }
-
-        .mobile-nav-close {
-            align-self: flex-end;
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: var(--glass-bg);
-            border-radius: 12px;
-            color: var(--text-muted);
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 32px;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-nav-close:hover {
-            background: rgba(250, 204, 21, 0.1);
-            color: var(--solar-yellow);
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .mobile-nav-links a {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 16px 20px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 16px;
-            border-radius: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-nav-links a i {
-            width: 20px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-
-        .mobile-nav-links a:hover,
-        .mobile-nav-links a:active {
-            background: rgba(250, 204, 21, 0.08);
-            color: var(--solar-yellow);
-        }
-
-        .mobile-nav-links a:hover i {
-            color: var(--solar-yellow);
-        }
-
-        .mobile-nav-cta {
-            margin-top: auto;
-            padding: 18px 24px;
-            background: var(--gradient-solar);
-            color: var(--bg-primary) !important;
-            font-weight: 700 !important;
-            border-radius: 16px !important;
-            text-align: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.3);
-        }
-
-        /* ===== HERO SECTION ===== */
+        /* ========== HERO SECTION ========== */
         .hero {
+            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 80px 40px 40px;
-            position: relative;
+            justify-content: center;
+            padding: var(--spacing-48) 60px;
+            margin-top: 80px;
+            background: var(--color-deep-space);
             overflow: hidden;
         }
 
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 233, 0, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            left: -200px;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 233, 0, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -100px;
+            right: -100px;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
         .hero-content {
-            max-width: 1520px;
-            width: 100%;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 48px;
-            align-items: center;
             position: relative;
             z-index: 1;
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px 10px 14px;
-            background: rgba(59, 130, 246, 0.06);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(59, 130, 246, 0.12);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--sky-blue);
-            margin-bottom: 28px;
-            animation: badgePulse 3s ease-in-out infinite;
-            letter-spacing: 0.3px;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-        }
-        
-        @keyframes badgePulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-            50% { box-shadow: 0 0 20px 2px rgba(59, 130, 246, 0.15); }
-        }
-
-        .hero-badge i {
-            font-size: 13px;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(59, 130, 246, 0.12);
-            border-radius: 50%;
+        .hero-label {
+            font-family: var(--font-geistmono);
+            font-size: 14px;
+            color: var(--color-terminal-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-24);
+            font-weight: 400;
         }
 
         .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 78px;
-            font-weight: 800;
-            line-height: 1.02;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-            letter-spacing: -2.5px;
-            text-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
+            font-family: var(--font-archivo);
+            font-size: 64px;
+            font-weight: 300;
+            color: var(--color-pure-white);
+            line-height: 1;
+            margin-bottom: var(--spacing-24);
+            letter-spacing: -0.5px;
         }
 
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, #FACC15 0%, #FDE047 50%, #FACC15 100%);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-            display: inline-block;
-            animation: gradientShift 3s ease-in-out infinite;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        .hero h1 .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: 6px;
-            left: 0;
-            width: 100%;
-            height: 8px;
-            background: linear-gradient(90deg, 
-                rgba(250, 204, 21, 0.3), 
-                rgba(250, 204, 21, 0.15)
-            );
-            border-radius: 4px;
-            z-index: -1;
-            transform: scaleX(0);
-            transform-origin: left;
-            animation: underlineGrow 1s var(--ease-out) 1.2s forwards;
-        }
-        
-        @keyframes underlineGrow {
-            to { transform: scaleX(1); }
-        }
-        
-        /* Text Shimmer Animation */
-        .text-shimmer {
-            background: linear-gradient(
-                120deg,
-                var(--text-primary) 0%,
-                var(--text-primary) 40%,
-                var(--solar-yellow) 50%,
-                var(--text-primary) 60%,
-                var(--text-primary) 100%
-            );
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textShimmer 3s ease-in-out infinite;
-        }
-        
-        @keyframes textShimmer {
-            0% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .hero h1 strong {
+            font-weight: 600;
+            color: var(--color-adnaut-gold);
         }
 
-        .hero p {
-            font-size: 20px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 32px;
-            max-width: 620px;
-            font-weight: 400;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Animated Counter */
-        .stat-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            letter-spacing: -1px;
+        .hero-description {
+            font-size: 18px;
+            color: var(--color-silver-text);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-48);
+            line-height: 1.5;
+            font-weight: 300;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        /* Hero Background Map */
-        .hero-bg-map {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60%;
-            height: 100%;
-            background: radial-gradient(ellipse at 70% 50%, rgba(250, 204, 21, 0.03) 0%, transparent 60%);
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        
-        /* Hero Trust Section */
-        .hero-trust {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-            padding: 14px 0;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        
-        .trust-label {
-            font-size: 12px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        
-        .trust-logos {
-            display: flex;
-            gap: 24px;
-        }
-        
-        .trust-logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px;
-            font-size: 12px;
-            color: var(--text-muted);
-            transition: all 0.3s ease;
-        }
-        
-        .trust-logo i {
-            color: var(--solar-yellow);
-            font-size: 14px;
-        }
-        
-        .trust-logo:hover {
-            background: rgba(250, 204, 21, 0.08);
-            border-color: rgba(250, 204, 21, 0.2);
-        }
-        
-        /* Large Pulse Button */
-        .btn-large {
-            padding: 24px 52px;
-            font-size: 18px;
-            border-radius: 16px;
-        }
-        
-        .pulse-glow {
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 8px 32px rgba(250, 204, 21, 0.35), inset 0 1px 0 rgba(255,255,255,0.2); }
-            50% { box-shadow: 0 8px 48px rgba(250, 204, 21, 0.5), 0 0 60px rgba(250, 204, 21, 0.2), inset 0 1px 0 rgba(255,255,255,0.2); }
-        }
-        
-        .pulse-glow:hover {
-            animation: none;
+            gap: var(--spacing-24);
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 18px 36px;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-geist);
+            font-size: 16px;
             font-weight: 600;
-            font-size: 15px;
-            border-radius: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s var(--ease-out);
             border: none;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
-            color: #070B14;
-            font-weight: 700;
-            box-shadow: 0 12px 40px rgba(250, 204, 21, 0.4), 
-                        inset 0 1px 0 rgba(255,255,255,0.3);
-        }
-        
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s ease;
-        }
-        
-        .btn-primary:hover::before {
-            left: 100%;
+            background: var(--color-adnaut-gold);
+            color: var(--color-ink-black);
         }
 
         .btn-primary:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 56px rgba(250, 204, 21, 0.5),
-                        0 0 60px rgba(250, 204, 21, 0.3),
-                        inset 0 1px 0 rgba(255,255,255,0.4);
-            background: linear-gradient(135deg, #FDE047 0%, #FACC15 100%);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 12px 32px rgba(250, 204, 21, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(255, 233, 0, 0.4);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            border: 1.5px solid var(--border-light);
-            backdrop-filter: blur(10px);
+            background: transparent;
+            color: var(--color-silver-text);
+            border: 1px solid var(--color-graphite);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--border-glow);
-            transform: translateY(-3px);
-        }
-        
-        .btn-secondary:active {
-            transform: translateY(-1px);
-        }
-        
-        /* Button Ripple Effect */
-        .btn {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0);
-            animation: rippleEffect 0.6s linear;
-            pointer-events: none;
-        }
-        
-        @keyframes rippleEffect {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
+            border-color: var(--color-adnaut-gold);
+            color: var(--color-adnaut-gold);
         }
 
-        /* Hero Stats */
-        .hero-stats {
-            display: flex;
-            gap: 48px;
-            padding-top: 20px;
-            margin-top: 20px;
-            border-top: 2px solid rgba(250, 204, 21, 0.15);
-        }
-
-        .stat-item {
-            text-align: left;
-            position: relative;
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-item:hover {
-            transform: translateY(-4px);
-        }
-        
-        .stat-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            right: -28px;
-            top: 50%;
-            transform: translateY(-50%);
-            height: 48px;
-            width: 2px;
-            background: linear-gradient(180deg, 
-                transparent, 
-                rgba(250, 204, 21, 0.3) 50%, 
-                transparent
-            );
-        }
-
-        .stat-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 48px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            letter-spacing: -1.5px;
-            text-shadow: 0 2px 20px rgba(250, 204, 21, 0.2);
-        }
-
-        .stat-value .accent {
-            color: var(--solar-yellow);
-            background: linear-gradient(135deg, #FACC15 0%, #FDE047 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-        
-        /* Trust Badges */
-        .trust-badges {
-            display: flex;
-            gap: 16px;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .trust-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(16px) saturate(150%);
-            -webkit-backdrop-filter: blur(16px) saturate(150%);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-        
-        .trust-badge:hover {
-            transform: translateY(-2px);
-            background: rgba(255,255,255,0.07);
-            border-color: rgba(250, 204, 21, 0.2);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15),
-                        0 0 20px rgba(250, 204, 21, 0.08),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-        }
-        
-        .trust-badge i {
-            color: var(--emerald);
-            font-size: 15px;
-        }
-
-        /* Hero Visual */
-        .hero-visual {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-image {
-            width: 100%;
-            max-width: 680px;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg), var(--shadow-glow-blue), 0 0 80px rgba(250, 204, 21, 0.1);
-            border: 2px solid rgba(250, 204, 21, 0.2);
-            transition: all 0.6s var(--ease-out);
-            animation: imageFloat 6s ease-in-out infinite;
-        }
-        
-        @keyframes imageFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .hero-image:hover {
-            box-shadow: var(--shadow-lg), 0 0 60px rgba(250, 204, 21, 0.3), 0 0 100px rgba(59, 130, 246, 0.2);
-            border-color: rgba(250, 204, 21, 0.4);
-            animation-play-state: paused;
-        }
-
-        /* Floating Cards — Liquid Glass */
-        .float-card {
-            position: absolute;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 16px 40px rgba(0,0,0,0.3), 
-                        0 0 20px rgba(250, 204, 21, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-            animation: cardFloat 6s ease-in-out infinite;
-            transition: all 0.4s var(--ease-out);
-        }
-        
-        .float-card:hover {
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 
-                        0 0 40px rgba(250, 204, 21, 0.12),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border-color: rgba(250, 204, 21, 0.25);
-        }
-
-        .float-card-1 {
-            top: 10%;
-            left: -20px;
-            animation-delay: 0s;
-        }
-
-        .float-card-2 {
-            bottom: 15%;
-            right: -30px;
-            animation-delay: -2s;
-        }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-8px) rotate(0.5deg); }
-            50% { transform: translateY(-15px) rotate(-0.5deg); }
-            75% { transform: translateY(-8px) rotate(0.5deg); }
-        }
-
-        .float-card-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 14px;
-            font-size: 22px;
-            transition: transform 0.3s var(--ease-out);
-        }
-        
-        .float-card:hover .float-card-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .float-card-icon.yellow {
-            background: rgba(250, 204, 21, 0.15);
-            color: var(--solar-yellow);
-            box-shadow: 0 4px 16px rgba(250, 204, 21, 0.2);
-        }
-
-        .float-card-icon.green {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--emerald);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
-        }
-
-        .float-card-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .float-card-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        /* ===== SAMPLE RESULTS PREVIEW ===== */
-        .sample-results {
-            padding: 80px 60px 120px;
+        /* ========== FEATURES SECTION ========== */
+        .features-section {
+            padding: var(--section-gap) 60px;
+            background: var(--color-deep-space);
             position: relative;
             z-index: 1;
-        }
-        
-        .sample-results-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 32px;
-            padding: 48px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .sample-results-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-solar);
-        }
-        
-        .sample-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            background: rgba(250, 204, 21, 0.1);
-            border: 1px solid rgba(250, 204, 21, 0.2);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--solar-yellow);
-            margin-bottom: 36px;
-        }
-        
-        .sample-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        .sample-card {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 28px;
-            text-align: center;
-            transition: all 0.4s var(--ease-out);
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06),
-                        inset 0 -1px 0 rgba(255,255,255,0.02),
-                        0 8px 32px rgba(0,0,0,0.15);
-        }
-
-        .sample-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-            pointer-events: none;
-        }
-        
-        .sample-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(250, 204, 21, 0.2);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1),
-                        inset 0 -1px 0 rgba(255,255,255,0.03),
-                        0 20px 40px rgba(0,0,0,0.25),
-                        0 0 40px rgba(250,204,21,0.05);
-        }
-        
-        .sample-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 22px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-        
-        .sample-icon.yellow {
-            background: rgba(250, 204, 21, 0.15);
-            color: var(--solar-yellow);
-        }
-        
-        .sample-icon.green {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--emerald);
-        }
-        
-        .sample-icon.blue {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--electric-blue);
-        }
-        
-        .sample-icon.purple {
-            background: rgba(139, 92, 246, 0.15);
-            color: #8B5CF6;
-        }
-        
-        .sample-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        
-        .sample-unit {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-        
-        .sample-label {
-            font-size: 13px;
-            color: var(--text-dim);
-            font-weight: 500;
-        }
-        
-        .sample-disclaimer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-dim);
-            padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        
-        .sample-disclaimer i {
-            color: var(--text-muted);
-        }
-        
-        @media (max-width: 900px) {
-            .sample-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .sample-results {
-                padding: 60px 24px 80px;
-            }
-            
-            .sample-results-container {
-                padding: 32px 24px;
-                border-radius: 24px;
-            }
-            
-            .sample-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .sample-value {
-                font-size: 28px;
-            }
-        }
-
-        /* ===== FEATURES SECTION ===== */
-        .features {
-            padding: 140px 60px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Section Divider */
-        .section-divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent 0%, rgba(250, 204, 21, 0.2) 50%, transparent 100%);
-            margin: 0;
-            border: none;
         }
 
         .section-header {
             text-align: center;
-            max-width: 760px;
-            margin: 0 auto 96px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
+            margin-bottom: var(--section-gap);
         }
 
-        .section-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 13px 28px;
-            background: rgba(250, 204, 21, 0.12);
-            border: 1px solid rgba(250, 204, 21, 0.2);
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--solar-yellow);
-            margin-bottom: 24px;
+        .section-label {
+            font-family: var(--font-geistmono);
+            font-size: 14px;
+            color: var(--color-terminal-green);
             text-transform: uppercase;
-            letter-spacing: 2.5px;
-            order: -1;
-            box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.05),
-                        0 4px 12px rgba(250, 204, 21, 0.15),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .section-tag:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.1),
-                        0 6px 20px rgba(250, 204, 21, 0.25),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-16);
+            display: block;
         }
 
         .section-title {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-archivo);
             font-size: 56px;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-            line-height: 1.12;
-            letter-spacing: -1.5px;
-            position: relative;
-            text-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .section-title::after {
-            display: none;
-        }
-        
-        .section-title .highlight {
-            position: relative;
-            display: inline;
-            background: linear-gradient(135deg, #FACC15 0%, #FDE047 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .section-title .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, rgba(250, 204, 21, 0.4), rgba(250, 204, 21, 0.15));
-            border-radius: 3px;
+            font-weight: 300;
+            color: var(--color-pure-white);
+            line-height: 1;
+            margin-bottom: var(--spacing-24);
+            letter-spacing: -0.5px;
         }
 
-        .section-subtitle {
-            font-size: 19px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            max-width: 640px;
+        .section-description {
+            font-size: 18px;
+            color: var(--color-silver-text);
+            max-width: 600px;
             margin: 0 auto;
-            font-weight: 400;
+            line-height: 1.5;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--spacing-32);
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .feature-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
-            backdrop-filter: blur(32px) saturate(180%);
-            -webkit-backdrop-filter: blur(32px) saturate(180%);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            padding: 48px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
-                        inset 0 1px 0 rgba(255,255,255,0.08),
-                        inset 0 -1px 0 rgba(255,255,255,0.03);
-        }
-        
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(250, 204, 21, 0.08), transparent 40%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-        }
-        
-        .feature-card:hover::after {
-            opacity: 1;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #FACC15 0%, #F59E0B 100%);
-            transform: scaleX(0);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 4px 4px 0 0;
+            background: var(--color-charcoal-canvas);
+            border: 1px solid var(--color-graphite);
+            padding: var(--spacing-48);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
         }
 
         .feature-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            border-color: rgba(250, 204, 21, 0.3);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 
-                        0 0 80px rgba(250, 204, 21, 0.2),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .feature-card > * {
-            position: relative;
-            z-index: 1;
+            border-color: var(--color-adnaut-gold);
+            background: rgba(255, 233, 0, 0.02);
+            transform: translateY(-4px);
         }
 
         .feature-icon {
-            width: 68px;
-            height: 68px;
-            background: var(--gradient-solar);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 28px;
-            font-size: 28px;
-            color: var(--bg-primary);
-            box-shadow: 0 12px 32px rgba(250, 204, 21, 0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-            transition: all 0.3s var(--ease-out);
-        }
-        
-        .feature-card:hover .feature-icon {
-            transform: scale(1.08) rotate(-3deg);
-            box-shadow: 0 16px 40px rgba(250, 204, 21, 0.45), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .feature-card:nth-child(2) .feature-icon {
-            background: var(--gradient-blue);
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-        
-        .feature-card:nth-child(2):hover .feature-icon {
-            box-shadow: 0 16px 40px rgba(59, 130, 246, 0.45), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .feature-card:nth-child(3) .feature-icon {
-            background: var(--gradient-emerald);
-            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-        
-        .feature-card:nth-child(3):hover .feature-icon {
-            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.45), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .feature-card:nth-child(5) .feature-icon {
-            background: var(--gradient-blue);
-            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-        
-        .feature-card:nth-child(5):hover .feature-icon {
-            box-shadow: 0 16px 40px rgba(59, 130, 246, 0.45), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .feature-card:nth-child(6) .feature-icon {
-            background: var(--gradient-emerald);
-            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-        
-        .feature-card:nth-child(6):hover .feature-icon {
-            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.45), inset 0 1px 0 rgba(255,255,255,0.25);
-        }
-
-        .feature-card h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 23px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 14px;
-            letter-spacing: -0.3px;
-        }
-
-        .feature-card p {
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.75;
-        }
-
-        /* Feature card numbering */
-        .feature-card .feature-number {
-            position: absolute;
-            top: 20px;
-            right: 24px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 64px;
-            font-weight: 800;
-            color: rgba(255, 255, 255, 0.03);
+            font-size: 40px;
+            margin-bottom: var(--spacing-24);
             line-height: 1;
-            pointer-events: none;
-            transition: color 0.4s ease;
         }
 
-        .feature-card:hover .feature-number {
-            color: rgba(250, 204, 21, 0.06);
-        }
-
-        /* ===== HOW IT WORKS ===== */
-        .how-it-works {
-            padding: 120px 60px;
-            background: var(--bg-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .steps-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .steps-timeline {
-            position: absolute;
-            top: 44px;
-            left: 12%;
-            right: 12%;
-            height: 2px;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(250, 204, 21, 0.15) 10%, 
-                rgba(250, 204, 21, 0.15) 90%, 
-                transparent);
-            border-radius: 2px;
-            z-index: 0;
-        }
-
-        /* Animated dashes on the timeline */
-        .steps-timeline::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            background: repeating-linear-gradient(90deg,
-                rgba(250, 204, 21, 0.4) 0px,
-                rgba(250, 204, 21, 0.4) 8px,
-                transparent 8px,
-                transparent 20px
-            );
-            border-radius: 2px;
-            animation: dashMove 20s linear infinite;
-        }
-
-        @keyframes dashMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(40px); }
-        }
-
-        .step-card {
-            text-align: center;
-            position: relative;
-            padding: 0 20px;
-            transition: all 0.4s var(--ease-out);
-        }
-        
-        .step-card:hover {
-            transform: translateY(-8px);
-        }
-
-        .step-number {
-            width: 88px;
-            height: 88px;
-            background: var(--gradient-solar);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 36px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--bg-primary);
-            box-shadow: 0 16px 40px rgba(250, 204, 21, 0.35), inset 0 2px 0 rgba(255,255,255,0.25);
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s var(--ease-out);
-        }
-        
-        .step-card:hover .step-number {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 20px 50px rgba(250, 204, 21, 0.45), inset 0 2px 0 rgba(255,255,255,0.25);
-        }
-
-        .step-icon {
-            position: absolute;
-            bottom: -10px;
-            right: calc(50% - 60px);
-            width: 40px;
-            height: 40px;
-            background: var(--bg-secondary);
-            border: 2.5px solid var(--solar-yellow);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--solar-yellow);
-            font-size: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .step-card h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-        }
-
-        .step-card p {
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.75;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        /* ===== DATA VISUALIZATION SECTION ===== */
-        .data-section {
-            padding: 120px 60px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            max-width: 1200px;
-            margin: 0 auto;
-            align-items: center;
-        }
-
-        .data-visual {
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1.5px solid rgba(250, 204, 21, 0.12);
-            border-radius: 28px;
-            padding: 36px;
-            position: relative;
-            box-shadow: 
-                0 32px 80px rgba(0,0,0,0.5),
-                0 0 100px rgba(250, 204, 21, 0.06),
-                inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-        
-        .data-visual::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-solar);
-            border-radius: 28px 28px 0 0;
-        }
-        
-        .data-visual::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 30%, rgba(250, 204, 21, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .chart-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chart-title-icon {
-            width: 36px;
-            height: 36px;
-            background: rgba(250, 204, 21, 0.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--solar-yellow);
-            font-size: 16px;
-        }
-
-        .chart-tabs {
-            display: flex;
-            gap: 6px;
-            background: rgba(255,255,255,0.03);
-            padding: 6px;
-            border-radius: 12px;
-        }
-
-        .chart-tab {
-            padding: 10px 18px;
-            background: transparent;
-            border: 1.5px solid transparent;
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s var(--ease-out);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .chart-tab::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: var(--solar-yellow);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.5s var(--ease-out), height 0.5s var(--ease-out);
-            z-index: -1;
-        }
-        
-        .chart-tab:hover {
-            color: var(--text-secondary);
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(250, 204, 21, 0.2);
-        }
-
-        .chart-tab.active {
-            background: var(--solar-yellow);
-            border-color: var(--solar-yellow);
-            color: var(--bg-primary);
-            box-shadow: 0 4px 16px rgba(250, 204, 21, 0.35);
-        }
-        
-        .chart-tab.active::before {
-            width: 150%;
-            height: 150%;
-        }
-
-        .chart-container {
-            height: 260px;
-            position: relative;
-            padding: 10px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 16px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .chart-container canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-        
-        .chart-note {
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-top: 12px;
-            font-style: italic;
-        }
-
-        .data-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-top: 28px;
-        }
-
-        .data-stat {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 22px;
-            transition: all 0.4s var(--ease-out);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .data-stat::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--gradient-solar);
-            transform: scaleY(0);
-            transform-origin: top;
-            transition: transform 0.4s var(--ease-out);
-        }
-        
-        .data-stat:hover::before {
-            transform: scaleY(1);
-        }
-        
-        .data-stat:hover {
-            border-color: rgba(250, 204, 21, 0.25);
-            transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(250, 204, 21, 0.06);
-        }
-
-        .data-stat-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--solar-yellow);
-            margin-bottom: 6px;
+        .feature-title {
+            font-family: var(--font-archivo);
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--color-pure-white);
+            margin-bottom: var(--spacing-16);
             letter-spacing: -0.5px;
         }
 
-        .data-stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        .data-content h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 40px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .data-content p {
+        .feature-description {
             font-size: 16px;
-            color: var(--text-muted);
-            line-height: 1.8;
-            margin-bottom: 32px;
+            color: var(--color-silver-text);
+            line-height: 1.6;
+            font-weight: 300;
         }
 
-        .data-features {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* ========== HIGHLIGHT CARD ========== */
+        .highlight-section {
+            padding: var(--section-gap) 60px;
+            background: var(--color-deep-space);
         }
 
-        .data-feature {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .data-feature-icon {
-            width: 44px;
-            height: 44px;
-            background: rgba(250, 204, 21, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--solar-yellow);
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .data-feature h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .data-feature p {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials {
-            padding: 120px 60px;
-            background: var(--bg-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+        .highlight-card {
+            background: var(--color-adnaut-gold);
+            color: var(--color-ink-black);
+            padding: var(--spacing-64);
+            border-radius: var(--radius-lg);
+            text-align: center;
             max-width: 1200px;
             margin: 0 auto;
+            box-shadow: 0 0 40px rgba(255, 233, 0, 0.2);
         }
 
-        .testimonial-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-            backdrop-filter: blur(24px) saturate(160%);
-            -webkit-backdrop-filter: blur(24px) saturate(160%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 28px;
-            padding: 40px;
-            transition: all 0.4s var(--ease-out);
-            position: relative;
-            opacity: 0;
-            transform: translateY(30px);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06),
-                        inset 0 -1px 0 rgba(255,255,255,0.02),
-                        0 8px 32px rgba(0,0,0,0.15);
-        }
-        
-        .testimonial-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .testimonial-card:nth-child(1) { transition-delay: 0.1s; }
-        .testimonial-card:nth-child(2) { transition-delay: 0.2s; }
-        .testimonial-card:nth-child(3) { transition-delay: 0.3s; }
-        
-        .testimonial-card::before {
-            content: '"';
-            position: absolute;
-            top: 24px;
-            right: 28px;
-            font-size: 80px;
-            font-family: Georgia, serif;
-            color: rgba(250, 204, 21, 0.1);
-            line-height: 1;
+        .highlight-card h2 {
+            font-family: var(--font-archivo);
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: var(--spacing-24);
+            letter-spacing: -0.5px;
         }
 
-        .testimonial-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(250, 204, 21, 0.3);
-            box-shadow: 
-                0 32px 80px rgba(0,0,0,0.4), 
-                0 0 60px rgba(250, 204, 21, 0.1),
-                inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-        
-        .testimonial-card.visible:hover {
-            transform: translateY(-8px);
-        }
-
-        .testimonial-rating {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 24px;
-        }
-
-        .testimonial-rating i {
-            color: var(--solar-yellow);
-            font-size: 15px;
-        }
-
-        .testimonial-text {
-            font-size: 16px;
-            color: var(--text-secondary);
-            line-height: 1.85;
-            margin-bottom: 28px;
-            font-weight: 400;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .testimonial-avatar {
-            width: 52px;
-            height: 52px;
-            background: var(--gradient-solar);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--bg-primary);
+        .highlight-card p {
             font-size: 18px;
-            box-shadow: 0 4px 16px rgba(250, 204, 21, 0.25);
+            margin-bottom: var(--spacing-32);
+            line-height: 1.6;
+            font-weight: 300;
         }
 
-        .testimonial-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .testimonial-name .verified-icon {
-            color: var(--electric-blue);
-            font-size: 13px;
-        }
-
-        .testimonial-role {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* ===== CTA SECTION ===== */
-        .cta {
-            padding: 160px 60px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(7, 11, 20, 1) 50%, var(--bg-secondary) 100%);
-        }
-        
-        .cta-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.12) 0%, transparent 60%);
-            pointer-events: none;
-            animation: ctaPulse 4s ease-in-out infinite;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 900px;
-            height: 900px;
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.08) 0%, transparent 50%);
-            pointer-events: none;
-            animation: ctaPulse 8s ease-in-out infinite;
-        }
-        
-        .cta::after {
-            content: '';
-            position: absolute;
-            top: 20%;
-            right: 10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-            animation: ctaFloat 6s ease-in-out infinite;
-        }
-        
-        @keyframes ctaPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-        }
-        
-        @keyframes ctaFloat {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 20px); }
-        }
-
-        .cta-content {
-            max-width: 720px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .cta-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
-            background: rgba(250, 204, 21, 0.1);
-            backdrop-filter: blur(16px) saturate(150%);
-            -webkit-backdrop-filter: blur(16px) saturate(150%);
-            border: 1px solid rgba(250, 204, 21, 0.2);
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--solar-yellow);
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-
-        .cta h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 52px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s var(--ease-out);
-        }
-        
-        .cta.visible h2 {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .cta p {
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-            line-height: 1.7;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s var(--ease-out) 0.2s;
-        }
-        
-        .cta.visible p {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-bottom: 32px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s var(--ease-out) 0.4s;
-        }
-        
-        .cta.visible .cta-buttons {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .cta-trust {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s var(--ease-out) 0.6s;
-        }
-        
-        .cta.visible .cta-trust {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .cta-trust span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-dim);
-        }
-        
-        .cta-trust i {
-            color: var(--emerald);
-            font-size: 14px;
-        }
-        
-        @media (max-width: 768px) {
-            .cta {
-                padding: 100px 30px;
-            }
-            
-            .cta h2 {
-                font-size: 36px;
-            }
-            
-            .cta-trust {
-                flex-direction: column;
-                gap: 12px;
-            }
-        }
-
-        /* ===== FOOTER ===== */
+        /* ========== FOOTER ========== */
         footer {
-            padding: 100px 60px 50px;
-            background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(7, 11, 20, 1) 100%);
-            border-top: 1px solid rgba(250, 204, 21, 0.08);
+            background: var(--color-charcoal-canvas);
+            border-top: 1px solid var(--color-graphite);
+            padding: var(--spacing-64) 60px;
             position: relative;
             z-index: 1;
-        }
-        
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--solar-yellow), transparent);
         }
 
         .footer-content {
-            display: grid;
-            grid-template-columns: 2fr repeat(3, 1fr);
-            gap: 80px;
             max-width: 1200px;
-            margin: 0 auto 70px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-48);
+            margin-bottom: var(--spacing-48);
         }
 
-        .footer-brand .logo {
-            margin-bottom: 24px;
+        .footer-section h3 {
+            font-family: var(--font-archivo);
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--color-pure-white);
+            margin-bottom: var(--spacing-24);
+            letter-spacing: -0.5px;
         }
 
-        .footer-brand p {
+        .footer-link {
+            display: block;
+            font-family: var(--font-geistmono);
             font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.8;
-            max-width: 320px;
-            margin-bottom: 28px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 14px;
-        }
-
-        .social-links a {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1.5px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 17px;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--solar-yellow);
-            border-color: var(--solar-yellow);
-            color: var(--bg-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.3);
-        }
-
-        .footer-links h4 {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 28px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 14px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s var(--ease-out);
-        }
-        
-        .footer-links.visible li:nth-child(1) { transition-delay: 0.1s; }
-        .footer-links.visible li:nth-child(2) { transition-delay: 0.15s; }
-        .footer-links.visible li:nth-child(3) { transition-delay: 0.2s; }
-        .footer-links.visible li:nth-child(4) { transition-delay: 0.25s; }
-        .footer-links.visible li:nth-child(5) { transition-delay: 0.3s; }
-        
-        .footer-links.visible li {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .footer-links a {
-            font-size: 14px;
-            color: var(--text-muted);
+            color: var(--color-silver-text);
             text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-        }
-        
-        .footer-links a::before {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--solar-yellow);
-            transition: width 0.3s var(--ease-out);
-        }
-        
-        .footer-links a:hover::before {
-            width: 100%;
+            margin-bottom: var(--spacing-16);
+            transition: color 0.3s ease;
+            font-weight: 400;
         }
 
-        .footer-links a:hover {
-            color: var(--solar-yellow);
-            transform: translateX(4px);
+        .footer-link:hover {
+            color: var(--color-adnaut-gold);
         }
 
         .footer-bottom {
+            border-top: 1px solid var(--color-graphite);
+            padding-top: var(--spacing-32);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            max-width: 1200px;
-            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: var(--spacing-24);
         }
 
         .footer-bottom p {
+            font-family: var(--font-geistmono);
             font-size: 13px;
-            color: var(--text-dim);
+            color: var(--color-graphite);
+            font-weight: 400;
         }
 
-        /* Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: var(--gradient-solar);
-            color: var(--bg-primary);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.4s var(--ease-out);
-            box-shadow: 0 8px 24px rgba(250, 204, 21, 0.35);
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .back-to-top:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(250, 204, 21, 0.5);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            nav {
-                padding: 16px 30px;
-            }
-
-            .hero {
-                padding: 90px 30px 60px;
-            }
-
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 60px;
-                text-align: center;
-            }
-
-            .hero h1 {
-                font-size: 48px;
-            }
-
-            .hero p {
-                margin: 0 auto 40px;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-stats {
-                justify-content: center;
-            }
-
-            .hero-visual {
-                max-width: 500px;
-                margin: 0 auto;
-            }
-
-            .features-grid,
-            .steps-container,
-            .testimonials-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .data-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section-title {
-                font-size: 36px;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-            }
-        }
-
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
+            nav {
+                padding: var(--spacing-16) 24px;
+            }
+
             .nav-links {
                 display: none;
             }
 
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            .mobile-nav-overlay,
-            .mobile-nav-panel {
-                display: block;
-            }
-
-            .nav-actions {
-                gap: 10px;
-            }
-
-            .nav-actions .nav-cta {
-                display: none;
-            }
-
-            .nav-cta {
-                padding: 10px 18px;
-                font-size: 13px;
+            .hero {
+                padding: var(--spacing-32) 24px;
+                margin-top: 60px;
             }
 
             .hero h1 {
-                font-size: 38px;
-                letter-spacing: -1px;
+                font-size: 40px;
             }
 
-            .hero-stats {
-                flex-direction: column;
-                gap: 24px;
-                align-items: center;
-            }
-            
-            .stat-item::after {
-                display: none;
-            }
-            
-            .trust-badges {
-                justify-content: center;
+            .hero-description {
+                font-size: 16px;
             }
 
-            .cta h2 {
-                font-size: 34px;
+            .features-section,
+            .highlight-section {
+                padding: var(--spacing-48) 24px;
             }
 
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
             .section-title {
+                font-size: 36px;
+            }
+
+            .highlight-card {
+                padding: var(--spacing-48);
+            }
+
+            .highlight-card h2 {
                 font-size: 32px;
             }
 
-            .footer-content {
-                grid-template-columns: 1fr;
+            footer {
+                padding: var(--spacing-48) 24px;
             }
 
-            .footer-bottom {
+            .hero-buttons {
                 flex-direction: column;
-                gap: 16px;
-                text-align: center;
             }
-            
-            .chart-header {
-                flex-direction: column;
-                gap: 12px;
+
+            .btn {
+                width: 100%;
+                text-align: center;
             }
         }
 
+        @media (max-width: 1200px) {
+            nav,
+            .hero,
+            .features-section,
+            .highlight-section,
+            footer {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        /* ========== REDUCED MOTION ========== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Skip to Content (Accessibility) -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <!-- Page Transition Overlay -->
-    <div class="page-transition" id="pageTransition" aria-hidden="true"></div>
-
-    <!-- Premium Loading Screen -->
-    <div class="premium-loader" id="premiumLoader" role="status" aria-label="Loading SolarVision">
-        <div class="loader-container">
-            <div class="loader-logo-wrapper">
-                <img src="assets/images/logo.png" alt="SolarVision" onerror="this.src='data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>☀️</text></svg>';">
-            </div>
-            <div class="loader-progress-track">
-                <div class="loader-progress-fill"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Background Effects -->
-    <div class="noise-overlay"></div>
-    <div class="bg-grid"></div>
-    <div class="bg-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
-    <div class="particle-container" id="particles"></div>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
     <!-- Navigation -->
-    <nav id="navbar" role="navigation" aria-label="Main navigation">
-        <a href="#" class="logo" aria-label="SolarVision - Home">
-            <img src="assets/images/logo.png" alt="SolarVision" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="logo-icon" style="display: none;">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="4"/>
-                    <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <span class="logo-text">Solar<span>Vision</span></span>
+    <nav>
+        <a href="#" class="logo">
+            <span class="logo-icon">☀️</span>
+            <span class="logo-text"><strong>Solar</strong>Vision</span>
         </a>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#data">Analytics</a>
-            <a href="#testimonials">Reviews</a>
-        </div>
-        <div class="nav-actions">
-            <a href="solar_advanced.html" class="nav-cta">Launch Calculator</a>
-            <button class="mobile-menu-btn" onclick="openMobileMenu()" aria-label="Open menu">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+        <ul class="nav-links">
+            <li><a href="#features" class="nav-link">Features</a></li>
+            <li><a href="#how-it-works" class="nav-link">How it Works</a></li>
+            <li><a href="#" class="nav-link">Docs</a></li>
+            <li><button class="nav-cta" onclick="window.location.href='solar_advanced.html'">Get Started</button></li>
+        </ul>
     </nav>
 
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-nav-panel" id="mobilePanel">
-        <button class="mobile-nav-close" onclick="closeMobileMenu()" aria-label="Close menu">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="mobile-nav-links">
-            <a href="#features" onclick="closeMobileMenu()"><i class="fas fa-sparkles"></i> Features</a>
-            <a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-route"></i> How It Works</a>
-            <a href="#data" onclick="closeMobileMenu()"><i class="fas fa-chart-bar"></i> Analytics</a>
-            <a href="#testimonials" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Reviews</a>
-            <a href="solar_advanced.html" class="mobile-nav-cta"><i class="fas fa-bolt"></i> Launch Calculator</a>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <main id="main-content">
-    <section class="hero" role="banner">
-        <div class="hero-bg-map"></div>
-        <div class="hero-content">
-            <div class="hero-text" data-aos="fade-right" data-aos-duration="800">
-                <div class="hero-badge">
-                    <i class="fas fa-satellite"></i>
-                    AI-Powered Analysis
-                </div>
-                <h1>See How Much Solar Your Roof Can Produce — <span class="highlight">Instantly</span></h1>
-                <p>AI-powered rooftop analysis using satellite imagery & NASA solar data. Get accurate energy estimates, savings projections, and environmental impact in seconds.</p>
+    <!-- Main Content -->
+    <main id="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-label">AI-Powered Analysis</div>
+                <h1>Unlock Your Rooftop <strong>Solar Potential</strong></h1>
+                <p class="hero-description">
+                    Instantly analyze rooftop solar potential using satellite imagery, NASA climate data, and AI. Get accurate energy estimates, financial projections, and environmental impact metrics.
+                </p>
                 <div class="hero-buttons">
-                    <a href="solar_advanced.html" class="btn btn-primary btn-large pulse-glow">
-                        <i class="fas fa-bolt"></i>
-                        Analyze My Roof
-                    </a>
-                </div>
-                <div class="hero-trust">
-                    <span class="trust-label">Powered by</span>
-                    <div class="trust-logos">
-                        <div class="trust-logo" title="NASA POWER Data">
-                            <i class="fas fa-satellite-dish"></i>
-                            <span>NASA POWER</span>
-                        </div>
-                        <div class="trust-logo" title="Google Maps">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Google Maps</span>
-                        </div>
-                        <div class="trust-logo" title="AI Analysis">
-                            <i class="fas fa-brain"></i>
-                            <span>AI Analysis</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">50<span class="accent">K+</span></div>
-                        <div class="stat-label">Roofs Analyzed</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">98.5<span class="accent">%</span></div>
-                        <div class="stat-label">Accuracy Rate</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value"><span class="accent">8.7</span>M</div>
-                        <div class="stat-label">AED Saved</div>
-                    </div>
-                </div>
-                <div class="trust-badges" data-aos="fade-up" data-aos-delay="400">
-                    <div class="trust-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>NASA Data Powered</span>
-                    </div>
-                    <div class="trust-badge">
-                        <i class="fas fa-lock"></i>
-                        <span>Secure & Private</span>
-                    </div>
-                    <div class="trust-badge">
-                        <i class="fas fa-globe"></i>
-                        <span>Global Coverage</span>
-                    </div>
+                    <button class="btn btn-primary" onclick="window.location.href='solar_advanced.html'">Launch Analyzer</button>
+                    <button class="btn btn-secondary">Learn More</button>
                 </div>
             </div>
-            <div class="hero-visual" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
-                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&h=600&fit=crop&q=80&fm=webp" 
-                     alt="Solar Panels on Rooftop — illustrating a residential solar installation"
-                     class="hero-image"
-                     loading="eager"
-                     decoding="async"
-                     width="800"
-                     height="600"
-                     fetchpriority="high">
-                <div class="float-card float-card-1" data-aos="fade-up" data-aos-delay="600">
-                    <div class="float-card-icon yellow"><i class="fas fa-bolt"></i></div>
-                    <div class="float-card-value">12.5 kW</div>
-                    <div class="float-card-label">System Size</div>
-                </div>
-                <div class="float-card float-card-2" data-aos="fade-up" data-aos-delay="800">
-                    <div class="float-card-icon green"><i class="fas fa-leaf"></i></div>
-                    <div class="float-card-value">18.2 tons</div>
-                    <div class="float-card-label">CO₂ Saved/Year</div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Sample Results Preview Section -->
-    <section class="sample-results" id="sample-results">
-        <div class="sample-results-container" data-aos="fade-up">
-            <div class="sample-badge" style="display: flex; justify-content: center; margin: 0 auto 32px;">
-                <i class="fas fa-chart-line"></i>
-                Example results for a typical Dubai villa
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="section-header">
+                <span class="section-label">Capabilities</span>
+                <h2 class="section-title">Comprehensive Solar Analysis</h2>
+                <p class="section-description">
+                    Everything you need to make informed solar decisions
+                </p>
             </div>
-            <div class="sample-grid">
-                <div class="sample-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="sample-icon yellow">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <div class="sample-value">18,500</div>
-                    <div class="sample-unit">kWh/year</div>
-                    <div class="sample-label">Annual Energy Production</div>
-                </div>
-                <div class="sample-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="sample-icon green">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div class="sample-value">AED 12,400</div>
-                    <div class="sample-unit">per year</div>
-                    <div class="sample-label">Estimated Savings</div>
-                </div>
-                <div class="sample-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="sample-icon blue">
-                        <i class="fas fa-leaf"></i>
-                    </div>
-                    <div class="sample-value">15.8</div>
-                    <div class="sample-unit">tons CO₂/year</div>
-                    <div class="sample-label">Carbon Reduction</div>
-                </div>
-                <div class="sample-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="sample-icon purple">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="sample-value">5.2</div>
-                    <div class="sample-unit">years</div>
-                    <div class="sample-label">Payback Period</div>
-                </div>
-            </div>
-            <p class="sample-disclaimer">
-                <i class="fas fa-info-circle"></i>
-                Estimates based on satellite imagery & historical irradiance data from NASA POWER
-            </p>
-        </div>
-    </section>
 
-    <hr class="section-divider">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛰️</div>
+                    <h3 class="feature-title">Satellite Mapping</h3>
+                    <p class="feature-description">
+                        High-resolution satellite imagery for precise rooftop detection and area calculation
+                    </p>
+                </div>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="section-header" data-aos="fade-up">
-            <span class="section-tag"><i class="fas fa-sparkles"></i> Features</span>
-            <h2 class="section-title">Everything You Need for <span class="highlight">Solar Planning</span></h2>
-            <p class="section-subtitle">Advanced AI analysis combined with satellite imagery and real-time data to give you the most accurate solar potential assessment.</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="0">
-                <span class="feature-number">01</span>
-                <div class="feature-icon"><i class="fas fa-satellite-dish"></i></div>
-                <h3>Satellite Mapping</h3>
-                <p>High-resolution satellite imagery with automatic roof detection and measurement using Google Maps integration.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                <span class="feature-number">02</span>
-                <div class="feature-icon"><i class="fas fa-sun"></i></div>
-                <h3>NASA Weather Data</h3>
-                <p>Access 6 years of historical solar irradiance data from NASA POWER satellite for accurate energy estimates.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                <span class="feature-number">03</span>
-                <div class="feature-icon"><i class="fas fa-robot"></i></div>
-                <h3>AI Analysis</h3>
-                <p>Machine learning algorithms analyze roof orientation, shading, and local conditions for optimal panel placement.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                <span class="feature-number">04</span>
-                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Financial Projections</h3>
-                <p>Detailed ROI calculations with local electricity rates, incentives, installation costs, and payback periods.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                <span class="feature-number">05</span>
-                <div class="feature-icon"><i class="fas fa-chart-area"></i></div>
-                <h3>Production Forecasts</h3>
-                <p>Monthly and yearly energy production projections with interactive charts showing seasonal variations.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
-                <span class="feature-number">06</span>
-                <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
-                <h3>Environmental Impact</h3>
-                <p>Calculate your carbon footprint reduction in CO₂ tons and see equivalent trees planted for sustainability metrics.</p>
-            </div>
-        </div>
-    </section>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Energy Analysis</h3>
+                    <p class="feature-description">
+                        NASA POWER climate data for accurate monthly and annual generation estimates
+                    </p>
+                </div>
 
-    <hr class="section-divider">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Financial ROI</h3>
+                    <p class="feature-description">
+                        LCOE, IRR, NPV calculations with region-specific electricity rates
+                    </p>
+                </div>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="section-header" data-aos="fade-up">
-            <span class="section-tag"><i class="fas fa-route"></i> Simple Process</span>
-            <h2 class="section-title">See <span class="highlight">How It Works</span></h2>
-            <p class="section-subtitle">Get your personalized solar analysis in four simple steps</p>
-        </div>
-        <div class="steps-container">
-            <div class="steps-timeline"></div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="0">
-                <div class="step-number">
-                    1
-                    <div class="step-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3 class="feature-title">Impact Metrics</h3>
+                    <p class="feature-description">
+                        CO₂ reduction, tree equivalents, and environmental impact projections
+                    </p>
                 </div>
-                <h3>Locate Your Roof</h3>
-                <p>Enter your address to find your property on our interactive satellite map.</p>
-            </div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="step-number">
-                    2
-                    <div class="step-icon"><i class="fas fa-brain"></i></div>
-                </div>
-                <h3>AI Analyzes Sunlight</h3>
-                <p>Our AI calculates solar irradiance, shading, and optimal panel placement.</p>
-            </div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="step-number">
-                    3
-                    <div class="step-icon"><i class="fas fa-chart-pie"></i></div>
-                </div>
-                <h3>Get Energy & Savings</h3>
-                <p>View detailed energy production, financial savings, and CO₂ impact estimates.</p>
-            </div>
-            <div class="step-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="step-number">
-                    4
-                    <div class="step-icon"><i class="fas fa-download"></i></div>
-                </div>
-                <h3>Download Report</h3>
-                <p>Export a professional PDF report to share with installers or stakeholders.</p>
-            </div>
-        </div>
-    </section>
 
-    <!-- Data Visualization Section -->
-    <section class="data-section" id="data">
-        <div class="data-grid">
-            <div class="data-visual" data-aos="fade-right">
-                <div class="chart-header">
-                    <span class="chart-title">
-                        <span class="chart-title-icon"><i class="fas fa-chart-line"></i></span>
-                        Energy Production Forecast
-                    </span>
-                    <div class="chart-tabs">
-                        <button class="chart-tab active" data-view="monthly">Monthly</button>
-                        <button class="chart-tab" data-view="yearly">Yearly</button>
-                        <button class="chart-tab" data-view="lifetime">Lifetime</button>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI Assistant</h3>
+                    <p class="feature-description">
+                        Personalized insights powered by advanced language models
+                    </p>
                 </div>
-                <div class="chart-container">
-                    <canvas id="energyChart" style="display: block; box-sizing: border-box; max-width: 100%;"></canvas>
-                </div>
-                <p class="chart-note">*Based on 10kW system in UAE (Avg. Solar Irradiance: 5.8 kWh/m²/day) with 18% efficient panels</p>
-                <div class="data-stats">
-                    <div class="data-stat">
-                        <div class="data-stat-value" id="stat-annual">17,520 kWh</div>
-                        <div class="data-stat-label">Annual Production</div>
-                    </div>
-                    <div class="data-stat">
-                        <div class="data-stat-value" id="stat-savings">5,572 AED</div>
-                        <div class="data-stat-label">Annual Savings</div>
-                    </div>
-                    <div class="data-stat">
-                        <div class="data-stat-value" id="stat-payback">5.8 years</div>
-                        <div class="data-stat-label">Payback Period</div>
-                    </div>
-                    <div class="data-stat">
-                        <div class="data-stat-value" id="stat-roi">312%</div>
-                        <div class="data-stat-label">25-Year ROI</div>
-                    </div>
-                </div>
-            </div>
-            <div class="data-content" data-aos="fade-left">
-                <h2>Intelligent Data Visualization</h2>
-                <p>Our advanced analytics dashboard provides clear, actionable insights with beautiful data visualizations. Toggle between different time periods to understand your long-term solar investment.</p>
-                <div class="data-features">
-                    <div class="data-feature">
-                        <div class="data-feature-icon"><i class="fas fa-chart-pie"></i></div>
-                        <div>
-                            <h4>Clean Charts</h4>
-                            <p>Minimal, elegant visualizations with soft glow effects</p>
-                        </div>
-                    </div>
-                    <div class="data-feature">
-                        <div class="data-feature-icon"><i class="fas fa-exchange-alt"></i></div>
-                        <div>
-                            <h4>Multiple Views</h4>
-                            <p>Toggle between monthly, yearly, and lifetime projections</p>
-                        </div>
-                    </div>
-                    <div class="data-feature">
-                        <div class="data-feature-icon"><i class="fas fa-download"></i></div>
-                        <div>
-                            <h4>Export Reports</h4>
-                            <p>Download detailed PDF reports for installers and financing</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Testimonials -->
-    <section class="testimonials" id="testimonials">
-        <div class="section-header" data-aos="fade-up">
-            <span class="section-tag"><i class="fas fa-star"></i> Reviews</span>
-            <h2 class="section-title">See <span class="highlight">What Our Users Say</span></h2>
-            <p class="section-subtitle">Join thousands of homeowners who made informed solar decisions</p>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="0">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"The accuracy of SolarVision's estimates was incredible. My actual installation matched their projections almost exactly. Saved months of research!"</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">AK</div>
-                    <div>
-                        <div class="testimonial-name">Ahmed Khan <i class="fas fa-circle-check verified-icon"></i></div>
-                        <div class="testimonial-role">Homeowner, Dubai</div>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3 class="feature-title">PDF Reports</h3>
+                    <p class="feature-description">
+                        Professional downloadable analysis reports for stakeholders
+                    </p>
                 </div>
             </div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"As an installer, I recommend SolarVision to all my clients. The detailed reports help set realistic expectations and close deals faster."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">SR</div>
-                    <div>
-                        <div class="testimonial-name">Sarah Rahman <i class="fas fa-circle-check verified-icon"></i></div>
-                        <div class="testimonial-role">Solar Installer, Abu Dhabi</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"The financial projections helped me secure financing from my bank. They were impressed by the detailed ROI analysis and payback calculations."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">MJ</div>
-                    <div>
-                        <div class="testimonial-name">Mohammed Jabri <i class="fas fa-circle-check verified-icon"></i></div>
-                        <div class="testimonial-role">Business Owner, Sharjah</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="cta-glow"></div>
-        <div class="cta-content" data-aos="fade-up">
-            <div class="cta-badge"><i class="fas fa-bolt"></i> Get Started Free</div>
-            <h2>Ready to Unlock Your Solar Potential?</h2>
-            <p>Start your free solar analysis today and discover how much you can save while reducing your carbon footprint.</p>
-            <div class="cta-buttons">
-                <a href="solar_advanced.html" class="btn btn-primary btn-large pulse-glow">
-                    <i class="fas fa-rocket"></i>
-                    Start Free Analysis
-                </a>
+        <!-- Highlight Section -->
+        <section class="highlight-section" id="how-it-works">
+            <div class="highlight-card">
+                <h2>Free & Accessible</h2>
+                <p>
+                    No credit card required. Analyze unlimited rooftops anywhere in the world. 
+                    Get instant results backed by NASA satellite data and AI-powered insights.
+                </p>
+                <button class="btn btn-primary" style="background: var(--color-ink-black); color: var(--color-adnaut-gold);" onclick="window.location.href='solar_advanced.html'">
+                    Start Your Analysis
+                </button>
             </div>
-            <div class="cta-trust">
-                <span><i class="fas fa-shield-alt"></i> No credit card required</span>
-                <span><i class="fas fa-clock"></i> Results in 30 seconds</span>
-                <span><i class="fas fa-lock"></i> 100% private</span>
-            </div>
-        </div>
-    </section>
+        </section>
     </main>
 
     <!-- Footer -->
-    <footer role="contentinfo">
+    <footer>
         <div class="footer-content">
-            <div class="footer-brand">
-                <a href="#" class="logo">
-                    <img src="assets/images/logo.png" alt="SolarVision" style="height: 80px; width: auto; filter: drop-shadow(0 0 16px rgba(250, 204, 21, 0.4));" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="logo-icon" style="display: none;">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="4"/>
-                            <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <span class="logo-text">Solar<span>Vision</span></span>
-                </a>
-                <p>Empowering homeowners with smart solar analysis tools. Make informed decisions about your renewable energy future.</p>
-                <div class="social-links">
-                    <a href="https://github.com/Hamdan772/SolarVision" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
+            <div class="footer-section">
+                <h3>SolarVision</h3>
+                <p style="color: var(--color-graphite); font-size: 14px; margin-bottom: var(--spacing-24);">
+                    AI-powered rooftop solar analysis for a sustainable future.
+                </p>
             </div>
-            <div class="footer-links">
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="solar_advanced.html">Calculator</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#data">Analytics</a></li>
-                </ul>
+            <div class="footer-section">
+                <h3>Product</h3>
+                <a href="solar_advanced.html" class="footer-link">Solar Analyzer</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">API</a>
             </div>
-            <div class="footer-links">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Solar Guide</a></li>
-                    <li><a href="https://github.com/Hamdan772/SolarVision" target="_blank">GitHub</a></li>
-                </ul>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="#" class="footer-link">Blog</a>
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Support</a>
             </div>
-            <div class="footer-links">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Privacy</a></li>
-                </ul>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">License</a>
             </div>
         </div>
+
         <div class="footer-bottom">
-            <p>&copy; <span id="footerYear">2026</span> SolarVision. All rights reserved.</p>
-            <p>Built with ☀️ for a sustainable future</p>
+            <p>&copy; 2024 SolarVision. All rights reserved.</p>
+            <p>Building a sustainable energy future with AI and satellite technology.</p>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Scripts -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Navigation scroll effect -->
     <script>
-        // ============================================
-        // MOBILE MENU
-        // ============================================
-        function openMobileMenu() {
-            const overlay = document.getElementById('mobileOverlay');
-            const panel = document.getElementById('mobilePanel');
-            overlay.classList.add('active');
-            panel.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMobileMenu() {
-            const overlay = document.getElementById('mobileOverlay');
-            const panel = document.getElementById('mobilePanel');
-            overlay.classList.remove('active');
-            panel.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Close mobile menu on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeMobileMenu();
-        });
-
-        // Premium Loader
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('premiumLoader');
-                if (loader) {
-                    loader.classList.add('hidden');
-                }
-            }, 2200);
-        });
-
-        // Initialize AOS with better settings
-        AOS.init({
-            duration: 900,
-            easing: 'ease-out-cubic',
-            once: true,
-            offset: 80,
-            delay: 100
-        });
-
-        // Navbar scroll effect with smooth transition
-        const navbar = document.getElementById('navbar');
-        const backToTopBtn = document.getElementById('backToTop');
-        let lastScroll = 0;
-        
+        const nav = document.querySelector('nav');
         window.addEventListener('scroll', () => {
-            const currentScroll = window.scrollY;
-            
-            if (currentScroll > 50) {
-                navbar.classList.add('scrolled');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
             } else {
-                navbar.classList.remove('scrolled');
-            }
-
-            // Back to top button visibility
-            if (backToTopBtn) {
-                if (currentScroll > 600) {
-                    backToTopBtn.classList.add('visible');
-                } else {
-                    backToTopBtn.classList.remove('visible');
-                }
-            }
-            
-            lastScroll = currentScroll;
-        });
-
-        // Generate enhanced particles
-        const particleContainer = document.getElementById('particles');
-        for (let i = 0; i < 40; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 15 + 's';
-            particle.style.animationDuration = (12 + Math.random() * 10) + 's';
-            particleContainer.appendChild(particle);
-        }
-        
-        // Glow dots removed for cleaner UI
-        
-        // Smooth scroll reveal for elements
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-        
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
-            revealObserver.observe(el);
-        });
-        
-        // Testimonial cards staggered animation
-        const testimonialObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.2 });
-        
-        document.querySelectorAll('.testimonial-card').forEach(card => {
-            testimonialObserver.observe(card);
-        });
-        
-        // CTA section animation
-        const ctaObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.3 });
-        
-        document.querySelectorAll('.cta').forEach(cta => {
-            ctaObserver.observe(cta);
-        });
-        
-        // Footer links staggered animation
-        const footerObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.2 });
-        
-        document.querySelectorAll('.footer-links').forEach(section => {
-            footerObserver.observe(section);
-        });
-        
-        // Animated counter for stats
-        function animateCounter(element, target, duration = 2000) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            
-            function updateCounter() {
-                start += increment;
-                if (start < target) {
-                    element.textContent = Math.floor(start).toLocaleString();
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    element.textContent = target.toLocaleString();
-                }
-            }
-            
-            updateCounter();
-        }
-
-        // Energy Production Chart with accurate solar calculations
-        // Based on NASA POWER data for UAE region (Avg: 5.8 kWh/m²/day)
-        const ctx = document.getElementById('energyChart').getContext('2d');
-        
-        // Custom plugin for line glow effect
-        const glowPlugin = {
-            id: 'lineGlow',
-            beforeDatasetsDraw: (chart) => {
-                const ctx = chart.ctx;
-                ctx.save();
-                
-                chart.data.datasets.forEach((dataset, i) => {
-                    const meta = chart.getDatasetMeta(i);
-                    if (meta.type === 'line' && meta.data.length > 0) {
-                        ctx.shadowColor = dataset.borderColor || '#FACC15';
-                        ctx.shadowBlur = 16;
-                        ctx.shadowOffsetX = 0;
-                        ctx.shadowOffsetY = 0;
-                    }
-                });
-            },
-            afterDatasetsDraw: (chart) => {
-                chart.ctx.restore();
-            }
-        };
-        
-        // Register the glow plugin
-        Chart.register(glowPlugin);
-        
-        // System parameters for realistic calculations
-        // Based on UAE/DEWA market conditions 2024
-        const systemConfig = {
-            systemSizeKW: 10,            // 10 kW residential system
-            panelEfficiency: 0.21,       // 21% (modern monocrystalline panels)
-            systemLosses: 0.16,          // 16% total losses (inverter 3%, wiring 2%, soiling 4%, temp 5%, mismatch 2%)
-            degradationRate: 0.005,      // 0.5% annual panel degradation
-            electricityRate: 0.38,       // AED 0.38/kWh (DEWA slab 2 average)
-            installCostPerWatt: 3.2,     // AED 3.2/W (UAE average installed cost)
-            get installCost() { return this.systemSizeKW * 1000 * this.installCostPerWatt; }
-        };
-        
-        // Monthly GHI data (kWh/m²/day) — NASA POWER average for Dubai (25.2°N, 55.3°E)
-        const monthlyIrradiance = [4.52, 5.28, 6.14, 6.83, 7.41, 7.58, 7.19, 6.92, 6.47, 5.76, 4.87, 4.25];
-        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        
-        // Calculate monthly production (kWh)
-        const monthlyData = monthlyIrradiance.map((irradiance, i) => {
-            const dailyProduction = systemConfig.systemSizeKW * irradiance * (1 - systemConfig.systemLosses);
-            return Math.round(dailyProduction * daysInMonth[i]);
-        });
-        
-        // Calculate yearly data (with degradation)
-        const yearlyData = [];
-        const baseAnnual = monthlyData.reduce((sum, val) => sum + val, 0);
-        for (let year = 0; year < 6; year++) {
-            const degradedProduction = Math.round(baseAnnual * Math.pow(1 - systemConfig.degradationRate, year));
-            yearlyData.push(degradedProduction);
-        }
-        
-        // Calculate lifetime data (25 years with degradation)
-        const lifetimeData = [];
-        const lifetimeLabels = [];
-        for (let year = 1; year <= 25; year += 3) {
-            const degradedProduction = Math.round(baseAnnual * Math.pow(1 - systemConfig.degradationRate, year));
-            lifetimeData.push(degradedProduction);
-            lifetimeLabels.push(`Yr ${year}`);
-        }
-        
-        const chartConfig = {
-            monthly: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                data: monthlyData,
-                label: 'Monthly Production (kWh)',
-                color: '#FACC15'
-            },
-            yearly: {
-                labels: ['2021', '2022', '2023', '2024', '2025', '2026'],
-                data: yearlyData,
-                label: 'Annual Production (kWh)',
-                color: '#60A5FA'
-            },
-            lifetime: {
-                labels: lifetimeLabels,
-                data: lifetimeData,
-                label: 'Projected Production (kWh)',
-                color: '#10B981'
-            }
-        };
-        
-        // Calculate and update stats
-        function updateStats(viewType) {
-            const annualKWh = viewType === 'monthly' ? baseAnnual : yearlyData[yearlyData.length - 1];
-            const annualSavings = annualKWh * systemConfig.electricityRate;
-            const paybackYears = systemConfig.installCost / annualSavings;
-            const lifetimeProduction = lifetimeData.reduce((sum, val) => sum + val, 0) * 3;
-            const lifetimeSavings = lifetimeProduction * systemConfig.electricityRate;
-            const roi = ((lifetimeSavings - systemConfig.installCost) / systemConfig.installCost) * 100;
-            
-            document.getElementById('stat-annual').textContent = annualKWh.toLocaleString() + ' kWh';
-            document.getElementById('stat-savings').textContent = Math.round(annualSavings).toLocaleString() + ' AED';
-            document.getElementById('stat-payback').textContent = paybackYears.toFixed(1) + ' years';
-            document.getElementById('stat-roi').textContent = Math.round(roi) + '%';
-        }
-        
-        const energyChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: chartConfig.monthly.labels,
-                datasets: [{
-                    label: chartConfig.monthly.label,
-                    data: chartConfig.monthly.data,
-                    borderColor: chartConfig.monthly.color,
-                    backgroundColor: (context) => {
-                        const chart = context.chart;
-                        const {ctx, chartArea} = chart;
-                        if (!chartArea) return 'rgba(250, 204, 21, 0.08)';
-                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                        gradient.addColorStop(0, 'rgba(250, 204, 21, 0.15)');
-                        gradient.addColorStop(0.5, 'rgba(250, 204, 21, 0.05)');
-                        gradient.addColorStop(1, 'rgba(250, 204, 21, 0)');
-                        return gradient;
-                    },
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.45,
-                    pointBackgroundColor: '#FACC15',
-                    pointBorderColor: 'rgba(250, 204, 21, 0.3)',
-                    pointBorderWidth: 8,
-                    pointRadius: 5,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: '#FDE047',
-                    pointHoverBorderColor: 'rgba(253, 224, 71, 0.4)',
-                    pointHoverBorderWidth: 12,
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 4,
-                    shadowBlur: 16,
-                    shadowColor: 'rgba(250, 204, 21, 0.5)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(10, 14, 26, 0.95)',
-                        titleColor: '#FACC15',
-                        titleFont: { size: 13, weight: 600, family: 'Space Grotesk' },
-                        bodyColor: '#F1F5F9',
-                        bodyFont: { size: 14, family: 'DM Sans' },
-                        borderColor: 'rgba(250, 204, 21, 0.2)',
-                        borderWidth: 1,
-                        padding: 16,
-                        displayColors: false,
-                        cornerRadius: 12,
-                        callbacks: {
-                            title: function(context) {
-                                return context[0].label;
-                            },
-                            label: function(context) {
-                                const value = context.parsed.y.toLocaleString();
-                                const savings = (context.parsed.y * systemConfig.electricityRate).toFixed(0);
-                                return [
-                                    `${value} kWh`,
-                                    `${savings} AED savings`
-                                ];
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.03)',
-                            drawBorder: false,
-                            lineWidth: 1
-                        },
-                        ticks: {
-                            color: 'rgba(148, 163, 184, 0.7)',
-                            font: { size: 11, weight: 500, family: 'DM Sans' },
-                            padding: 8
-                        },
-                        border: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.03)',
-                            drawBorder: false,
-                            lineWidth: 1
-                        },
-                        ticks: {
-                            color: 'rgba(148, 163, 184, 0.7)',
-                            font: { size: 11, weight: 500, family: 'DM Sans' },
-                            callback: function(value) {
-                                return value >= 1000 ? (value/1000).toFixed(1) + 'k' : value;
-                            },
-                            padding: 12,
-                            maxTicksLimit: 5
-                        },
-                        border: {
-                            display: false
-                        },
-                        beginAtZero: true
-                    }
-                },
-                animation: {
-                    duration: 800,
-                    easing: 'easeOutQuart'
-                }
+                nav.classList.remove('scrolled');
             }
         });
-        
-        // Chart tab functionality
-        const chartTabs = document.querySelectorAll('.chart-tab');
-        chartTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                chartTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                const tabType = tab.dataset.view || tab.textContent.toLowerCase();
-                const config = chartConfig[tabType];
-                
-                energyChart.data.labels = config.labels;
-                energyChart.data.datasets[0].data = config.data;
-                energyChart.data.datasets[0].label = config.label;
-                energyChart.data.datasets[0].borderColor = config.color;
-                energyChart.data.datasets[0].pointBackgroundColor = config.color;
-                energyChart.data.datasets[0].pointBorderColor = config.color.replace(')', ', 0.3)').replace('#', 'rgba(').replace(/([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/, (m, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}`);
-                energyChart.data.datasets[0].pointHoverBackgroundColor = config.color;
-                
-                // Update gradient based on color
-                energyChart.data.datasets[0].backgroundColor = (context) => {
-                    const chart = context.chart;
-                    const {ctx, chartArea} = chart;
-                    if (!chartArea) return 'transparent';
-                    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                    const hexToRgba = (hex, alpha) => {
-                        const r = parseInt(hex.slice(1, 3), 16);
-                        const g = parseInt(hex.slice(3, 5), 16);
-                        const b = parseInt(hex.slice(5, 7), 16);
-                        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                    };
-                    gradient.addColorStop(0, hexToRgba(config.color, 0.15));
-                    gradient.addColorStop(0.5, hexToRgba(config.color, 0.05));
-                    gradient.addColorStop(1, hexToRgba(config.color, 0));
-                    return gradient;
-                };
-                
-                energyChart.update('active');
-                updateStats(tabType);
-            });
-        });
-        
-        // Initialize stats
-        updateStats('monthly');
-
-        // Smooth scroll for anchor links with offset
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offset = 100;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // Button Ripple Effect
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple');
-                
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
-                ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-        
-        // Parallax effect for hero section
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const heroImage = document.querySelector('.hero-image');
-            const floatCards = document.querySelectorAll('.float-card');
-            
-            if (heroImage && scrolled < 800) {
-                heroImage.style.transform = `scale(${1 + scrolled * 0.0001}) translateY(${scrolled * 0.1}px)`;
-            }
-            
-            floatCards.forEach((card, index) => {
-                const speed = index % 2 === 0 ? 0.05 : 0.08;
-                card.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-        
-        // Mouse tracking for feature cards glow effect
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                card.style.setProperty('--mouse-x', x + '%');
-                card.style.setProperty('--mouse-y', y + '%');
-            });
-        });
-        
-        // Magnetic button effect
-        document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
-            });
-            
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'translate(0, 0)';
-            });
-        });
-
-        // Auto-update footer year
-        const footerYear = document.getElementById('footerYear');
-        if (footerYear) footerYear.textContent = new Date().getFullYear();
-
-        // ============================================
-        // PAGE TRANSITIONS
-        // ============================================
-        document.querySelectorAll('a[href$=".html"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (!href || href.startsWith('#') || href.startsWith('http')) return;
-                e.preventDefault();
-                const transition = document.getElementById('pageTransition');
-                if (transition) {
-                    transition.classList.add('active');
-                    setTimeout(() => { window.location.href = href; }, 350);
-                } else {
-                    window.location.href = href;
-                }
-            });
-        });
-
-        // ============================================
-        // SERVICE WORKER REGISTRATION
-        // ============================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
-            });
-        }
     </script>
 </body>
 </html>
